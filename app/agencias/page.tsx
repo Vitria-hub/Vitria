@@ -28,10 +28,10 @@ function AgenciasContent() {
   const { data, isLoading } = trpc.agency.list.useQuery(filters);
 
   useEffect(() => {
-    if (data?.agencies && data.agencies.length > 0) {
+    if (data !== undefined) {
       const searchKey = JSON.stringify(filters);
       if (searchKey !== lastSearchTracked.current) {
-        const agencyIds = data.agencies.map((a: any) => a.id);
+        const agencyIds = data.agencies?.map((a: any) => a.id) || [];
         trackSearch({
           searchQuery: filters.q,
           serviceCategory: filters.category,
