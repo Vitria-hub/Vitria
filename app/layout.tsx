@@ -5,8 +5,8 @@ import Footer from '@/components/Footer';
 import { Providers } from '@/lib/providers';
 
 export const metadata: Metadata = {
-  title: 'Agencias - Directorio de Agencias de Marketing en Chile',
-  description: 'El directorio más completo de agencias de marketing, branding y publicidad en Chile',
+  title: 'Vitria - Directorio de Agencias de Marketing en Chile',
+  description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
 };
 
 export default function RootLayout({
