@@ -6,7 +6,16 @@ import { useState } from 'react';
 import { AuthProvider } from '@/hooks/useAuth';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        retry: 1,
+      },
+    },
+  }));
   const [trpcClient] = useState(() => getTRPCClient());
 
   return (

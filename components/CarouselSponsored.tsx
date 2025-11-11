@@ -8,7 +8,38 @@ import { useState } from 'react';
 
 export default function CarouselSponsored() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data: sponsored } = trpc.sponsor.listHome.useQuery();
+  const { data: sponsored, isLoading } = trpc.sponsor.listHome.useQuery();
+
+  if (isLoading) {
+    return (
+      <div className="relative bg-gradient-to-br from-primary/80 via-secondary/80 to-primary/80 rounded-2xl overflow-hidden shadow-2xl animate-pulse">
+        <div className="relative px-4 sm:px-8 md:px-16 py-8 md:py-12">
+          <div className="flex items-center gap-2 sm:gap-3 mb-4 md:mb-6">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded"></div>
+            <div className="h-4 w-32 bg-white/20 rounded"></div>
+          </div>
+
+          <div className="grid md:grid-cols-[auto_1fr] gap-6 md:gap-8 items-start">
+            <div className="flex-shrink-0 mx-auto md:mx-0">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/20 rounded-xl"></div>
+            </div>
+
+            <div className="text-white space-y-4">
+              <div className="h-8 bg-white/20 rounded w-3/4"></div>
+              <div className="h-4 bg-white/20 rounded w-1/2"></div>
+              <div className="h-16 bg-white/20 rounded w-full"></div>
+              <div className="flex gap-2">
+                <div className="h-8 w-24 bg-white/20 rounded"></div>
+                <div className="h-8 w-24 bg-white/20 rounded"></div>
+                <div className="h-8 w-24 bg-white/20 rounded"></div>
+              </div>
+              <div className="h-12 w-48 bg-white/20 rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!sponsored || sponsored.length === 0) {
     return null;
