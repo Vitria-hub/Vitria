@@ -10,7 +10,11 @@ import {
   Star, 
   Clock,
   CheckCircle,
-  XCircle 
+  XCircle,
+  Search,
+  MousePointerClick,
+  TrendingUp,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -20,6 +24,10 @@ export default function AdminDashboard() {
   const { data: stats, isLoading: statsLoading } = trpc.admin.stats.useQuery(undefined, {
     enabled: userData?.role === 'admin',
   });
+  const { data: analyticsStats, isLoading: analyticsLoading } = trpc.analytics.getDashboardStats.useQuery(
+    { days: 30 },
+    { enabled: userData?.role === 'admin' }
+  );
 
   useEffect(() => {
     if (!loading && (!userData || userData.role !== 'admin')) {
@@ -27,7 +35,7 @@ export default function AdminDashboard() {
     }
   }, [userData, loading, router]);
 
-  if (loading || statsLoading) {
+  if (loading || statsLoading || analyticsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -50,47 +58,97 @@ export default function AdminDashboard() {
           <p className="text-dark/70">Gestiona el marketplace de Vitria</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <StatsCard
-            title="Total Agencias"
-            value={stats?.totalAgencies || 0}
-            icon={<Building2 className="w-8 h-8 text-primary" />}
-            subtitle={`${stats?.pendingAgencies || 0} sin verificar`}
-          />
-          <StatsCard
-            title="Total Usuarios"
-            value={stats?.totalUsers || 0}
-            icon={<Users className="w-8 h-8 text-secondary" />}
-          />
-          <StatsCard
-            title="Total Reseñas"
-            value={stats?.totalReviews || 0}
-            icon={<Star className="w-8 h-8 text-accent" />}
-            subtitle={`${stats?.pendingReviews || 0} pendientes`}
-          />
+        <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-8">
+          <h2 className="text-2xl font-bold text-dark mb-6">Estadísticas Generales</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <StatsCard
+              title="Total Agencias"
+              value={stats?.totalAgencies || 0}
+              icon={<Building2 className="w-8 h-8 text-primary" />}
+              subtitle={`+${analyticsStats?.newAgencies || 0} este mes`}
+            />
+            <StatsCard
+              title="Total Usuarios"
+              value={stats?.totalUsers || 0}
+              icon={<Users className="w-8 h-8 text-secondary" />}
+              subtitle={`+${analyticsStats?.newUsers || 0} este mes`}
+            />
+            <StatsCard
+              title="Total Reseñas"
+              value={stats?.totalReviews || 0}
+              icon={<Star className="w-8 h-8 text-accent" />}
+              subtitle={`${stats?.pendingReviews || 0} pendientes`}
+            />
+            <StatsCard
+              title="Agencias Premium"
+              value={analyticsStats?.premiumAgencies || 0}
+              icon={<TrendingUp className="w-8 h-8 text-green-600" />}
+              subtitle={`de ${stats?.totalAgencies || 0} totales`}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AdminCard
-            title="Gestionar Agencias"
-            description="Aprobar, verificar o eliminar agencias"
-            href="/admin/agencias"
-            icon={<Building2 className="w-6 h-6" />}
-            badge={stats?.pendingAgencies}
-          />
-          <AdminCard
-            title="Gestionar Reseñas"
-            description="Moderar reseñas pendientes"
-            href="/admin/resenas"
-            icon={<Star className="w-6 h-6" />}
-            badge={stats?.pendingReviews}
-          />
-          <AdminCard
-            title="Gestionar Usuarios"
-            description="Ver y administrar usuarios"
-            href="/admin/usuarios"
-            icon={<Users className="w-6 h-6" />}
-          />
+        <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-8">
+          <h2 className="text-2xl font-bold text-dark mb-6">Analytics (Últimos 30 días)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <StatsCard
+              title="Total Búsquedas"
+              value={analyticsStats?.totalSearches || 0}
+              icon={<Search className="w-8 h-8 text-blue-600" />}
+              subtitle="Búsquedas realizadas"
+            />
+            <StatsCard
+              title="Contactos Generados"
+              value={analyticsStats?.totalContacts || 0}
+              icon={<MousePointerClick className="w-8 h-8 text-purple-600" />}
+              subtitle="Leads para agencias"
+            />
+            <StatsCard
+              title="Ver Analytics Completo"
+              value={0}
+              icon={<BarChart3 className="w-8 h-8 text-orange-600" />}
+              customContent={
+                <Link 
+                  href="/admin/analytics" 
+                  className="text-primary hover:underline font-semibold"
+                >
+                  Ir al Dashboard →
+                </Link>
+              }
+            />
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-dark mb-6">Gestión</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AdminCard
+              title="Gestionar Agencias"
+              description="Aprobar, verificar o eliminar agencias"
+              href="/admin/agencias"
+              icon={<Building2 className="w-6 h-6" />}
+              badge={stats?.pendingAgencies}
+            />
+            <AdminCard
+              title="Gestionar Reseñas"
+              description="Moderar reseñas pendientes"
+              href="/admin/resenas"
+              icon={<Star className="w-6 h-6" />}
+              badge={stats?.pendingReviews}
+            />
+            <AdminCard
+              title="Gestionar Usuarios"
+              description="Ver y administrar usuarios"
+              href="/admin/usuarios"
+              icon={<Users className="w-6 h-6" />}
+            />
+            <AdminCard
+              title="Analytics Completo"
+              description="Gráficos, rankings y métricas detalladas"
+              href="/admin/analytics"
+              icon={<BarChart3 className="w-6 h-6" />}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -102,20 +160,28 @@ function StatsCard({
   value,
   icon,
   subtitle,
+  customContent,
 }: {
   title: string;
   value: number;
   icon: React.ReactNode;
   subtitle?: string;
+  customContent?: React.ReactNode;
 }) {
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
-      <div className="flex items-start justify-between mb-4">
+    <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+      <div className="flex items-start justify-between mb-3">
         <div>{icon}</div>
       </div>
-      <h3 className="text-3xl font-bold text-dark mb-1">{value.toLocaleString()}</h3>
-      <p className="text-sm text-dark/60">{title}</p>
-      {subtitle && <p className="text-xs text-primary mt-2">{subtitle}</p>}
+      {customContent ? (
+        customContent
+      ) : (
+        <>
+          <h3 className="text-2xl font-bold text-dark mb-1">{value.toLocaleString()}</h3>
+          <p className="text-sm text-dark/60">{title}</p>
+          {subtitle && <p className="text-xs text-primary mt-2">{subtitle}</p>}
+        </>
+      )}
     </div>
   );
 }
