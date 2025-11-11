@@ -10,9 +10,11 @@
 - Manage agencies: verify, unverify, delete with filtering and pagination
 - Manage reviews: approve, reject, delete with status filtering
 - Manage users: change roles, delete users with full user list
-- Admin-only tRPC procedures with middleware protection
+- Admin-only tRPC procedures with middleware protection (`adminProcedure` extends `protectedProcedure`)
 - Admin link in Navbar (visible only for admin users)
 - Secure authentication checks on frontend and backend
+- React Query v5 compatible mutations using `isPending` instead of deprecated `isLoading`
+- Documentation in `ADMIN_SETUP.md` with SQL instructions for creating first admin user
 
 **Deployment Configuration Fixed** (November 11, 2025):
 - Corrected run command from `npm start -p 5000` to `npm run start`
