@@ -4,6 +4,15 @@
 
 # Recent Changes (November 2025)
 
+**Production Deployment Configured** (November 11, 2025):
+- Deployment type: Autoscale (serverless, scales automatically)
+- Build command: `npm run build`
+- Run command: `npm run start` (production server on port 5000)
+- Environment variables configured in Supabase
+- Admin user created: contacto@scalelab.cl (role: admin)
+- Row Level Security (RLS) policies configured for users table
+- Ready to publish to production
+
 **Admin Panel Implementation** (November 11, 2025):
 - Complete admin system with role-based access control (role='admin')
 - Admin dashboard at `/admin` with stats and quick access cards
