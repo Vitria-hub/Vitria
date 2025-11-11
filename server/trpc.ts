@@ -32,10 +32,17 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid auth token' });
   }
 
+  const { data: userData } = await supabase
+    .from('users')
+    .select('id, role, full_name, avatar_url')
+    .eq('auth_id', user.id)
+    .single();
+
   return opts.next({
     ctx: {
       ...opts.ctx,
       userId: user.id,
+      user: userData,
     },
   });
 });

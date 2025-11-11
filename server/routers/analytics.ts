@@ -1,20 +1,19 @@
 import { z } from 'zod';
-import { router, publicProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const analyticsRouter = router({
-  // Trackear vista de perfil
   trackView: publicProcedure
     .input(z.object({
       agencyId: z.string(),
       sessionId: z.string().optional(),
       userAgent: z.string().optional(),
     }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { agencyId, sessionId, userAgent } = input;
       
-      // Insertar log de interacción
-      await supabase.from('interaction_logs').insert({
+      const { error } = await supabaseAdmin.from('interaction_logs').insert({
         agency_id: agencyId,
         interaction_type: 'view',
         session_id: sessionId,
@@ -22,10 +21,14 @@ export const analyticsRouter = router({
         metadata: {},
       });
 
+      if (error) {
+        console.error('Error tracking view:', error);
+        return { success: false, error: error.message };
+      }
+
       return { success: true };
     }),
 
-  // Trackear click en contacto (teléfono, email, website)
   trackContact: publicProcedure
     .input(z.object({
       agencyId: z.string(),
@@ -35,16 +38,20 @@ export const analyticsRouter = router({
     .mutation(async ({ input }) => {
       const { agencyId, contactType, sessionId } = input;
       
-      await supabase.from('interaction_logs').insert({
+      const { error } = await supabaseAdmin.from('interaction_logs').insert({
         agency_id: agencyId,
         interaction_type: contactType,
         session_id: sessionId,
       });
 
+      if (error) {
+        console.error('Error tracking contact:', error);
+        return { success: false, error: error.message };
+      }
+
       return { success: true };
     }),
 
-  // Trackear búsqueda
   trackSearch: publicProcedure
     .input(z.object({
       searchQuery: z.string().optional(),
@@ -68,7 +75,7 @@ export const analyticsRouter = router({
         sessionId,
       } = input;
       
-      await supabase.from('search_analytics').insert({
+      const { error } = await supabaseAdmin.from('search_analytics').insert({
         search_query: searchQuery,
         service_category: serviceCategory,
         location_filter: locationFilter,
@@ -79,65 +86,66 @@ export const analyticsRouter = router({
         session_id: sessionId,
       });
 
+      if (error) {
+        console.error('Error tracking search:', error);
+        return { success: false, error: error.message };
+      }
+
       return { success: true };
     }),
 
-  // Obtener estadísticas generales del dashboard
-  getDashboardStats: publicProcedure
+  getDashboardStats: protectedProcedure
     .input(z.object({
       days: z.number().default(30),
     }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+
       const { days } = input;
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
+      const startDateISO = startDate.toISOString();
 
-      // Total usuarios
-      const { count: totalUsers } = await supabase
+      const { count: totalUsers } = await supabaseAdmin
         .from('users')
         .select('*', { count: 'exact', head: true });
 
-      // Total agencias
-      const { count: totalAgencies } = await supabase
+      const { count: totalAgencies } = await supabaseAdmin
         .from('agencies')
         .select('*', { count: 'exact', head: true });
 
-      // Agencias premium
-      const { count: premiumAgencies } = await supabase
+      const { count: premiumAgencies } = await supabaseAdmin
         .from('agencies')
         .select('*', { count: 'exact', head: true })
         .eq('is_premium', true);
 
-      // Total reviews
-      const { count: totalReviews } = await supabase
+      const { count: totalReviews } = await supabaseAdmin
         .from('reviews')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'approved');
 
-      // Búsquedas del período
-      const { count: totalSearches } = await supabase
+      const { count: totalSearches } = await supabaseAdmin
         .from('search_analytics')
         .select('*', { count: 'exact', head: true })
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
-      // Contactos generados
-      const { count: totalContacts } = await supabase
+      const { count: totalContacts } = await supabaseAdmin
         .from('interaction_logs')
         .select('*', { count: 'exact', head: true })
         .in('interaction_type', ['phone_click', 'email_click', 'website_click', 'form_submit'])
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
-      // Nuevos usuarios del período
-      const { count: newUsers } = await supabase
+      const { count: newUsers } = await supabaseAdmin
         .from('users')
         .select('*', { count: 'exact', head: true })
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
-      // Nuevas agencias del período
-      const { count: newAgencies } = await supabase
+      const { count: newAgencies } = await supabaseAdmin
         .from('agencies')
         .select('*', { count: 'exact', head: true })
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
       return {
         totalUsers: totalUsers || 0,
@@ -151,52 +159,70 @@ export const analyticsRouter = router({
       };
     }),
 
-  // Obtener ranking de agencias
-  getAgencyRanking: publicProcedure
+  getAgencyRanking: protectedProcedure
     .input(z.object({
       days: z.number().default(30),
       limit: z.number().default(10),
     }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+
       const { days, limit } = input;
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
+      const startDateISO = startDate.toISOString();
 
-      // Obtener métricas por agencia
-      const { data: interactions } = await supabase
-        .from('interaction_logs')
-        .select('agency_id, interaction_type')
-        .gte('created_at', startDate.toISOString());
-
-      if (!interactions) return [];
-
-      // Agrupar por agencia
-      const agencyStats: Record<string, { views: number; contacts: number }> = {};
-      
-      interactions.forEach((log) => {
-        if (!agencyStats[log.agency_id]) {
-          agencyStats[log.agency_id] = { views: 0, contacts: 0 };
-        }
-        
-        if (log.interaction_type === 'view') {
-          agencyStats[log.agency_id].views++;
-        } else if (['phone_click', 'email_click', 'website_click', 'form_submit'].includes(log.interaction_type)) {
-          agencyStats[log.agency_id].contacts++;
-        }
+      const { data: viewStats, error: viewError } = await supabaseAdmin.rpc('get_agency_view_stats', {
+        start_date: startDateISO,
       });
 
-      // Obtener información de las agencias
-      const agencyIds = Object.keys(agencyStats);
-      const { data: agencies } = await supabase
+      if (viewError) {
+        console.error('Error getting view stats:', viewError);
+        return [];
+      }
+
+      const { data: contactStats, error: contactError } = await supabaseAdmin.rpc('get_agency_contact_stats', {
+        start_date: startDateISO,
+      });
+
+      if (contactError) {
+        console.error('Error getting contact stats:', contactError);
+        return [];
+      }
+
+      const statsMap = new Map();
+      
+      viewStats?.forEach((row: any) => {
+        statsMap.set(row.agency_id, {
+          agencyId: row.agency_id,
+          views: row.view_count || 0,
+          contacts: 0,
+        });
+      });
+
+      contactStats?.forEach((row: any) => {
+        const existing = statsMap.get(row.agency_id) || { agencyId: row.agency_id, views: 0, contacts: 0 };
+        existing.contacts = row.contact_count || 0;
+        statsMap.set(row.agency_id, existing);
+      });
+
+      const agencyIds = Array.from(statsMap.keys());
+      if (agencyIds.length === 0) return [];
+
+      const { data: agencies, error: agenciesError } = await supabaseAdmin
         .from('agencies')
         .select('id, name, slug, logo_url, avg_rating, reviews_count, is_premium')
         .in('id', agencyIds);
 
-      if (!agencies) return [];
+      if (agenciesError || !agencies) {
+        console.error('Error getting agencies:', agenciesError);
+        return [];
+      }
 
-      // Combinar datos y calcular CTR
       const ranking = agencies.map((agency) => {
-        const stats = agencyStats[agency.id];
+        const stats = statsMap.get(agency.id) || { views: 0, contacts: 0 };
         const ctr = stats.views > 0 ? (stats.contacts / stats.views) * 100 : 0;
         
         return {
@@ -213,34 +239,38 @@ export const analyticsRouter = router({
         };
       });
 
-      // Ordenar por vistas y limitar
       return ranking
         .sort((a, b) => b.views - a.views)
         .slice(0, limit);
     }),
 
-  // Obtener detalles de analytics de una agencia
-  getAgencyAnalytics: publicProcedure
+  getAgencyAnalytics: protectedProcedure
     .input(z.object({
       agencyId: z.string(),
       days: z.number().default(30),
     }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+
       const { agencyId, days } = input;
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
+      const startDateISO = startDate.toISOString();
 
-      // Interacciones del período
-      const { data: interactions } = await supabase
+      const { data: interactions, error: interactionsError } = await supabaseAdmin
         .from('interaction_logs')
         .select('interaction_type, created_at')
         .eq('agency_id', agencyId)
-        .gte('created_at', startDate.toISOString())
+        .gte('created_at', startDateISO)
         .order('created_at', { ascending: false });
 
-      if (!interactions) return null;
+      if (interactionsError || !interactions) {
+        console.error('Error getting interactions:', interactionsError);
+        return null;
+      }
 
-      // Contar por tipo
       const stats = {
         views: 0,
         phoneClicks: 0,
@@ -272,26 +302,23 @@ export const analyticsRouter = router({
       const totalContacts = stats.phoneClicks + stats.emailClicks + stats.websiteClicks + stats.formSubmissions;
       const conversionRate = stats.views > 0 ? (totalContacts / stats.views) * 100 : 0;
 
-      // Búsquedas donde apareció
-      const { count: searchAppearances } = await supabase
+      const { count: searchAppearances } = await supabaseAdmin
         .from('search_analytics')
         .select('*', { count: 'exact', head: true })
         .contains('agencies_shown', [agencyId])
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
-      // Clicks desde búsquedas
-      const { count: searchClicks } = await supabase
+      const { count: searchClicks } = await supabaseAdmin
         .from('search_analytics')
         .select('*', { count: 'exact', head: true })
         .eq('clicked_agency_id', agencyId)
-        .gte('created_at', startDate.toISOString());
+        .gte('created_at', startDateISO);
 
-      // Top keywords
-      const { data: searches } = await supabase
+      const { data: searches } = await supabaseAdmin
         .from('search_analytics')
         .select('search_query, service_category')
         .eq('clicked_agency_id', agencyId)
-        .gte('created_at', startDate.toISOString())
+        .gte('created_at', startDateISO)
         .not('search_query', 'is', null);
 
       const keywordCount: Record<string, number> = {};
