@@ -92,15 +92,50 @@ create table public.sponsored_slots (
   ends_at timestamptz not null
 );
 
--- Métricas diarias
+-- Métricas diarias agregadas
 create table public.agency_metrics_daily (
   day date not null,
   agency_id uuid references public.agencies(id) on delete cascade,
   views int default 0,
+  unique_visitors int default 0,
   profile_clicks int default 0,
   contact_clicks int default 0,
+  phone_clicks int default 0,
+  email_clicks int default 0,
+  website_clicks int default 0,
+  form_submissions int default 0,
+  search_appearances int default 0,
+  avg_position numeric(4,2) default 0,
   leads int default 0,
   primary key (day, agency_id)
+);
+
+-- Logs de interacciones individuales
+create table public.interaction_logs (
+  id uuid primary key default gen_random_uuid(),
+  agency_id uuid references public.agencies(id) on delete cascade,
+  user_id uuid references public.users(id) on delete set null,
+  interaction_type text not null check (interaction_type in ('view','phone_click','email_click','website_click','form_submit','search_appear','search_click')),
+  session_id text,
+  user_agent text,
+  ip_address inet,
+  metadata jsonb,
+  created_at timestamptz default now()
+);
+
+-- Analytics de búsquedas
+create table public.search_analytics (
+  id uuid primary key default gen_random_uuid(),
+  search_query text,
+  service_category text,
+  location_filter text,
+  results_count int not null,
+  agencies_shown uuid[],
+  clicked_agency_id uuid references public.agencies(id) on delete set null,
+  clicked_position int,
+  user_id uuid references public.users(id) on delete set null,
+  session_id text,
+  created_at timestamptz default now()
 );
 
 -- Índices
@@ -109,6 +144,10 @@ create index agencies_gin_categories on public.agencies using gin (categories);
 create index agencies_trgm_name on public.agencies using gin (name gin_trgm_ops);
 create index agencies_loc on public.agencies (location_region, location_city);
 create index reviews_agency_status on public.reviews (agency_id, status);
+create index interaction_logs_agency_created on public.interaction_logs (agency_id, created_at desc);
+create index interaction_logs_type_created on public.interaction_logs (interaction_type, created_at desc);
+create index search_analytics_created on public.search_analytics (created_at desc);
+create index search_analytics_clicked on public.search_analytics (clicked_agency_id, created_at desc) where clicked_agency_id is not null;
 
 -- Trigger para rating promedio
 create or replace function update_agency_rating() returns trigger as $$
@@ -138,6 +177,8 @@ alter table public.reviews enable row level security;
 alter table public.subscriptions enable row level security;
 alter table public.sponsored_slots enable row level security;
 alter table public.agency_metrics_daily enable row level security;
+alter table public.interaction_logs enable row level security;
+alter table public.search_analytics enable row level security;
 
 -- Políticas públicas de lectura
 create policy "Allow public read access to agencies"
