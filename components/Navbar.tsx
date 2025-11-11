@@ -25,6 +25,9 @@ export default function Navbar() {
             <Link href="/blog" className="text-dark hover:text-primary transition">
               Blog
             </Link>
+            <Link href="/admin" className="bg-purple-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-purple-700 transition">
+              🔐 Admin
+            </Link>
             
             {user ? (
               <div className="relative">
