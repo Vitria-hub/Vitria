@@ -11,7 +11,7 @@ import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, CreditC
 export default function DashboardPage() {
   const { user, userData, loading } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<'profile' | 'metrics' | 'subscription'>('profile');
+  const [tab, setTab] = useState<'profile' | 'metrics'>('profile');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -77,16 +77,6 @@ export default function DashboardPage() {
                 >
                   Métricas
                 </button>
-                <button
-                  onClick={() => setTab('subscription')}
-                  className={`px-6 py-4 font-semibold transition ${
-                    tab === 'subscription'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-dark/60 hover:text-primary'
-                  }`}
-                >
-                  Suscripción
-                </button>
               </nav>
             </div>
 
@@ -142,49 +132,6 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {tab === 'subscription' && (
-                <div>
-                  <h2 className="text-2xl font-bold text-dark mb-6">Plan de Suscripción</h2>
-                  {userAgency?.is_premium ? (
-                    <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-lg p-6 mb-6">
-                      <h3 className="text-xl font-bold mb-2">Plan Premium Activo ✓</h3>
-                      <p className="mb-4 opacity-90">
-                        Tu agencia está destacada y obtiene prioridad en las búsquedas
-                      </p>
-                      <p className="text-sm">
-                        Renovación: {new Date(userAgency.premium_until || '').toLocaleDateString('es-CL')}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="bg-mint/10 border-2 border-mint rounded-lg p-6 mb-6">
-                      <h3 className="text-xl font-bold text-dark mb-2">Plan Actual: Free</h3>
-                      <p className="text-dark/70 mb-4">
-                        Actualiza a Premium para destacar tu agencia y acceder a funcionalidades
-                        exclusivas.
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="bg-white border-2 border-primary rounded-lg p-6">
-                    <h3 className="text-xl font-bold text-primary mb-2">Plan Premium - $49/mes</h3>
-                    <ul className="space-y-2 mb-6 text-dark/80">
-                      <li>✓ Destacado en el carrusel principal</li>
-                      <li>✓ Badge Premium en tu perfil</li>
-                      <li>✓ Portafolio ilimitado</li>
-                      <li>✓ Métricas avanzadas</li>
-                      <li>✓ Prioridad en resultados de búsqueda</li>
-                    </ul>
-                    {!userAgency?.is_premium && (
-                      <Link href="/dashboard/upgrade">
-                        <Button variant="accent" size="lg">
-                          <CreditCard className="w-4 h-4 mr-2" />
-                          Actualizar a Premium
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         ) : (

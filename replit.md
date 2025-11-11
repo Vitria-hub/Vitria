@@ -29,8 +29,7 @@
 - **Create Agency Flow**: Secure agency creation with automatic slug generation and owner_id persistence
 - **Agency Profile**: View and edit agency information, manage portfolio
 - **Metrics Dashboard**: View analytics (views, clicks, contacts, leads)
-- **Premium Subscription**: Full Stripe checkout integration for Premium plan upgrade
-
+- 
 **Security Implementation**:
 - **Protected Procedures**: All mutations (agency.create, billing.createCheckoutSession) require authentication
 - **Ownership Verification**: Agency operations verify owner_id before allowing modifications
@@ -42,7 +41,6 @@
 - **Search Integration**: Hero search form connects to agency listing with URL params
 - **Advanced Filters**: Working filters for region, services, price range, and sorting
 - **Pagination**: Full pagination support on agency listings
-- **Stripe Checkout**: Premium plan upgrade with ownership verification
 - **Agency Creation**: Complete flow from registration to agency profile
 
 **Design Improvements**:
@@ -158,20 +156,10 @@ Preferred communication style: Simple, everyday language.
 
 ## Payment Processing
 
-**Provider**: Stripe with Checkout Sessions
-- Subscription-based premium plans ($49/month shown in code)
-- Checkout session creation through tRPC billing router
-- Webhook handler at `/api/stripe/webhook` processes payment events
-- Premium status and expiration tracked in agencies table
-
-**Webhook Events Handled**:
-- `checkout.session.completed`: Activates premium, creates subscription record
-- `invoice.payment_failed` and cancellation events (mentioned but not fully implemented)
-
-**Subscription Management**:
-- Premium status boolean flag with expiration timestamp
-- Subscription records link agencies to Stripe customer and subscription IDs
-- Status tracking for active/cancelled/expired states
+**Status**: Currently disabled - Stripe integration removed as it's not commonly used in Chile
+- Premium/subscription functionality temporarily disabled
+- Database schema supports future payment integration
+- Can be re-enabled with local Chilean payment providers (e.g., Transbank, Mercado Pago)
 
 ## SEO Implementation
 

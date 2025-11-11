@@ -40,6 +40,5 @@ externalPort = 3000
 
 [deployment]
 deploymentTarget = "cloudrun"
-publicDir = "public"
 run = ["sh", "-c", "https://vitria.replit.app/"]
 build = ["npm", "run", "build"]

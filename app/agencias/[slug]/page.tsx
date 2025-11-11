@@ -15,10 +15,12 @@ export default function AgencyDetailPage() {
   const slug = params.slug as string;
   const [showContactForm, setShowContactForm] = useState(false);
 
-  const { data: agency, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
+  const { data: agencyData, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
+  const agency = agencyData as any;
+  
   const { data: reviews } = trpc.review.listByAgency.useQuery(
-    { agencyId: agency?.id || '', status: 'approved' },
-    { enabled: !!agency?.id }
+    { agencyId: agency?.id || '', status: 'approved' as const },
+    { enabled: !!agency }
   );
 
   const trackMetric = trpc.metrics.track.useMutation();

@@ -144,7 +144,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-lg transition">
-                <p className="text-dark/80 mb-6 italic">"{testimonial.quote}"</p>
+                <p className="text-dark/80 mb-6 italic">&ldquo;{testimonial.quote}&rdquo;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold">
                     {testimonial.initials}
