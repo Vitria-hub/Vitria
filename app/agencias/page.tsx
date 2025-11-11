@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import AgencyCard from '@/components/AgencyCard';
 import FilterBar from '@/components/FilterBar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function AgenciasPage() {
+function AgenciasContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<any>({
     page: 1,
@@ -85,5 +85,20 @@ export default function AgenciasPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AgenciasPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-4xl font-bold text-primary mb-8">Explorar Agencias</h1>
+        <div className="text-center py-12">
+          <p className="text-dark/60">Cargando agencias...</p>
+        </div>
+      </div>
+    }>
+      <AgenciasContent />
+    </Suspense>
   );
 }

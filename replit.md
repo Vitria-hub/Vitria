@@ -31,7 +31,7 @@
 - **Metrics Dashboard**: View analytics (views, clicks, contacts, leads)
 - 
 **Security Implementation**:
-- **Protected Procedures**: All mutations (agency.create, billing.createCheckoutSession) require authentication
+- **Protected Procedures**: All mutations (agency.create) require authentication
 - **Ownership Verification**: Agency operations verify owner_id before allowing modifications
 - **agency.myAgency Endpoint**: Secure endpoint that returns only user's owned agency
 - **Auth Headers**: tRPC client automatically includes Bearer token in requests
