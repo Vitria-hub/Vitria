@@ -2,21 +2,51 @@
 
 import Link from 'next/link';
 import Button from './Button';
-import { Search } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Hero() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedService, setSelectedService] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
   const router = useRouter();
+
+  const services = [
+    'Marketing Digital',
+    'Publicidad',
+    'Diseño y Branding',
+    'Contenido',
+    'Audiovisual',
+    'Desarrollo Web',
+    'Relaciones Públicas',
+    'Social Media',
+  ];
+
+  const regions = [
+    { value: '', label: 'En todo Chile' },
+    { value: 'RM', label: 'Región Metropolitana' },
+    { value: 'V', label: 'Valparaíso' },
+    { value: 'VIII', label: 'Biobío (Concepción)' },
+    { value: 'IV', label: 'Coquimbo' },
+    { value: 'VI', label: 'O\'Higgins' },
+    { value: 'VII', label: 'Maule' },
+    { value: 'IX', label: 'Araucanía' },
+    { value: 'X', label: 'Los Lagos' },
+  ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/agencias?search=${encodeURIComponent(searchQuery)}`);
-    } else {
-      router.push('/agencias');
+    
+    const params = new URLSearchParams();
+    if (selectedService) {
+      params.set('search', selectedService);
     }
+    if (selectedRegion) {
+      params.set('region', selectedRegion);
+    }
+    
+    const queryString = params.toString();
+    router.push(`/agencias${queryString ? '?' + queryString : ''}`);
   };
 
   return (
@@ -32,19 +62,53 @@ export default function Hero() {
             Conecta con las mejores agencias de marketing, publicidad y diseño. Revisa portfolios, lee reseñas reales y encuentra el socio perfecto para hacer crecer tu marca.
           </p>
 
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 justify-center items-center max-w-2xl mx-auto mb-12">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar agencias..."
-                className="w-full pl-12 pr-4 py-4 rounded-lg text-dark focus:outline-none focus:ring-2 focus:ring-accent shadow-lg"
-              />
+          <form onSubmit={handleSearch} className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="relative">
+                <label className="block text-left text-sm font-semibold text-dark mb-2">
+                  ¿Qué servicio necesitas? *
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <select
+                    value={selectedService}
+                    onChange={(e) => setSelectedService(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 rounded-lg text-dark bg-gray-50 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition appearance-none cursor-pointer"
+                    required
+                  >
+                    <option value="">Selecciona un servicio</option>
+                    {services.map((service) => (
+                      <option key={service} value={service}>
+                        {service}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="block text-left text-sm font-semibold text-dark mb-2">
+                  ¿Dónde?
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <select
+                    value={selectedRegion}
+                    onChange={(e) => setSelectedRegion(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 rounded-lg text-dark bg-gray-50 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition appearance-none cursor-pointer"
+                  >
+                    {regions.map((region) => (
+                      <option key={region.value} value={region.value}>
+                        {region.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
-            <Button type="submit" variant="accent" size="lg" className="shadow-lg">
-              Buscar
+
+            <Button type="submit" variant="primary" size="lg" className="w-full shadow-lg text-lg">
+              Ver Agencias Disponibles
             </Button>
           </form>
 
