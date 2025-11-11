@@ -158,7 +158,7 @@ export default function AdminReviewsPage() {
                       <button
                         onClick={() => handleApprove(review.id)}
                         className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold"
-                        disabled={updateStatusMutation.isLoading}
+                        disabled={updateStatusMutation.isPending}
                       >
                         <CheckCircle className="w-4 h-4" />
                         Aprobar
@@ -168,7 +168,7 @@ export default function AdminReviewsPage() {
                       <button
                         onClick={() => handleReject(review.id)}
                         className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold"
-                        disabled={updateStatusMutation.isLoading}
+                        disabled={updateStatusMutation.isPending}
                       >
                         <XCircle className="w-4 h-4" />
                         Rechazar
@@ -177,7 +177,7 @@ export default function AdminReviewsPage() {
                     <button
                       onClick={() => handleDelete(review.id)}
                       className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold ml-auto"
-                      disabled={deleteMutation.isLoading}
+                      disabled={deleteMutation.isPending}
                     >
                       <Trash2 className="w-4 h-4" />
                       Eliminar

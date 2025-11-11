@@ -1,13 +1,9 @@
-import { router, publicProcedure } from '../trpc';
+import { router, protectedProcedure } from '../trpc';
 import { db } from '../db';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
-const adminProcedure = publicProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'No autenticado' });
-  }
-
+const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const { data: userData } = await db
     .from('users')
     .select('role')

@@ -4,6 +4,16 @@
 
 # Recent Changes (November 2025)
 
+**Admin Panel Implementation** (November 11, 2025):
+- Complete admin system with role-based access control (role='admin')
+- Admin dashboard at `/admin` with stats and quick access cards
+- Manage agencies: verify, unverify, delete with filtering and pagination
+- Manage reviews: approve, reject, delete with status filtering
+- Manage users: change roles, delete users with full user list
+- Admin-only tRPC procedures with middleware protection
+- Admin link in Navbar (visible only for admin users)
+- Secure authentication checks on frontend and backend
+
 **Deployment Configuration Fixed** (November 11, 2025):
 - Corrected run command from `npm start -p 5000` to `npm run start`
 - Fixed tRPC client URL to use `window.location.origin` instead of env variable
