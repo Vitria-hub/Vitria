@@ -7,10 +7,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Image src="/vitria-logo.png" alt="Vitria" width={32} height={32} className="object-contain" />
-              <h3 className="text-xl font-bold">Vitria</h3>
-            </div>
+            <h3 className="text-xl font-bold mb-4">Vitria</h3>
             <p className="text-gray-300 text-sm">
               El directorio más completo de agencias de marketing en Chile.
             </p>
