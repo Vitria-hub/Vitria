@@ -73,18 +73,7 @@ Este sistema te permite demostrar **valor real** a las agencias y vender membres
 Las tablas de analytics necesitan las siguientes políticas RLS en Supabase:
 
 ```sql
--- Permitir inserts públicos para tracking (ya usa service role, pero por si acaso)
-CREATE POLICY "Allow public insert on interaction_logs"
-ON interaction_logs FOR INSERT
-TO anon, authenticated
-WITH CHECK (true);
-
-CREATE POLICY "Allow public insert on search_analytics"
-ON search_analytics FOR INSERT
-TO anon, authenticated
-WITH CHECK (true);
-
--- Solo admins pueden leer analytics
+-- Solo admins pueden leer analytics (las inserciones usan service role desde backend)
 CREATE POLICY "Only admins can read interaction_logs"
 ON interaction_logs FOR SELECT
 TO authenticated
@@ -107,6 +96,12 @@ USING (
   )
 );
 ```
+
+**Nota:** Los endpoints de tracking (trackView, trackContact, trackSearch) son públicos pero incluyen:
+- Validación de UUIDs con Zod
+- Verificación de existencia de agencia
+- Límites de tamaño en strings y arrays
+- Uso de service role solo desde backend (nunca expuesto al cliente)
 
 ## 📈 Próximos Pasos Recomendados
 

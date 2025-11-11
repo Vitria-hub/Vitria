@@ -6,12 +6,22 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 export const analyticsRouter = router({
   trackView: publicProcedure
     .input(z.object({
-      agencyId: z.string(),
+      agencyId: z.string().uuid(),
       sessionId: z.string().optional(),
       userAgent: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const { agencyId, sessionId, userAgent } = input;
+      
+      const { data: agencyExists } = await supabaseAdmin
+        .from('agencies')
+        .select('id')
+        .eq('id', agencyId)
+        .single();
+      
+      if (!agencyExists) {
+        return { success: false, error: 'Agency not found' };
+      }
       
       const { error } = await supabaseAdmin.from('interaction_logs').insert({
         agency_id: agencyId,
@@ -31,12 +41,22 @@ export const analyticsRouter = router({
 
   trackContact: publicProcedure
     .input(z.object({
-      agencyId: z.string(),
+      agencyId: z.string().uuid(),
       contactType: z.enum(['phone_click', 'email_click', 'website_click', 'form_submit']),
       sessionId: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const { agencyId, contactType, sessionId } = input;
+      
+      const { data: agencyExists } = await supabaseAdmin
+        .from('agencies')
+        .select('id')
+        .eq('id', agencyId)
+        .single();
+      
+      if (!agencyExists) {
+        return { success: false, error: 'Agency not found' };
+      }
       
       const { error } = await supabaseAdmin.from('interaction_logs').insert({
         agency_id: agencyId,
@@ -54,13 +74,13 @@ export const analyticsRouter = router({
 
   trackSearch: publicProcedure
     .input(z.object({
-      searchQuery: z.string().optional(),
-      serviceCategory: z.string().optional(),
-      locationFilter: z.string().optional(),
-      resultsCount: z.number(),
-      agenciesShown: z.array(z.string()),
-      clickedAgencyId: z.string().optional(),
-      clickedPosition: z.number().optional(),
+      searchQuery: z.string().max(200).optional(),
+      serviceCategory: z.string().max(100).optional(),
+      locationFilter: z.string().max(100).optional(),
+      resultsCount: z.number().min(0).max(1000),
+      agenciesShown: z.array(z.string().uuid()).max(50),
+      clickedAgencyId: z.string().uuid().optional(),
+      clickedPosition: z.number().min(0).max(100).optional(),
       sessionId: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
