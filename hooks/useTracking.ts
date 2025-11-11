@@ -68,12 +68,12 @@ export function useTracking() {
 // Hook para trackear vista de página automáticamente
 export function useTrackPageView(agencyId: string | null | undefined) {
   const { trackView } = useTracking();
-  const tracked = useRef(false);
+  const lastTrackedId = useRef<string | null>(null);
 
   useEffect(() => {
-    if (agencyId && !tracked.current) {
+    if (agencyId && agencyId !== lastTrackedId.current) {
       trackView(agencyId);
-      tracked.current = true;
+      lastTrackedId.current = agencyId;
     }
   }, [agencyId, trackView]);
 }

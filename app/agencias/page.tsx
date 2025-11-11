@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import AgencyCard from '@/components/AgencyCard';
 import FilterBar from '@/components/FilterBar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTracking } from '@/hooks/useTracking';
 
 function AgenciasContent() {
   const searchParams = useSearchParams();
@@ -14,6 +15,8 @@ function AgenciasContent() {
     limit: 12,
     sort: 'premium',
   });
+  const { trackSearch } = useTracking();
+  const lastSearchTracked = useRef<string>('');
 
   useEffect(() => {
     const searchQuery = searchParams.get('search');
@@ -23,6 +26,23 @@ function AgenciasContent() {
   }, [searchParams]);
 
   const { data, isLoading } = trpc.agency.list.useQuery(filters);
+
+  useEffect(() => {
+    if (data?.agencies && data.agencies.length > 0) {
+      const searchKey = JSON.stringify(filters);
+      if (searchKey !== lastSearchTracked.current) {
+        const agencyIds = data.agencies.map((a: any) => a.id);
+        trackSearch({
+          searchQuery: filters.q,
+          serviceCategory: filters.category,
+          locationFilter: filters.location,
+          resultsCount: data.total || 0,
+          agenciesShown: agencyIds,
+        });
+        lastSearchTracked.current = searchKey;
+      }
+    }
+  }, [data, filters, trackSearch]);
 
   const handleFilterChange = (newFilters: any) => {
     setFilters((prev: any) => ({ ...prev, ...newFilters, page: 1 }));
