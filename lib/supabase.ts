@@ -58,6 +58,47 @@ export type Database = {
           created_at: string;
         };
       };
+      interaction_logs: {
+        Row: {
+          id: string;
+          agency_id: string;
+          interaction_type: string;
+          session_id: string | null;
+          user_agent: string | null;
+          metadata: any;
+          created_at: string;
+        };
+      };
+      search_analytics: {
+        Row: {
+          id: string;
+          search_query: string | null;
+          service_category: string | null;
+          location_filter: string | null;
+          results_count: number;
+          agencies_shown: string[];
+          clicked_agency_id: string | null;
+          clicked_position: number | null;
+          session_id: string | null;
+          created_at: string;
+        };
+      };
+      agency_metrics_daily: {
+        Row: {
+          id: string;
+          agency_id: string;
+          date: string;
+          views: number;
+          unique_visitors: number;
+          phone_clicks: number;
+          email_clicks: number;
+          website_clicks: number;
+          form_submissions: number;
+          search_appearances: number;
+          search_clicks: number;
+          created_at: string;
+        };
+      };
     };
   };
 };
