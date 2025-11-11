@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 
@@ -20,9 +21,24 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await signIn(email, password);
-      router.push('/dashboard');
-      router.refresh();
+      const authData = await signIn(email, password);
+      
+      // Obtener el rol del usuario
+      if (authData.user) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('role')
+          .eq('auth_id', authData.user.id)
+          .single();
+
+        // Redirigir a /admin si es admin, sino a /dashboard
+        if (userData?.role === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/dashboard');
+        }
+        router.refresh();
+      }
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión');
     } finally {
