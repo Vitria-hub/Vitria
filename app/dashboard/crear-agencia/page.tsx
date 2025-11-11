@@ -6,10 +6,46 @@ import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { useAuth } from '@/hooks/useAuth';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
+
+const SERVICES = [
+  'SEO', 'SEM', 'Marketing Digital', 'Branding', 'Diseño Gráfico', 
+  'Identidad Corporativa', 'Publicidad', 'Campañas ATL', 'Campañas BTL',
+  'Copywriting', 'Content Marketing', 'Blogs', 'Producción Audiovisual',
+  'Fotografía', 'Video Corporativo', 'Desarrollo Web', 'E-commerce',
+  'Apps Móviles', 'Gestión RRSS', 'Community Management', 'Influencers',
+  'RRPP', 'Comunicación Corporativa', 'Eventos'
+];
+
+const CATEGORIES = [
+  'Marketing Digital',
+  'Publicidad',
+  'Diseño y Branding',
+  'Contenido',
+  'Audiovisual',
+  'Desarrollo Web',
+  'Relaciones Públicas',
+  'Social Media',
+];
+
+const INDUSTRIES = [
+  'Retail', 'Tech/Startups', 'E-commerce', 'Salud', 'Educación',
+  'Inmobiliaria', 'Finanzas', 'Alimentos y Bebidas', 'Turismo',
+  'Automotriz', 'Moda', 'Deportes', 'Entretenimiento', 'ONG'
+];
+
+const TEAM_SIZES = [
+  { min: 1, max: 5, label: '1-5 empleados (Boutique)' },
+  { min: 5, max: 15, label: '5-15 empleados (Pequeña)' },
+  { min: 15, max: 30, label: '15-30 empleados (Mediana)' },
+  { min: 30, max: 50, label: '30-50 empleados (Grande)' },
+  { min: 50, max: 200, label: '50+ empleados (Enterprise)' },
+];
 
 export default function CrearAgenciaPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -18,6 +54,12 @@ export default function CrearAgenciaPage() {
     phone: '',
     city: '',
     region: '',
+    services: [] as string[],
+    categories: [] as string[],
+    employeesMin: undefined as number | undefined,
+    employeesMax: undefined as number | undefined,
+    priceRange: '' as '' | '$' | '$$' | '$$$',
+    industries: [] as string[],
   });
 
   const createMutation = trpc.agency.create.useMutation({
@@ -30,123 +72,362 @@ export default function CrearAgenciaPage() {
     e.preventDefault();
     if (!user) return;
     
-    createMutation.mutate(formData);
+    const submitData = {
+      ...formData,
+      priceRange: formData.priceRange as '$' | '$$' | '$$$',
+    };
+    
+    createMutation.mutate(submitData);
+  };
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  const toggleArrayItem = (array: string[], item: string) => {
+    return array.includes(item)
+      ? array.filter((i) => i !== item)
+      : [...array, item];
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold text-primary mb-8">Crear Mi Agencia</h1>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-4xl font-bold text-primary mb-2">Crear Mi Agencia</h1>
+      <p className="text-dark/70 mb-8">Completa la información en 3 simples pasos</p>
 
-      <form onSubmit={handleSubmit} className="bg-white border-2 border-gray-200 rounded-xl p-8 space-y-6">
-        <div>
-          <label className="block text-sm font-semibold text-dark mb-2">
-            Nombre de la Agencia *
-          </label>
-          <Input
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Mi Agencia Digital"
-            required
-          />
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center flex-1">
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
+                step === currentStep ? 'bg-primary text-white' :
+                step < currentStep ? 'bg-accent text-dark' :
+                'bg-gray-200 text-gray-400'
+              }`}>
+                {step < currentStep ? <Check className="w-5 h-5" /> : step}
+              </div>
+              {step < 3 && (
+                <div className={`flex-1 h-1 mx-2 ${
+                  step < currentStep ? 'bg-accent' : 'bg-gray-200'
+                }`} />
+              )}
+            </div>
+          ))}
         </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-dark mb-2">
-            Descripción
-          </label>
-          <textarea
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder="Describe los servicios y especialidad de tu agencia..."
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none resize-none"
-            rows={4}
-          />
+        <div className="flex justify-between text-sm">
+          <span className={currentStep === 1 ? 'text-primary font-semibold' : 'text-dark/60'}>Información Básica</span>
+          <span className={currentStep === 2 ? 'text-primary font-semibold' : 'text-dark/60'}>Servicios</span>
+          <span className={currentStep === 3 ? 'text-primary font-semibold' : 'text-dark/60'}>Detalles</span>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-semibold text-dark mb-2">
-              Sitio Web
-            </label>
-            <Input
-              type="url"
-              value={formData.website}
-              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              placeholder="https://miagencia.cl"
-            />
+      <form onSubmit={handleSubmit} className="bg-white border-2 border-gray-200 rounded-xl p-8">
+        {/* PASO 1: Información Básica */}
+        {currentStep === 1 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-dark mb-6">Información Básica</h2>
+            
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Nombre de la Agencia *
+              </label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Mi Agencia Digital"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Descripción * (mínimo 50 caracteres)
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Describe los servicios y especialidad de tu agencia. ¿Qué te hace diferente?"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none resize-none"
+                rows={4}
+                required
+              />
+              <p className="text-sm text-dark/60 mt-1">{formData.description.length}/50 caracteres</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Email de Contacto *
+                </label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="contacto@miagencia.cl"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Teléfono *
+                </label>
+                <Input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="+56 9 1234 5678"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Sitio Web (opcional)
+              </label>
+              <Input
+                type="url"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                placeholder="https://miagencia.cl"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Ciudad *
+                </label>
+                <Input
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  placeholder="Santiago"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Región *
+                </label>
+                <select
+                  value={formData.region}
+                  onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
+                  required
+                >
+                  <option value="">Selecciona una región</option>
+                  <option value="RM">Región Metropolitana</option>
+                  <option value="V">Valparaíso</option>
+                  <option value="VIII">Biobío</option>
+                  <option value="IV">Coquimbo</option>
+                  <option value="VII">Maule</option>
+                  <option value="IX">Araucanía</option>
+                  <option value="X">Los Lagos</option>
+                </select>
+              </div>
+            </div>
           </div>
+        )}
 
-          <div>
-            <label className="block text-sm font-semibold text-dark mb-2">
-              Email
-            </label>
-            <Input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="contacto@miagencia.cl"
-            />
+        {/* PASO 2: Servicios y Categoría */}
+        {currentStep === 2 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-dark mb-6">Servicios y Especialidad</h2>
+            
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                ¿Qué servicios ofreces? * (selecciona al menos 1)
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {SERVICES.map((service) => (
+                  <label
+                    key={service}
+                    className={`flex items-center gap-2 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
+                      formData.services.includes(service)
+                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.services.includes(service)}
+                      onChange={() => setFormData({
+                        ...formData,
+                        services: toggleArrayItem(formData.services, service)
+                      })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">{service}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-sm text-dark/60 mt-2">Seleccionados: {formData.services.length}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Categoría Principal * (selecciona al menos 1)
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {CATEGORIES.map((category) => (
+                  <label
+                    key={category}
+                    className={`flex items-center gap-3 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
+                      formData.categories.includes(category)
+                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.categories.includes(category)}
+                      onChange={() => setFormData({
+                        ...formData,
+                        categories: toggleArrayItem(formData.categories, category)
+                      })}
+                      className="w-4 h-4"
+                    />
+                    <span>{category}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-semibold text-dark mb-2">
-              Teléfono
-            </label>
-            <Input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+56 9 1234 5678"
-            />
+        {/* PASO 3: Detalles del Negocio */}
+        {currentStep === 3 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-dark mb-6">Detalles del Negocio</h2>
+            
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Tamaño del Equipo *
+              </label>
+              <div className="grid grid-cols-1 gap-3">
+                {TEAM_SIZES.map((size) => (
+                  <label
+                    key={size.label}
+                    className={`flex items-center gap-3 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
+                      formData.employeesMin === size.min && formData.employeesMax === size.max
+                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="teamSize"
+                      checked={formData.employeesMin === size.min && formData.employeesMax === size.max}
+                      onChange={() => setFormData({
+                        ...formData,
+                        employeesMin: size.min,
+                        employeesMax: size.max
+                      })}
+                      className="w-4 h-4"
+                    />
+                    <span>{size.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Rango de Precios *
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {[
+                  { value: '$', label: 'Económico', desc: 'Ideal para startups' },
+                  { value: '$$', label: 'Estándar', desc: 'Ideal para pymes' },
+                  { value: '$$$', label: 'Premium', desc: 'Ideal para empresas' },
+                ].map((price) => (
+                  <label
+                    key={price.value}
+                    className={`flex flex-col items-center px-4 py-4 border-2 rounded-lg cursor-pointer transition ${
+                      formData.priceRange === price.value
+                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="priceRange"
+                      checked={formData.priceRange === price.value}
+                      onChange={() => setFormData({ ...formData, priceRange: price.value as any })}
+                      className="sr-only"
+                    />
+                    <span className="text-2xl mb-1">{price.value}</span>
+                    <span className="font-semibold">{price.label}</span>
+                    <span className="text-xs text-dark/60 mt-1">{price.desc}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Industrias con las que trabajas (opcional)
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {INDUSTRIES.map((industry) => (
+                  <label
+                    key={industry}
+                    className={`flex items-center gap-2 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
+                      formData.industries.includes(industry)
+                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.industries.includes(industry)}
+                      onChange={() => setFormData({
+                        ...formData,
+                        industries: toggleArrayItem(formData.industries, industry)
+                      })}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">{industry}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-dark mb-2">
-              Ciudad
-            </label>
-            <Input
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              placeholder="Santiago"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-dark mb-2">
-            Región
-          </label>
-          <select
-            value={formData.region}
-            onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
-          >
-            <option value="">Selecciona una región</option>
-            <option value="RM">Región Metropolitana</option>
-            <option value="V">Valparaíso</option>
-            <option value="VIII">Biobío</option>
-            <option value="IV">Coquimbo</option>
-            <option value="VII">Maule</option>
-            <option value="IX">Araucanía</option>
-            <option value="X">Los Lagos</option>
-          </select>
-        </div>
+        )}
 
         {createMutation.error && (
-          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mt-6">
             Error al crear la agencia. Inténtalo de nuevo.
           </div>
         )}
 
-        <div className="flex gap-4">
-          <Button type="submit" variant="primary" disabled={createMutation.isLoading}>
-            {createMutation.isLoading ? 'Creando...' : 'Crear Agencia'}
-          </Button>
-          <Button type="button" variant="outline" onClick={() => router.push('/dashboard')}>
-            Cancelar
-          </Button>
+        {/* Navigation Buttons */}
+        <div className="flex justify-between gap-4 mt-8">
+          <div>
+            {currentStep > 1 && (
+              <Button type="button" variant="outline" onClick={prevStep}>
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Anterior
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" onClick={() => router.push('/dashboard')}>
+              Cancelar
+            </Button>
+            {currentStep < 3 ? (
+              <Button type="button" variant="primary" onClick={nextStep}>
+                Siguiente
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            ) : (
+              <Button type="submit" variant="primary" disabled={createMutation.isPending}>
+                {createMutation.isPending ? 'Creando...' : 'Crear Agencia'}
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </div>

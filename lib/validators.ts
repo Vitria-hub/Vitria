@@ -42,11 +42,22 @@ export const contactFormSchema = z.object({
 });
 
 export const createAgencySchema = z.object({
-  name: z.string().min(2),
-  description: z.string().optional(),
-  website: z.string().url().optional().or(z.literal('')),
-  email: z.string().email().optional().or(z.literal('')),
-  phone: z.string().optional(),
-  city: z.string().optional(),
-  region: z.string().optional(),
+  // Paso 1: Información Básica
+  name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres'),
+  website: z.string().url('URL inválida').optional().or(z.literal('')),
+  email: z.string().email('Email inválido'),
+  phone: z.string().min(8, 'Teléfono inválido'),
+  city: z.string().min(2, 'Ciudad requerida'),
+  region: z.string().min(1, 'Región requerida'),
+  
+  // Paso 2: Servicios y Categoría
+  services: z.array(z.string()).min(1, 'Selecciona al menos un servicio'),
+  categories: z.array(z.string()).min(1, 'Selecciona al menos una categoría'),
+  
+  // Paso 3: Detalles del Negocio
+  employeesMin: z.number().min(1).optional(),
+  employeesMax: z.number().min(1).optional(),
+  priceRange: z.enum(['$', '$$', '$$$']),
+  industries: z.array(z.string()).optional(),
 });

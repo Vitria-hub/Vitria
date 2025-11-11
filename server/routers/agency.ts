@@ -132,6 +132,11 @@ export const agencyRouter = router({
           phone: input.phone || null,
           location_city: input.city || null,
           location_region: input.region || null,
+          services: input.services || [],
+          categories: input.categories || [],
+          employees_min: input.employeesMin || null,
+          employees_max: input.employeesMax || null,
+          price_range: input.priceRange || null,
           owner_id: userData.id,
         })
         .select()
