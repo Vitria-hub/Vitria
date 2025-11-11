@@ -4,6 +4,18 @@
 
 # Recent Changes (November 2025)
 
+**Deployment Configuration Fixed** (November 11, 2025):
+- Corrected run command from `npm start -p 5000` to `npm run start`
+- Fixed tRPC client URL to use `window.location.origin` instead of env variable
+- Added Suspense boundary to `/agencias` page for proper pre-rendering
+- Deployment type: Autoscale with Next.js production server on port 5000
+
+**Typography Implementation** (November 11, 2025):
+- **Quicksand Regular (400)**: Applied to all body text and paragraphs
+- **Quicksand Bold (700)**: Applied to headings (h1-h6), buttons, and bold text
+- Font loaded from Google Fonts CDN
+- Configured in both `globals.css` and `tailwind.config.ts`
+
 **Branding Update**: Platform rebranded from "Agencias" to **Vitria**
 - Custom logo added to Navbar and Footer components
 - All metadata and site references updated

@@ -11,7 +11,9 @@ export function getTRPCClient() {
   return trpc.createClient({
     links: [
       httpBatchLink({
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'}/api/trpc`,
+        url: typeof window !== 'undefined' 
+          ? `${window.location.origin}/api/trpc`
+          : '/api/trpc',
         async headers() {
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.access_token) {
