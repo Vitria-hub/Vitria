@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start -p 5000",
     "lint": "next lint",
-    "postbuild": "next-sitemap",
     "seed": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"} seed/seed.ts"
   },
   "dependencies": {
