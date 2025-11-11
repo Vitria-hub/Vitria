@@ -10,10 +10,40 @@
 - Logo file stored at `/public/vitria-logo.png`
 
 **Homepage Redesign**: Modern, user-focused design inspired by industry best practices
-- **Hero Section**: Enhanced gradient background with statistics (150+ agencies, 4.8★ rating), improved copy, and streamlined search/CTA layout
+- **Hero Section**: Enhanced gradient background with statistics (150+ agencies, 4.8★ rating), improved copy, and functional search form
 - **Category Section**: Expanded from 4 to 8 specialized categories (Marketing Digital, Publicidad, Diseño y Branding, Contenido, Audiovisual, Desarrollo Web, Relaciones Públicas, Social Media) with icons, descriptions, and agency counts
 - **Testimonials**: New section featuring 3 user stories from Chilean entrepreneurs
 - **Dual CTAs**: Separate call-to-action cards for agencies and clients, each with branded gradients and listed benefits
+
+**Authentication System Implemented** (November 11, 2025):
+- **Supabase Auth Integration**: Complete email/password authentication using Supabase
+- **Protected Routes**: tRPC protected procedures with Bearer token validation
+- **Login/Register Pages**: Full authentication flow with validation and error handling
+- **Auth Context**: Global authentication state management via useAuth hook
+- **Dynamic Navbar**: Shows login/register for guests, user menu with logout for authenticated users
+- **Session Management**: Automatic session persistence and refresh
+
+**Dashboard & Backoffice** (November 11, 2025):
+- **Role-Based Dashboard**: Different views for clients vs agency owners
+- **Agency Management**: Complete CRUD operations for agency profiles
+- **Create Agency Flow**: Secure agency creation with automatic slug generation and owner_id persistence
+- **Agency Profile**: View and edit agency information, manage portfolio
+- **Metrics Dashboard**: View analytics (views, clicks, contacts, leads)
+- **Premium Subscription**: Full Stripe checkout integration for Premium plan upgrade
+
+**Security Implementation**:
+- **Protected Procedures**: All mutations (agency.create, billing.createCheckoutSession) require authentication
+- **Ownership Verification**: Agency operations verify owner_id before allowing modifications
+- **agency.myAgency Endpoint**: Secure endpoint that returns only user's owned agency
+- **Auth Headers**: tRPC client automatically includes Bearer token in requests
+- **User Isolation**: Users can only see and modify their own agencies
+
+**Functional Features**:
+- **Search Integration**: Hero search form connects to agency listing with URL params
+- **Advanced Filters**: Working filters for region, services, price range, and sorting
+- **Pagination**: Full pagination support on agency listings
+- **Stripe Checkout**: Premium plan upgrade with ownership verification
+- **Agency Creation**: Complete flow from registration to agency profile
 
 **Design Improvements**:
 - Modern card hover effects with smooth transitions
@@ -96,20 +126,35 @@ Preferred communication style: Simple, everyday language.
 ## Authentication System
 
 **Provider**: Supabase Auth
-- Email/password and magic link authentication supported
-- Optional social providers (Google, LinkedIn) mentioned in documentation
-- Auth state managed through Supabase client
+- Email/password authentication fully implemented
+- Optional social providers (Google, LinkedIn) can be configured in Supabase Dashboard
+- Auth state managed globally through custom useAuth hook
 - User records linked to auth system via `auth_id` field
 
 **Authorization Model**: Role-based with user/agency/admin roles
-- User role stored in users table
+- User role stored in users table during registration
 - Agency ownership tracked via `owner_id` foreign key
-- Procedures should check ownership before mutation (implementation pending in shown code)
+- All protected tRPC procedures verify ownership before mutations
+- Bearer token authentication for all protected API routes
+
+**Protected Procedures** (server/trpc.ts):
+- `protectedProcedure`: Middleware that validates Supabase session tokens
+- Extracts userId from auth token and adds to context
+- All agency creation and billing operations use protected procedures
+- Throws UNAUTHORIZED error if token missing or invalid
 
 **Onboarding Flow**: Role-specific registration
-- Users selecting "agency" role trigger agency record creation
+- Users select "client" or "agency" role during registration
+- Agency owners can create agency profile after login
 - Automatic slug generation from agency name
-- Profile completion in dashboard after initial registration
+- Dashboard access requires authentication (redirects to login)
+- Agency creation automatically assigns current user as owner
+
+**Session Management**:
+- Sessions persist via Supabase local storage
+- Auth state synchronized across tabs
+- Automatic token refresh
+- Logout clears session and redirects to home
 
 ## Payment Processing
 
