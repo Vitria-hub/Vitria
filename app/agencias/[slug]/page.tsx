@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import { MapPin, Globe, Mail, Phone, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useTrackPageView, useTracking } from '@/hooks/useTracking';
 
 export default function AgencyDetailPage() {
   const params = useParams();
@@ -23,12 +24,32 @@ export default function AgencyDetailPage() {
     { enabled: !!agency }
   );
 
-  const trackMetric = trpc.metrics.track.useMutation();
+  const { trackContact } = useTracking();
+  
+  useTrackPageView(agency?.id);
 
   const handleContactClick = () => {
     if (agency?.id) {
-      trackMetric.mutate({ agencyId: agency.id, event: 'contact_click' });
+      trackContact(agency.id, 'form_submit');
       setShowContactForm(true);
+    }
+  };
+
+  const handlePhoneClick = () => {
+    if (agency?.id) {
+      trackContact(agency.id, 'phone_click');
+    }
+  };
+
+  const handleEmailClick = () => {
+    if (agency?.id) {
+      trackContact(agency.id, 'email_click');
+    }
+  };
+
+  const handleWebsiteClick = () => {
+    if (agency?.id) {
+      trackContact(agency.id, 'website_click');
     }
   };
 
@@ -93,7 +114,12 @@ export default function AgencyDetailPage() {
                 {agency.website && (
                   <div className="flex items-center gap-2">
                     <Globe className="w-5 h-5" />
-                    <a href={agency.website} target="_blank" className="hover:text-primary">
+                    <a 
+                      href={agency.website} 
+                      target="_blank" 
+                      onClick={handleWebsiteClick}
+                      className="hover:text-primary"
+                    >
                       {agency.website}
                     </a>
                   </div>
@@ -101,7 +127,11 @@ export default function AgencyDetailPage() {
                 {agency.email && (
                   <div className="flex items-center gap-2">
                     <Mail className="w-5 h-5" />
-                    <a href={`mailto:${agency.email}`} className="hover:text-primary">
+                    <a 
+                      href={`mailto:${agency.email}`} 
+                      onClick={handleEmailClick}
+                      className="hover:text-primary"
+                    >
                       {agency.email}
                     </a>
                   </div>
@@ -109,7 +139,13 @@ export default function AgencyDetailPage() {
                 {agency.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="w-5 h-5" />
-                    <span>{agency.phone}</span>
+                    <a 
+                      href={`tel:${agency.phone}`}
+                      onClick={handlePhoneClick}
+                      className="hover:text-primary cursor-pointer"
+                    >
+                      {agency.phone}
+                    </a>
                   </div>
                 )}
                 {agency.employees_min && agency.employees_max && (
