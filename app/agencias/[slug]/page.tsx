@@ -1,6 +1,5 @@
 'use client';
 
-import { use } from 'react';
 import { trpc } from '@/lib/trpc';
 import Badge from '@/components/Badge';
 import RatingStars from '@/components/RatingStars';
@@ -9,9 +8,11 @@ import ReviewForm from '@/components/ReviewForm';
 import Button from '@/components/Button';
 import { MapPin, Globe, Mail, Phone, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
 
-export default function AgencyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
+export default function AgencyDetailPage() {
+  const params = useParams();
+  const slug = params.slug as string;
   const [showContactForm, setShowContactForm] = useState(false);
 
   const { data: agency, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
