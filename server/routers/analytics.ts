@@ -264,6 +264,157 @@ export const analyticsRouter = router({
         .slice(0, limit);
     }),
 
+  getMyAgencyAnalytics: protectedProcedure
+    .input(z.object({
+      days: z.number().default(30),
+    }))
+    .query(async ({ input, ctx }) => {
+      const { days } = input;
+
+      const { data: agency } = await supabaseAdmin
+        .from('agencies')
+        .select('id')
+        .eq('owner_id', ctx.user?.id)
+        .single();
+
+      if (!agency) {
+        throw new Error('You do not own an agency');
+      }
+
+      const agencyId = agency.id;
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+      const startDateISO = startDate.toISOString();
+
+      const { data: interactions, error: interactionsError } = await supabaseAdmin
+        .from('interaction_logs')
+        .select('interaction_type, created_at')
+        .eq('agency_id', agencyId)
+        .gte('created_at', startDateISO)
+        .order('created_at', { ascending: false });
+
+      if (interactionsError || !interactions) {
+        console.error('Error getting interactions:', interactionsError);
+        return null;
+      }
+
+      const stats = {
+        views: 0,
+        phoneClicks: 0,
+        emailClicks: 0,
+        websiteClicks: 0,
+        formSubmissions: 0,
+      };
+
+      const dailyStats: Record<string, { views: number; contacts: number }> = {};
+
+      interactions.forEach((log) => {
+        const date = new Date(log.created_at).toISOString().split('T')[0];
+        
+        if (!dailyStats[date]) {
+          dailyStats[date] = { views: 0, contacts: 0 };
+        }
+
+        switch (log.interaction_type) {
+          case 'view':
+            stats.views++;
+            dailyStats[date].views++;
+            break;
+          case 'phone_click':
+            stats.phoneClicks++;
+            dailyStats[date].contacts++;
+            break;
+          case 'email_click':
+            stats.emailClicks++;
+            dailyStats[date].contacts++;
+            break;
+          case 'website_click':
+            stats.websiteClicks++;
+            dailyStats[date].contacts++;
+            break;
+          case 'form_submit':
+            stats.formSubmissions++;
+            dailyStats[date].contacts++;
+            break;
+        }
+      });
+
+      const totalContacts = stats.phoneClicks + stats.emailClicks + stats.websiteClicks + stats.formSubmissions;
+      const conversionRate = stats.views > 0 ? (totalContacts / stats.views) * 100 : 0;
+
+      const { count: searchAppearances } = await supabaseAdmin
+        .from('search_analytics')
+        .select('*', { count: 'exact', head: true })
+        .contains('agencies_shown', [agencyId])
+        .gte('created_at', startDateISO);
+
+      const { count: searchClicks } = await supabaseAdmin
+        .from('search_analytics')
+        .select('*', { count: 'exact', head: true })
+        .eq('clicked_agency_id', agencyId)
+        .gte('created_at', startDateISO);
+
+      const { data: searches } = await supabaseAdmin
+        .from('search_analytics')
+        .select('search_query, service_category')
+        .eq('clicked_agency_id', agencyId)
+        .gte('created_at', startDateISO);
+
+      const keywordCount: Record<string, number> = {};
+      searches?.forEach((search) => {
+        const keyword = search.search_query || search.service_category || '';
+        if (keyword) {
+          keywordCount[keyword] = (keywordCount[keyword] || 0) + 1;
+        }
+      });
+
+      const topKeywords = Object.entries(keywordCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([keyword, count]) => ({ keyword, count }));
+
+      const dailyTrends = Object.entries(dailyStats)
+        .map(([date, data]) => ({
+          date,
+          views: data.views,
+          contacts: data.contacts,
+        }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      const { count: platformAvgViews } = await supabaseAdmin
+        .from('interaction_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('interaction_type', 'view')
+        .gte('created_at', startDateISO);
+
+      const { count: platformAvgContacts } = await supabaseAdmin
+        .from('interaction_logs')
+        .select('*', { count: 'exact', head: true })
+        .in('interaction_type', ['phone_click', 'email_click', 'website_click', 'form_submit'])
+        .gte('created_at', startDateISO);
+
+      const { count: totalAgencies } = await supabaseAdmin
+        .from('agencies')
+        .select('*', { count: 'exact', head: true });
+
+      const avgViewsPerAgency = totalAgencies ? Math.floor((platformAvgViews || 0) / totalAgencies) : 0;
+      const avgContactsPerAgency = totalAgencies ? Math.floor((platformAvgContacts || 0) / totalAgencies) : 0;
+
+      return {
+        ...stats,
+        totalContacts,
+        conversionRate: parseFloat(conversionRate.toFixed(2)),
+        searchAppearances: searchAppearances || 0,
+        searchClicks: searchClicks || 0,
+        topKeywords,
+        dailyTrends,
+        platformAverage: {
+          views: avgViewsPerAgency,
+          contacts: avgContactsPerAgency,
+        },
+      };
+    }),
+
   getAgencyAnalytics: protectedProcedure
     .input(z.object({
       agencyId: z.string(),
@@ -338,8 +489,7 @@ export const analyticsRouter = router({
         .from('search_analytics')
         .select('search_query, service_category')
         .eq('clicked_agency_id', agencyId)
-        .gte('created_at', startDateISO)
-        .not('search_query', 'is', null);
+        .gte('created_at', startDateISO);
 
       const keywordCount: Record<string, number> = {};
       searches?.forEach((search) => {

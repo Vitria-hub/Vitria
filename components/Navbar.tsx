@@ -39,12 +39,30 @@ export default function Navbar() {
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-200 rounded-lg shadow-lg py-2">
                     {userData?.role === 'admin' && (
+                      <>
+                        <Link
+                          href="/admin"
+                          className="block px-4 py-2 text-purple-600 font-semibold hover:bg-purple-50 transition"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Panel de Admin
+                        </Link>
+                        <Link
+                          href="/admin/analytics"
+                          className="block px-4 py-2 text-purple-600 hover:bg-purple-50 transition"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Analytics Admin
+                        </Link>
+                      </>
+                    )}
+                    {userData?.role === 'agency' && (
                       <Link
-                        href="/admin"
-                        className="block px-4 py-2 text-purple-600 font-semibold hover:bg-purple-50 transition"
+                        href="/mi-agencia/analytics"
+                        className="block px-4 py-2 text-primary font-semibold hover:bg-primary/10 transition"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Panel de Admin
+                        Mis Métricas
                       </Link>
                     )}
                     <Link
