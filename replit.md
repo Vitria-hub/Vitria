@@ -6,6 +6,18 @@
 
 # Recent Changes
 
+## November 11, 2025 - Mobile Responsiveness & Deployment Fix
+
+Implemented comprehensive mobile responsiveness improvements and resolved deployment issues:
+
+- **Mobile Navigation**: Added functional mobile menu to Navbar with toggle button (hamburger/close icon), full navigation links, and role-specific options
+- **Responsive Carousel**: Enhanced CarouselSponsored with mobile-optimized layout:
+  - Reduced padding and font sizes on mobile devices
+  - Repositioned navigation arrows to bottom on mobile (prevents content obstruction)
+  - Made all text, icons, and buttons responsive with Tailwind breakpoints
+- **Deployment Fix**: Removed `postbuild` script from package.json that was causing deployment to hang at "Collecting page data" step
+- **User Experience**: Navigation and carousel now work seamlessly across all device sizes (mobile, tablet, desktop)
+
 ## November 11, 2025 - Agency Owner Dashboard
 
 Implemented comprehensive analytics dashboard for individual agency owners to view their own performance metrics:
