@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS search_analytics (
 CREATE TABLE IF NOT EXISTS agency_metrics_daily (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   agency_id uuid NOT NULL REFERENCES agencies(id) ON DELETE CASCADE,
-  date date NOT NULL,
+  metric_date date NOT NULL,
   views integer DEFAULT 0,
   unique_visitors integer DEFAULT 0,
   phone_clicks integer DEFAULT 0,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS agency_metrics_daily (
   search_appearances integer DEFAULT 0,
   search_clicks integer DEFAULT 0,
   created_at timestamptz DEFAULT now(),
-  UNIQUE(agency_id, date)
+  UNIQUE(agency_id, metric_date)
 );
 
 -- CREAR FUNCIONES PARA AGREGACIONES
@@ -97,7 +97,7 @@ CREATE INDEX IF NOT EXISTS idx_search_analytics_date
 ON search_analytics(created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_agency_metrics_daily_agency_date
-ON agency_metrics_daily(agency_id, date DESC);
+ON agency_metrics_daily(agency_id, metric_date DESC);
 
 -- CREAR POLÍTICAS RLS (Row Level Security)
 

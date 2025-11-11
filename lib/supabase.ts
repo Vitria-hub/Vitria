@@ -87,7 +87,7 @@ export type Database = {
         Row: {
           id: string;
           agency_id: string;
-          date: string;
+          metric_date: string;
           views: number;
           unique_visitors: number;
           phone_clicks: number;
