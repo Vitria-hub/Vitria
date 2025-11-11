@@ -1,5 +1,5 @@
-import { router, publicProcedure } from '../trpc';
-import { agencyListSchema, agencyBySlugSchema } from '@/lib/validators';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
+import { agencyListSchema, agencyBySlugSchema, createAgencySchema } from '@/lib/validators';
 import { db } from '../db';
 
 export const agencyRouter = router({
@@ -75,6 +75,66 @@ export const agencyRouter = router({
         .from('agencies')
         .select('*')
         .eq('slug', input.slug)
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }),
+
+  myAgency: protectedProcedure
+    .query(async ({ ctx }) => {
+      const { data: userData } = await db
+        .from('users')
+        .select('id')
+        .eq('auth_id', ctx.userId)
+        .single();
+
+      if (!userData) return null;
+
+      const { data, error } = await db
+        .from('agencies')
+        .select('*')
+        .eq('owner_id', userData.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      return data || null;
+    }),
+
+  create: protectedProcedure
+    .input(createAgencySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { data: userData } = await db
+        .from('users')
+        .select('id')
+        .eq('auth_id', ctx.userId)
+        .single();
+
+      if (!userData) throw new Error('User not found');
+
+      const slug = input.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      const { data, error } = await db
+        .from('agencies')
+        .insert({
+          name: input.name,
+          slug,
+          description: input.description || null,
+          website: input.website || null,
+          email: input.email || null,
+          phone: input.phone || null,
+          location_city: input.city || null,
+          location_region: input.region || null,
+          owner_id: userData.id,
+        })
+        .select()
         .single();
 
       if (error) throw error;

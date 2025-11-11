@@ -40,3 +40,13 @@ export const contactFormSchema = z.object({
   message: z.string().min(10),
   agencyId: z.string().uuid(),
 });
+
+export const createAgencySchema = z.object({
+  name: z.string().min(2),
+  description: z.string().optional(),
+  website: z.string().url().optional().or(z.literal('')),
+  email: z.string().email().optional().or(z.literal('')),
+  phone: z.string().optional(),
+  city: z.string().optional(),
+  region: z.string().optional(),
+});

@@ -1,17 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import AgencyCard from '@/components/AgencyCard';
 import FilterBar from '@/components/FilterBar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function AgenciasPage() {
+  const searchParams = useSearchParams();
   const [filters, setFilters] = useState<any>({
     page: 1,
     limit: 12,
     sort: 'premium',
   });
+
+  useEffect(() => {
+    const searchQuery = searchParams.get('search');
+    if (searchQuery) {
+      setFilters((prev: any) => ({ ...prev, q: searchQuery }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = trpc.agency.list.useQuery(filters);
 
