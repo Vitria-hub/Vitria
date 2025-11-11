@@ -1,6 +1,25 @@
 # Overview
 
-This is a comprehensive agency directory platform built for the Chilean market, connecting marketing, branding, and advertising agencies with potential clients. The application features an advanced search and filtering system, review management, premium/sponsored listings, and integrated Stripe payments for subscription management. Built as a modern monorepo using Next.js 14 with the App Router, it leverages tRPC for type-safe APIs and Supabase for authentication and PostgreSQL database management.
+**Vitria** is a comprehensive agency directory platform built for the Chilean market, connecting marketing, branding, and advertising agencies with potential clients. The application features an advanced search and filtering system, review management, premium/sponsored listings, and integrated Stripe payments for subscription management. Built as a modern monorepo using Next.js 14 with the App Router, it leverages tRPC for type-safe APIs and Supabase for authentication and PostgreSQL database management.
+
+# Recent Changes (November 2025)
+
+**Branding Update**: Platform rebranded from "Agencias" to **Vitria**
+- Custom logo added to Navbar and Footer components
+- All metadata and site references updated
+- Logo file stored at `/public/vitria-logo.png`
+
+**Homepage Redesign**: Modern, user-focused design inspired by industry best practices
+- **Hero Section**: Enhanced gradient background with statistics (150+ agencies, 4.8★ rating), improved copy, and streamlined search/CTA layout
+- **Category Section**: Expanded from 4 to 8 specialized categories (Marketing Digital, Publicidad, Diseño y Branding, Contenido, Audiovisual, Desarrollo Web, Relaciones Públicas, Social Media) with icons, descriptions, and agency counts
+- **Testimonials**: New section featuring 3 user stories from Chilean entrepreneurs
+- **Dual CTAs**: Separate call-to-action cards for agencies and clients, each with branded gradients and listed benefits
+
+**Design Improvements**:
+- Modern card hover effects with smooth transitions
+- Better use of brand color palette throughout
+- Enhanced typography and spacing
+- Professional, polished appearance aligned with modern SaaS platforms
 
 # User Preferences
 
