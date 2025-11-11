@@ -4,6 +4,25 @@
 
 # Recent Changes (November 2025)
 
+**Homepage UX Improvements** (November 11, 2025):
+- **New Smart Search**: Changed from generic "search by name" to contextual service-based search
+  - "¿Qué servicio necesitas?" (8 service categories)
+  - "¿Dónde?" (regions across Chile)
+  - Similar to airline/booking platforms (destination + dates approach)
+  - Automatically applies filters when redirecting to /agencias
+- **Enhanced Premium Carousel**: Completely redesigned sponsored agency showcase
+  - Added logo display with fallback avatars
+  - Star ratings with review count (⭐⭐⭐⭐⭐ 4.8 - 24 reseñas)
+  - Service tags and location/team size badges
+  - "Verificada" badge for verified agencies
+  - Larger, more premium feel to increase perceived value for sponsors
+  - Better visual hierarchy and spacing
+- **Data Seeding**: Populated database with 30 realistic Chilean agencies
+  - Distributed across 8 categories (Marketing Digital, Publicidad, Diseño, etc.)
+  - 125 reviews, 24 portfolio items, 5 active sponsored slots
+  - Varied locations (Santiago, Valparaíso, Concepción, etc.)
+  - Mix of premium (8) and standard agencies
+
 **Production Deployment Configured** (November 11, 2025):
 - Deployment type: Autoscale (serverless, scales automatically)
 - Build command: `npm run build`
@@ -11,6 +30,7 @@
 - Environment variables configured in Supabase
 - Admin user created: contacto@scalelab.cl (role: admin)
 - Row Level Security (RLS) policies configured for users table
+- Admin button removed from navbar; auto-redirect on login instead
 - Ready to publish to production
 
 **Admin Panel Implementation** (November 11, 2025):
