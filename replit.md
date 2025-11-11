@@ -4,6 +4,21 @@
 
 # Recent Changes
 
+## November 11, 2025 - Agency Owner Dashboard
+
+Implemented comprehensive analytics dashboard for individual agency owners to view their own performance metrics:
+
+- **New Endpoint**: Created `getMyAgencyAnalytics` tRPC endpoint that verifies agency ownership and returns scoped metrics
+- **Analytics Dashboard**: Built `/mi-agencia/analytics` page with interactive visualizations showing:
+  - Total views, contacts breakdown (phone, email, website, form)
+  - Conversion rate and CTR from search results
+  - Daily trend charts using recharts
+  - Top 5 keywords driving traffic to the agency profile
+  - Comparison with platform averages to demonstrate performance
+- **Navigation**: Added "Mis Métricas" link in navbar for users with `role='agency'`
+- **Time Filters**: Period selection (7, 30, 90 days) to analyze trends over different timeframes
+- **Bug Fix**: Corrected keyword aggregation to include both free-text queries and category-only searches
+
 ## November 11, 2025 - Frontend Tracking Implementation
 
 Integrated comprehensive analytics tracking throughout the user-facing pages:
