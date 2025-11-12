@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { checkRateLimit, getClientIp } from '../middleware/rate-limit';
 
 export const analyticsRouter = router({
   trackView: publicProcedure
@@ -10,7 +11,10 @@ export const analyticsRouter = router({
       sessionId: z.string().optional(),
       userAgent: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const clientIp = getClientIp(ctx.req);
+      checkRateLimit(`trackView:${clientIp}`, 30);
+      
       const { agencyId, sessionId, userAgent } = input;
       
       const { data: agencyExists } = await supabaseAdmin
@@ -45,7 +49,10 @@ export const analyticsRouter = router({
       contactType: z.enum(['phone_click', 'email_click', 'website_click', 'form_submit']),
       sessionId: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const clientIp = getClientIp(ctx.req);
+      checkRateLimit(`trackContact:${clientIp}`, 15);
+      
       const { agencyId, contactType, sessionId } = input;
       
       const { data: agencyExists } = await supabaseAdmin
@@ -83,7 +90,10 @@ export const analyticsRouter = router({
       clickedPosition: z.number().min(0).max(100).optional(),
       sessionId: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const clientIp = getClientIp(ctx.req);
+      checkRateLimit(`trackSearch:${clientIp}`, 25);
+      
       const {
         searchQuery,
         serviceCategory,

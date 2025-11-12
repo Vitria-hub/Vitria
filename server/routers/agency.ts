@@ -1,4 +1,5 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
 import { agencyListSchema, agencyBySlugSchema, createAgencySchema } from '@/lib/validators';
 import { db } from '../db';
 
@@ -125,30 +126,61 @@ export const agencyRouter = router({
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
 
-      const { data, error } = await db
+      const { data: existingSlug } = await db
         .from('agencies')
-        .insert({
-          name: input.name,
-          slug,
-          description: input.description || null,
-          website: input.website || null,
-          email: input.email || null,
-          phone: input.phone || null,
-          location_city: input.city || null,
-          location_region: input.region || null,
-          services: input.services || [],
-          categories: input.categories || [],
-          specialties: input.specialties || [],
-          employees_min: input.employeesMin || null,
-          employees_max: input.employeesMax || null,
-          price_range: input.priceRange || null,
-          owner_id: userData.id,
-        })
-        .select()
-        .single();
+        .select('slug')
+        .eq('slug', slug)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (existingSlug) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `Ya existe una agencia con un nombre similar. Por favor usa un nombre diferente para tu agencia.`,
+        });
+      }
 
-      return data;
+      try {
+        const { data, error } = await db
+          .from('agencies')
+          .insert({
+            name: input.name,
+            slug,
+            description: input.description || null,
+            website: input.website || null,
+            email: input.email || null,
+            phone: input.phone || null,
+            location_city: input.city || null,
+            location_region: input.region || null,
+            services: input.services || [],
+            categories: input.categories || [],
+            specialties: input.specialties || [],
+            employees_min: input.employeesMin || null,
+            employees_max: input.employeesMax || null,
+            price_range: input.priceRange || null,
+            owner_id: userData.id,
+          })
+          .select()
+          .single();
+
+        if (error) {
+          if (error.code === '23505') {
+            throw new TRPCError({
+              code: 'CONFLICT',
+              message: `Ya existe una agencia con este nombre. Por favor elige un nombre diferente.`,
+            });
+          }
+          throw error;
+        }
+
+        return data;
+      } catch (error: any) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Error al crear la agencia: ${error.message}`,
+        });
+      }
     }),
 });

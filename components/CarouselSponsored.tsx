@@ -1,14 +1,17 @@
 'use client';
 
 import { trpc } from '@/lib/trpc';
+import type { RouterOutputs } from '@/server/routers/_app';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Star, MapPin, Users, CheckCircle, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
+type SponsoredEntry = RouterOutputs['sponsor']['listHome'][number];
+
 export default function CarouselSponsored() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data: sponsored, isLoading } = trpc.sponsor.listHome.useQuery();
+  const { data: sponsored = [], isLoading } = trpc.sponsor.listHome.useQuery();
 
   if (isLoading) {
     return (
