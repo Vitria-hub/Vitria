@@ -49,6 +49,28 @@ Implementado el sistema base para registro de clientes y tracking de contactos c
 - Exportación de leads a CSV
 - Políticas de privacidad y términos formales
 
+## November 12, 2025 - Price Range Filter & Display
+
+**Price Range Filtering**:
+- Added price filter dropdown in FilterBar with options: "Cualquier precio", "$", "$$", "$$$"
+- Backend correctly handles empty selection by converting `""` to `undefined` to prevent Zod validation errors
+- Filter applies equality check on `price_range` field only when value is truthy
+- "Cualquier precio" option shows ALL agencies without price filtering
+
+**Price Range Display in Search Results**:
+- Extended AgencyCard interface to include `price_range: string | null`
+- Price badge shown alongside location in tertiary metadata row
+- Visual design: DollarSign icon with yellow accent badge (`bg-accent/10 text-accent`)
+- Normalizes display by removing spaces (e.g., "$ $" → "$$") for consistent formatting
+- Responsive layout with `flex-wrap` for mobile screens
+- Conditionally hidden for agencies without price data (legacy compatibility)
+
+**Technical Implementation**:
+- `components/AgencyCard.tsx`: Added price_range field and badge rendering
+- `app/agencias/page.tsx`: Filter processing converts empty strings to undefined
+- `server/routers/agency.ts`: Price filtering with falsy check (`if (priceRange)`)
+- Schema validation: `createAgencySchema` requires price_range on agency creation
+
 ## November 12, 2025 - Category Migration Script & Loading States
 
 **Migration Script for Production**:
