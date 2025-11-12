@@ -59,6 +59,9 @@ export default function CarouselSponsored() {
   const employeeRange = agency.employees_min && agency.employees_max 
     ? `${agency.employees_min}-${agency.employees_max} empleados`
     : null;
+  const logoUrl = typeof agency.logo_url === 'string' && agency.logo_url.length > 0 
+    ? agency.logo_url 
+    : null;
 
   return (
     <div className="relative bg-gradient-to-br from-primary via-secondary to-primary rounded-2xl overflow-hidden shadow-2xl">
@@ -86,12 +89,14 @@ export default function CarouselSponsored() {
 
         <div className="grid md:grid-cols-[auto_1fr] gap-6 md:gap-8 items-start">
           <div className="flex-shrink-0 mx-auto md:mx-0">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-xl p-3 sm:p-4 shadow-xl flex items-center justify-center">
-              {agency.logo_url ? (
-                <img 
-                  src={agency.logo_url} 
+            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-xl p-3 sm:p-4 shadow-xl flex items-center justify-center relative">
+              {logoUrl ? (
+                <Image 
+                  src={logoUrl} 
                   alt={agency.name || 'Logo'}
-                  className="w-full h-full object-contain"
+                  fill
+                  sizes="(max-width: 768px) 96px, 128px"
+                  className="object-contain p-2"
                 />
               ) : (
                 <div className="w-full h-full bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold text-2xl sm:text-3xl">
