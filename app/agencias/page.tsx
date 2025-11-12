@@ -37,7 +37,7 @@ function AgenciasContent() {
     }
   }, [searchParams]);
 
-  const { data, isLoading } = trpc.agency.list.useQuery(filters);
+  const { data, isLoading, isFetching } = trpc.agency.list.useQuery(filters);
 
   useEffect(() => {
     if (data !== undefined) {
@@ -71,7 +71,7 @@ function AgenciasContent() {
 
       <FilterBar onFilterChange={handleFilterChange} currentFilters={filters} />
 
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <div className="py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
