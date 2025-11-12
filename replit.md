@@ -1,122 +1,6 @@
 # Overview
 
-**Vitria** is an agency directory platform designed for the Chilean market, connecting marketing, branding, and advertising agencies with clients. It features advanced search, review management, premium listings, integrated payments, comprehensive analytics system, and SEO-optimized blog content. The platform is built as a Next.js 14 monorepo using the App Router, tRPC for type-safe APIs, and Supabase for authentication and PostgreSQL database management. Vitria aims to be the leading directory for agencies in Chile, offering a modern, user-friendly experience for both agencies and clients.
-
-**Status**: ✅ Ready for publication with enhanced homepage, complete blog system, and SEO optimization
-
-# Recent Changes
-
-## November 12, 2025 - Community-Focused Messaging & Brand Integration
-
-Transformed the entire homepage to reflect Vitria's authentic mission as a community-first platform for Chilean agencies:
-
-**Hero Section Simplification**:
-- **Clear Value Proposition**: "Encuentra la agencia que necesitas en Chile" - inclusive and direct
-- **Simple Subtitle**: Removed confusing messaging, kept it straightforward about connecting businesses with specialized agencies
-- **Visual Enhancement**: Added 2 subtle Vitria isotipos (opacity 5%) in hero background corners
-- **Streamlined Layout**: Removed redundant statistics from hero, keeping focus on the search tool
-
-**New Mission Section**:
-- **"Creamos Comunidad, No Solo Listados"**: Added dedicated section between testimonials and CTAs explaining Vitria's purpose
-- **Subtle Messaging**: Focuses on the "why" (bridging gap between agencies and clients) without explicit mentions of monetization or founders' personal story
-- **Community Philosophy**: Emphasizes mutual growth - agencies find opportunities, clients make informed decisions, ecosystem strengthens
-- **Visual Design**: Soft gradient background with isotipos, Heart icon, and centered text for emotional connection
-
-**Enhanced CTAs**:
-- **Agency CTA**: Changed from "gratuito" focus to "forma parte de nuestra comunidad" emphasizing belonging
-- **Client CTA**: Updated to highlight informed decision-making with real data
-- **Unified Tone**: Both CTAs now reflect community-first approach without confusing pricing messages
-
-**Platform Philosophy**:
-- Marketplace listing is free (agencies pay nothing to be listed, clients pay nothing to browse)
-- Clients pay for agency services (normal business transaction)
-- No monetization in initial phase - focus on organic community growth
-- Founders are agency owners solving their own pain point: connecting agencies with qualified leads and helping clients find trustworthy partners
-
-## November 12, 2025 - Homepage Enhancement & SEO Blog System
-
-Implemented major visual improvements to homepage and created complete blog system optimized for Google and AI search engines:
-
-**Homepage Enhancements (Brandbook-aligned)**:
-- **Statistics Section**: Added impactful metrics showcase (500+ agencies, 10K projects, 95% satisfaction, 4.8/5 rating) with colorful icons
-- **"Cómo Funciona" Section**: Visual 3-step process with large icons, numbered badges, and clear CTAs
-- **Enhanced Testimonials**: Replaced initials with professional headshot photos for authenticity
-- **Brandbook Colors**: Utilized full palette (mint, lilac, secondary, accent) from Vitria brandbook throughout new sections
-
-**Complete Blog System**:
-- **Blog Infrastructure**: Created `/blog` listing page and `/blog/[slug]` dynamic routes with TypeScript data management
-- **SEO Optimization**: Full metadata implementation (OpenGraph, Twitter Cards, JSON-LD schema for articles)
-- **3 Comprehensive Posts** (8-10 min read each):
-  1. "Cómo Elegir una Agencia de Marketing en Chile: Guía Completa 2025" - Complete selection guide with 8 key factors
-  2. "¿Cuánto Cuesta Contratar una Agencia de Branding en Chile? [Precios 2025]" - Detailed pricing breakdown by service type
-  3. "10 Preguntas Clave Antes de Contratar una Agencia Digital en Chile" - Essential checklist for clients
-- **AI-Optimized Content**: Structured with H2/H3 hierarchy, Q&A format, factual data, local references (Chile-specific prices, examples, regulations)
-- **Rich Content**: Each post includes tables, checklists, real examples, price ranges in CLP, and actionable advice
-- **Markdown Rendering**: Implemented react-markdown with remark-gfm for proper content formatting
-
-**Technical Improvements**:
-- Added professional stock images for testimonials and blog posts
-- Configured Tailwind prose classes for optimal blog typography
-- Ensured mobile responsiveness across all new sections
-- Integrated Vitria isotipo as decorative elements throughout homepage (statistics section, "Cómo funciona", CTAs)
-
-## November 11, 2025 - Performance Optimization & Loading States
-
-Implemented comprehensive performance improvements and loading indicators to enhance user experience:
-
-- **Loading States**: Added skeleton loader to CarouselSponsored showing animated placeholder while data loads
-- **React Query Caching**: Configured optimized cache settings (staleTime: 5min, gcTime: 10min) to reduce unnecessary API requests by ~90%
-- **Database Indexing**: Created composite index on `sponsored_slots(starts_at, ends_at, position)` for faster carousel queries
-- **Reusable Components**: Built LoadingSpinner component for consistent loading UI across the platform
-- **Performance Impact**: Second-page loads now ~15x faster (3500ms → 235ms) thanks to intelligent caching
-
-## November 11, 2025 - Mobile Responsiveness & Deployment Fix
-
-Implemented comprehensive mobile responsiveness improvements and resolved deployment issues:
-
-- **Mobile Navigation**: Added functional mobile menu to Navbar with toggle button (hamburger/close icon), full navigation links, and role-specific options
-- **Responsive Carousel**: Enhanced CarouselSponsored with mobile-optimized layout:
-  - Reduced padding and font sizes on mobile devices
-  - Repositioned navigation arrows to bottom on mobile (prevents content obstruction)
-  - Made all text, icons, and buttons responsive with Tailwind breakpoints
-- **Deployment Fix**: Removed `postbuild` script from package.json that was causing deployment to hang at "Collecting page data" step
-- **User Experience**: Navigation and carousel now work seamlessly across all device sizes (mobile, tablet, desktop)
-
-## November 11, 2025 - Agency Owner Dashboard
-
-Implemented comprehensive analytics dashboard for individual agency owners to view their own performance metrics:
-
-- **New Endpoint**: Created `getMyAgencyAnalytics` tRPC endpoint that verifies agency ownership and returns scoped metrics
-- **Analytics Dashboard**: Built `/mi-agencia/analytics` page with interactive visualizations showing:
-  - Total views, contacts breakdown (phone, email, website, form)
-  - Conversion rate and CTR from search results
-  - Daily trend charts using recharts
-  - Top 5 keywords driving traffic to the agency profile
-  - Comparison with platform averages to demonstrate performance
-- **Navigation**: Added "Mis Métricas" link in navbar for users with `role='agency'`
-- **Time Filters**: Period selection (7, 30, 90 days) to analyze trends over different timeframes
-- **Bug Fix**: Corrected keyword aggregation to include both free-text queries and category-only searches
-
-## November 11, 2025 - Frontend Tracking Implementation
-
-Integrated comprehensive analytics tracking throughout the user-facing pages:
-
-- **Agency Profile Tracking**: Automatic page view tracking for each agency profile visited, with multi-agency navigation support
-- **Contact Button Tracking**: Click tracking for all contact methods (phone, email, website, contact form) to measure engagement
-- **Search Analytics**: Complete search tracking including zero-result searches, capturing query terms, filters, result counts, and agencies shown
-- **Smart Deduplication**: Implemented ref-based tracking guards to prevent duplicate events while allowing proper multi-page tracking
-- **Bug Fixes**: Corrected `useTrackPageView` hook to track each different agency (stores lastTrackedId instead of single boolean flag)
-
-## November 11, 2025 - Analytics System Implementation
-
-Implemented complete analytics infrastructure to track user interactions and demonstrate value to premium agencies:
-
-- **Backend Analytics Router**: Created tRPC endpoints for tracking views, contacts, and searches with secure service role authentication
-- **Admin Dashboard**: Enhanced with real-time KPIs showing total searches, contacts generated, and growth metrics
-- **Analytics Page**: Built dedicated `/admin/analytics` page with interactive charts (recharts), top 10 agency ranking, CSV export, and period filters
-- **Tracking System**: Custom React hook (`useTracking`) for automatic event logging across the platform
-- **Database Optimization**: Created SQL functions for aggregated queries and performance indexes
-- **Security**: Implemented strict validation, UUID checks, and admin-only access controls
+Vitria is an agency directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with clients. It offers advanced search, review management, premium listings, integrated payments, comprehensive analytics, and SEO-optimized blog content. Built with a Next.js 14 monorepo using the App Router, tRPC for type-safe APIs, and Supabase for authentication and PostgreSQL, Vitria aims to be the leading agency directory in Chile, providing a modern, user-friendly experience for both agencies and clients. The platform's core vision is to build a community, not just a listing service, by bridging the gap between agencies and clients in Chile, facilitating mutual growth, and strengthening the local marketing ecosystem.
 
 # User Preferences
 
@@ -126,36 +10,42 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-The frontend is built with Next.js 14 using the App Router, combining server and client components. It employs an Atomic Design pattern with reusable, type-safe components managed by `class-variance-authority` and styled using TailwindCSS. A custom design system with branded colors (primary: #1B5568, accent: #F5D35E) ensures consistent UI. State management and data fetching are handled via tRPC React Query hooks, providing automatic caching and invalidation.
+The frontend uses Next.js 14 with the App Router, combining server and client components. It follows an Atomic Design pattern with reusable, type-safe components styled using TailwindCSS and `class-variance-authority`. A custom design system with brand colors (primary: #1B5568, accent: #F5D35E) ensures UI consistency. tRPC React Query hooks manage state and data fetching, providing caching and invalidation. The UI features a simplified category system for agency search, a community-focused homepage with clear CTAs, and a comprehensive blog system with SEO optimization. Mobile responsiveness is implemented across all components, including navigation and carousels.
 
 ## Backend Architecture
 
-The backend leverages tRPC for a type-safe RPC-style API, organizing route handlers by domain (e.g., agency, review) with Zod for input validation. A single API endpoint (`/api/trpc/[trpc]/route.ts`) processes all requests. Data access directly uses the Supabase client with a query builder pattern. Business logic includes advanced agency filtering, a review moderation system, metrics tracking, and managing sponsored content.
+The backend utilizes tRPC for a type-safe RPC-style API, with route handlers organized by domain and input validation via Zod. A single API endpoint processes all requests. Data access is managed directly through the Supabase client using a query builder. Business logic encompasses advanced agency filtering (supporting both new category and legacy service parameters), a review moderation system, comprehensive metrics tracking for agencies, and sponsored content management. Analytics endpoints include secure tracking for views, contacts, and searches, with admin-only access for KPIs and agency performance ranking.
 
 ## Database Design
 
-Supabase (PostgreSQL) is the chosen database, featuring tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, `sponsored_slots`, and `subscriptions`. UUID primary keys and foreign key relationships are used. Key tables like `agencies` store owner relationships, service categories, and rating information, while `agency_metrics_daily` tracks time-series data.
+Supabase (PostgreSQL) serves as the database, featuring tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, `sponsored_slots`, and `subscriptions`. It uses UUID primary keys and foreign key relationships. Key tables store owner relationships, service categories, and rating information, while `agency_metrics_daily` tracks time-series data. Database indexing is optimized for performance, especially for carousel and analytics queries.
 
 ## Authentication System
 
-Supabase Auth provides email/password authentication and manages user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding flow allows users to select roles, and agency owners can create and manage their profiles securely.
+Supabase Auth handles email/password authentication and user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding process allows role selection, and agency owners can securely manage their profiles.
 
 ## SEO Implementation
 
-SEO is managed using the `next-seo` package for global and page-specific metadata, and `next-sitemap` for generating `sitemap.xml` and `robots.txt` post-build.
+SEO is managed using the `next-seo` package for global and page-specific metadata. `next-sitemap` generates `sitemap.xml` and `robots.txt` post-build. Blog content is structured with H2/H3, Q&A formats, and rich media for AI and search engine optimization.
+
+## Analytics System
+
+A comprehensive analytics infrastructure tracks user interactions, including agency profile views, contact button clicks, and detailed search analytics (queries, filters, results, zero-result searches). Frontend tracking uses custom React hooks with smart deduplication. The backend provides tRPC endpoints for tracking with service role authentication, and an admin dashboard displays real-time KPIs, top agency rankings, and allows data export with period filters. Agency owners have a dedicated dashboard to view their specific performance metrics, including views, contacts, conversion rates, and top keywords.
 
 # External Dependencies
 
 ## Core Infrastructure
 
-- **Supabase**: Provides PostgreSQL database, authentication services, and file storage for images.
-- **Stripe**: Handles payment processing for subscriptions and manages webhooks (currently disabled but integrated).
+- **Supabase**: PostgreSQL database, authentication, and file storage.
+- **Stripe**: Payment processing and webhooks (integrated, but currently disabled).
 
 ## Frontend Libraries
 
 - **lucide-react**: Icon library.
-- **class-variance-authority, clsx, tailwind-merge**: For UI component styling and class composition.
-- **@tanstack/react-query, @trpc/client, @trpc/react-query, @trpc/next**: For type-safe API communication and data management.
+- **class-variance-authority, clsx, tailwind-merge**: UI styling and class composition.
+- **@tanstack/react-query, @trpc/client, @trpc/react-query, @trpc/next**: Type-safe API communication and data management.
+- **recharts**: Charting library for analytics visualizations.
+- **react-markdown, remark-gfm**: Markdown rendering for blog content.
 
 ## Backend Libraries
 
@@ -165,7 +55,7 @@ SEO is managed using the `next-seo` package for global and page-specific metadat
 
 ## Development Tools
 
-- **TypeScript**: For type safety.
-- **ESLint, Prettier**: For code quality and formatting.
-- **PostCSS, Autoprefixer**: For CSS processing.
-- **ts-node, next-sitemap**: For development utilities and build processes.
+- **TypeScript**: Type safety.
+- **ESLint, Prettier**: Code quality and formatting.
+- **PostCSS, Autoprefixer**: CSS processing.
+- **ts-node, next-sitemap**: Development utilities and build processes.
