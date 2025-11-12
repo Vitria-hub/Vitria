@@ -130,6 +130,29 @@ export const adminRouter = router({
       return data;
     }),
 
+  cleanExpiredPremium: adminProcedure
+    .mutation(async () => {
+      const now = new Date().toISOString();
+      
+      const { data, error } = await db
+        .from('agencies')
+        .update({
+          is_premium: false,
+          updated_at: now,
+        })
+        .eq('is_premium', true)
+        .lt('premium_until', now)
+        .select();
+
+      if (error) throw error;
+
+      return {
+        success: true,
+        expiredCount: data?.length || 0,
+        expiredAgencies: data || [],
+      };
+    }),
+
   listReviews: adminProcedure
     .input(z.object({
       page: z.number().default(1),
