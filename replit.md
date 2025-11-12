@@ -26,7 +26,9 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 
 **Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation (password confirmation, minimum 6 characters). Both flows redirect to respective onboarding pages after account creation:
 - Client registration → `/auth/registro/cliente/perfil` (business profile setup)
-- Agency registration → `/dashboard/crear-agencia` (3-step agency profile creation)
+- Agency registration → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
+
+**Agency Profile Creation:** The 3-step agency creation wizard includes immediate logo upload functionality in Step 1. Agencies can upload their logo (JPG, PNG, WebP, max 5MB) during profile creation, with real-time preview and validation. Logos are stored in Supabase Storage (`agency-logos` bucket) and automatically linked to the agency profile. The upload flow uses functional state updates to preserve concurrent form edits during async operations.
 
 **Password Recovery Flow:** Complete password reset functionality allows users to recover forgotten passwords via email. Users request a recovery link at `/auth/recuperar-contrasena`, receive a time-limited token via email, and update their password at `/auth/actualizar-contrasena`. The flow includes token validation, password strength requirements (min 6 chars), and automatic session termination post-update. Server-side middleware protects admin (`/admin`) and agency (`/mi-agencia`) routes with role-based access control.
 
@@ -64,6 +66,10 @@ Future integration will automate premium subscription management via Stripe, han
 ## Core Infrastructure
 
 - **Supabase**: PostgreSQL database, authentication, and file storage.
+  - **Storage Setup Required**: Create `agency-logos` bucket in Supabase Storage with public access policies:
+    - Bucket: `agency-logos` (public)
+    - Policy: Allow public read access for all users
+    - Policy: Allow authenticated users to upload files
 - **Stripe**: Payment processing and webhooks (integrated, but currently disabled).
 
 ## Frontend Libraries
