@@ -64,6 +64,18 @@ export default function CarouselSponsored() {
     <div className="relative bg-gradient-to-br from-primary via-secondary to-primary rounded-2xl overflow-hidden shadow-2xl">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTEyIDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTEyIDQyYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTM2IDQyYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
       
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-6 sm:-top-10 right-6 sm:right-12 w-20 sm:w-28 md:w-32 h-20 sm:h-28 md:h-32 opacity-15">
+          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+        </div>
+        <div className="absolute bottom-8 sm:bottom-10 left-6 sm:left-12 w-16 sm:w-24 h-16 sm:h-24 opacity-10">
+          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+        </div>
+        <div className="absolute top-1/2 -translate-y-1/2 sm:-translate-y-1/3 left-1/2 sm:left-auto sm:right-24 w-24 sm:w-32 h-24 sm:h-32 opacity-10 rotate-12 hidden sm:block">
+          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+        </div>
+      </div>
+      
       <div className="relative px-4 sm:px-8 md:px-16 py-8 md:py-12 pb-16 md:pb-12">
         <div className="flex items-center gap-2 sm:gap-3 mb-4 md:mb-6">
           <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
