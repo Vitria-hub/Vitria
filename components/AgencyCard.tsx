@@ -12,6 +12,7 @@ interface Agency {
   location_city: string | null;
   location_region: string | null;
   services: string[];
+  specialties?: string[];
   avg_rating: number;
   reviews_count: number;
   is_premium: boolean;
@@ -84,6 +85,27 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
               </span>
             )}
           </div>
+
+          {agency.specialties && agency.specialties.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <p className="text-xs font-semibold text-dark/60 mb-2">Especialidades:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {agency.specialties.slice(0, 4).map((specialty) => (
+                  <span
+                    key={specialty}
+                    className="px-2 py-1 text-xs rounded-md bg-secondary/10 text-secondary font-medium border border-secondary/20"
+                  >
+                    {specialty}
+                  </span>
+                ))}
+                {agency.specialties.length > 4 && (
+                  <span className="px-2 py-1 text-xs rounded-md bg-secondary/10 text-secondary font-medium border border-secondary/20">
+                    +{agency.specialties.length - 4}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Link>
