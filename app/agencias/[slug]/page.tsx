@@ -19,6 +19,7 @@ export default function AgencyDetailPage() {
 
   const { data: agencyData, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
   const agency = agencyData as any;
+  const specialties = agency?.specialties ?? [];
   
   const { data: reviews } = trpc.review.listByAgency.useQuery(
     { agencyId: agency?.id || '', status: 'approved' as const },
@@ -197,6 +198,25 @@ export default function AgencyDetailPage() {
               ))}
             </div>
           </section>
+
+          {specialties.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-bold text-primary mb-4">Especialidades Técnicas</h2>
+              <p className="text-dark/60 text-sm mb-4">
+                Plataformas y herramientas que domina esta agencia
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {specialties.map((specialty: string) => (
+                  <span
+                    key={specialty}
+                    className="px-4 py-2 bg-secondary/10 text-secondary border border-secondary/20 rounded-lg font-semibold"
+                  >
+                    {specialty}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section>
             <h2 className="text-2xl font-bold text-primary mb-4">Reseñas</h2>

@@ -21,6 +21,8 @@ interface Agency {
 }
 
 export default function AgencyCard({ agency }: { agency: Agency }) {
+  const specialties = agency.specialties ?? [];
+  
   return (
     <Link
       href={`/agencias/${agency.slug}`}
@@ -86,11 +88,11 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
             )}
           </div>
 
-          {agency.specialties && agency.specialties.length > 0 && (
+          {specialties.length > 0 && (
             <div className="mt-3 pt-3 border-t border-gray-200">
               <p className="text-xs font-semibold text-dark/60 mb-2">Especialidades:</p>
               <div className="flex flex-wrap gap-1.5">
-                {agency.specialties.slice(0, 4).map((specialty) => (
+                {specialties.slice(0, 4).map((specialty) => (
                   <span
                     key={specialty}
                     className="px-2 py-1 text-xs rounded-md bg-secondary/10 text-secondary font-medium border border-secondary/20"
@@ -98,9 +100,9 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
                     {specialty}
                   </span>
                 ))}
-                {agency.specialties.length > 4 && (
+                {specialties.length > 4 && (
                   <span className="px-2 py-1 text-xs rounded-md bg-secondary/10 text-secondary font-medium border border-secondary/20">
-                    +{agency.specialties.length - 4}
+                    +{specialties.length - 4}
                   </span>
                 )}
               </div>
