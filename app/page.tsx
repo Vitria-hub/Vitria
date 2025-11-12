@@ -134,8 +134,15 @@ export default function Home() {
           <CarouselSponsored />
         </section>
 
-        <section className="mb-24 bg-gradient-to-br from-mint/10 via-lilac/10 to-secondary/10 rounded-3xl p-12">
-          <div className="text-center mb-12">
+        <section className="mb-24 bg-gradient-to-br from-mint/10 via-lilac/10 to-secondary/10 rounded-3xl p-12 relative overflow-hidden">
+          <div className="absolute top-10 right-10 w-32 h-32 opacity-10">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+          <div className="absolute bottom-10 left-10 w-24 h-24 opacity-10">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+
+          <div className="relative z-10 text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
               El Marketplace de Agencias más Grande de Chile
             </h2>
@@ -144,7 +151,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -162,8 +169,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mb-24">
-          <div className="text-center mb-12">
+        <section className="mb-24 relative">
+          <div className="absolute -top-20 left-1/4 w-20 h-20 opacity-5 hidden lg:block">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+          <div className="absolute -bottom-20 right-1/4 w-20 h-20 opacity-5 hidden lg:block">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+
+          <div className="text-center mb-12 relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
               ¿Cómo Funciona Vitria?
             </h2>
@@ -172,7 +186,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative z-10">
             {howItWorks.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -196,7 +210,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="text-center">
+          <div className="text-center relative z-10">
             <Link
               href="/agencias"
               className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-dark transition shadow-lg text-lg"
@@ -287,6 +301,10 @@ export default function Home() {
 
         <section className="grid md:grid-cols-2 gap-8 mb-20">
           <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-40 h-40 opacity-10">
+              <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+            </div>
             <div className="relative z-10">
               <h2 className="text-3xl font-bold mb-4">¿Tienes una Agencia?</h2>
               <p className="text-lg mb-6 opacity-95">
@@ -317,10 +335,13 @@ export default function Home() {
                 Registrar mi Agencia
               </Link>
             </div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
           </div>
 
           <div className="bg-gradient-to-br from-lilac to-mint text-dark rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/20 rounded-full -ml-32 -mb-32"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 opacity-10">
+              <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+            </div>
             <div className="relative z-10">
               <h2 className="text-3xl font-bold mb-4 text-primary">¿Buscas una Agencia?</h2>
               <p className="text-lg mb-6 text-dark/80">
@@ -351,7 +372,6 @@ export default function Home() {
                 Explorar Agencias
               </Link>
             </div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/20 rounded-full -ml-32 -mb-32"></div>
           </div>
         </section>
       </div>

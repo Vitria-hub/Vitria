@@ -31,6 +31,7 @@ Implemented major visual improvements to homepage and created complete blog syst
 - Added professional stock images for testimonials and blog posts
 - Configured Tailwind prose classes for optimal blog typography
 - Ensured mobile responsiveness across all new sections
+- Integrated Vitria isotipo as decorative elements throughout homepage (statistics section, "Cómo funciona", CTAs)
 
 ## November 11, 2025 - Performance Optimization & Loading States
 
