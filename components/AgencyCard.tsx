@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import RatingStars from './RatingStars';
 import Badge from './Badge';
-import { MapPin } from 'lucide-react';
+import { MapPin, DollarSign } from 'lucide-react';
 
 interface Agency {
   id: string;
@@ -16,6 +16,7 @@ interface Agency {
   reviews_count: number;
   is_premium: boolean;
   is_verified: boolean;
+  price_range: string | null;
 }
 
 export default function AgencyCard({ agency }: { agency: Agency }) {
@@ -49,11 +50,19 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
             <span className="text-sm text-dark/60">({agency.reviews_count} reseñas)</span>
           </div>
 
-          <div className="flex items-center gap-2 mt-3 text-sm text-dark/70">
-            <MapPin className="w-4 h-4" />
-            <span>
-              {agency.location_city}, {agency.location_region}
-            </span>
+          <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-dark/70">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              <span>
+                {agency.location_city}, {agency.location_region}
+              </span>
+            </div>
+            {agency.price_range && (
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-accent/10 text-accent rounded-md font-semibold">
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>{agency.price_range.replace(/\s/g, '')}</span>
+              </div>
+            )}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">

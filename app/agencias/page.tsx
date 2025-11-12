@@ -57,7 +57,11 @@ function AgenciasContent() {
   }, [data, filters, trackSearch]);
 
   const handleFilterChange = (newFilters: any) => {
-    setFilters((prev: any) => ({ ...prev, ...newFilters, page: 1 }));
+    const processedFilters = { ...newFilters };
+    if (processedFilters.priceRange === '') {
+      processedFilters.priceRange = undefined;
+    }
+    setFilters((prev: any) => ({ ...prev, ...processedFilters, page: 1 }));
   };
 
   const handlePageChange = (newPage: number) => {
