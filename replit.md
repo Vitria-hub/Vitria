@@ -24,6 +24,8 @@ Supabase (PostgreSQL) is the database, featuring tables for `users`, `agencies`,
 
 Supabase Auth manages email/password and Google OAuth authentication, along with user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding process includes role selection, and agency owners can securely manage their profiles. OAuth callbacks handle role assignment and redirection to onboarding flows for clients and agencies.
 
+**Password Recovery Flow:** Complete password reset functionality allows users to recover forgotten passwords via email. Users request a recovery link at `/auth/recuperar-contrasena`, receive a time-limited token via email, and update their password at `/auth/actualizar-contrasena`. The flow includes token validation, password strength requirements (min 6 chars), and automatic session termination post-update. Server-side middleware protects admin (`/admin`) and agency (`/mi-agencia`) routes with role-based access control.
+
 ## SEO Implementation
 
 SEO is managed using the `next-seo` package for global and page-specific metadata. `next-sitemap` generates `sitemap.xml` and `robots.txt` post-build. Blog content is structured with H2/H3, Q&A formats, and rich media for optimal indexing.
