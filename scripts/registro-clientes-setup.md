@@ -1,6 +1,6 @@
 # Sistema de Registro y Tracking de Clientes
 
-## ✅ Implementado (MVP)
+## ✅ Implementado Completamente
 
 ### 1. Nuevas Tablas en Base de Datos
 
@@ -68,75 +68,200 @@
 - contactMethod: enum ['email', 'phone', 'website', 'form']
 - message: string optional
 
-## 📋 Pendiente (Segunda Iteración)
+### 5. Sistema de Tracking de Contactos (✅ IMPLEMENTADO)
 
-### 1. Tracking de Contactos
-- [ ] Modificar botones de contacto para requerir autenticación
-- [ ] Crear modal de contacto que trackee en `agency_contacts`
-- [ ] Implementar endpoint `contacts.track` para guardar contactos
-- [ ] Mostrar mensaje al usuario anónimo: "Inicia sesión para contactar"
+**Endpoint tRPC** (`contact.create`):
+- Requiere autenticación (protectedProcedure)
+- Rate limiting: 1 contacto por agencia cada 24 horas
+- Guarda snapshot de datos del cliente (business_name, budget_range, desired_categories)
+- Validación con `trackAgencyContactSchema`
 
-### 2. Dashboard de Leads para Agencias
-- [ ] Crear `/mi-agencia/leads` mostrando clientes que contactaron
-- [ ] Mostrar: nombre negocio, presupuesto, categorías, método contacto, timestamp
-- [ ] Filtros por fecha, método de contacto
-- [ ] Exportar leads a CSV
+**Modal de Contacto** (`ContactAgencyModal.tsx`):
+- Requiere autenticación para contactar
+- Autocompleta datos del perfil del cliente
+- Permite seleccionar método de contacto preferido (email, teléfono, formulario, website)
+- Mensaje opcional personalizable
+- Manejo completo de estados:
+  * Usuario no autenticado → Redirige a login/registro
+  * Perfil incompleto → Redirige a completar perfil de cliente
+  * Éxito → Muestra confirmación con animación
+  * Error (rate limit, etc.) → Muestra mensaje de error claro
+- Previene spam con rate limiting de 24h
 
-### 3. Sistema de Reseñas Mejorado
-- [ ] Vincular reseñas a usuarios autenticados (user_id NOT NULL)
-- [ ] Mostrar nombre completo del autor en reseñas
-- [ ] Badge "Cliente Verificado" si tiene perfil completo
-- [ ] Requerir login para dejar reseñas
+**Integración en Perfil de Agencia**:
+- Botón "Contactar Agencia" abre el modal nuevo
+- Enlaces directos (email, teléfono, website) siguen funcionando libremente
+- Tracking automático al contactar
 
-### 4. Mejoras de UX
-- [ ] Onboarding post-registro para clientes (tour de la plataforma)
-- [ ] Dashboard para clientes (`/dashboard/cliente`)
-  - Agencias favoritas
-  - Historial de contactos
+### 6. Dashboard de Leads para Agencias (✅ IMPLEMENTADO)
+
+**Endpoint tRPC** (`contact.listForAgency`):
+- Requiere autenticación y ownership de la agencia
+- Paginación (20 leads por página)
+- JOIN con tabla users para obtener datos del cliente
+- Retorna: contactos, total, página actual, total de páginas
+
+**Página `/mi-agencia/leads`**:
+- Estadísticas destacadas:
+  * Total de leads recibidos
+  * Leads del mes actual
+  * Método de contacto preferido
+- Tabla de leads con:
+  * Nombre completo y email del cliente
+  * Nombre del negocio e Instagram
+  * Presupuesto ($, $$, $$$)
+  * Categorías de servicio que busca
+  * Método de contacto utilizado
+  * Mensaje personalizado (si existe)
+  * Fecha y hora del contacto
+- Paginación funcional
+- Empty state claro cuando no hay leads
+- Diseño responsive y consistente con el resto de la plataforma
+
+### 7. Sistema de Reseñas Mejorado (✅ IMPLEMENTADO)
+
+**Backend** (`server/routers/review.ts`):
+- Endpoint `create` ahora usa `protectedProcedure` (requiere login)
+- Guarda `user_id` del autor autenticado
+- Previene reseñas duplicadas (1 reseña por usuario por agencia)
+- Endpoint `listByAgency` hace JOIN con tabla `users` para obtener nombres
+
+**Frontend** (`ReviewForm.tsx`):
+- Detecta si usuario está autenticado
+- Usuarios no autenticados ven CTA para login/registro
+- Muestra errores claros (ej: "Ya has dejado una reseña para esta agencia")
+- Confirmación visual al enviar reseña
+
+**UI de Reseñas** (perfil de agencia):
+- Muestra avatar con inicial del nombre del autor
+- Nombre completo del autor visible
+- Fecha formateada en español (es-CL)
+- Diseño mejorado con mejor jerarquía visual
+- Fallback "Usuario Anónimo" para reseñas legacy
+
+## 📋 Pendiente (Futuras Mejoras)
+
+### 1. Dashboard para Clientes
+- [ ] Crear página `/dashboard/cliente` con:
+  - Agencias favoritas guardadas
+  - Historial de contactos realizados
   - Reseñas dejadas
-- [ ] Notificaciones email cuando cliente contacta agencia
+  - Sugerencias personalizadas basadas en categorías
 
-### 5. Políticas y Privacidad
-- [ ] Agregar checkbox de términos y condiciones en registro
-- [ ] Política de privacidad clara sobre uso de datos
-- [ ] Permitir a clientes editar/eliminar su perfil
-- [ ] GDPR compliance (Chile)
+### 2. Notificaciones
+- [ ] Email a agencia cuando recibe nuevo lead
+- [ ] Email a cliente confirmando contacto enviado
+- [ ] Notificaciones en tiempo real (opcional)
+
+### 3. Políticas y Privacidad
+- [ ] Checkbox de términos y condiciones en registro
+- [ ] Política de privacidad sobre uso de datos
+- [ ] Permitir a clientes editar/eliminar perfil
+- [ ] GDPR/LOPD compliance
+
+### 4. Exportación de Datos
+- [ ] Exportar leads a CSV desde dashboard de agencia
+- [ ] Filtros avanzados por fecha, método, presupuesto
+- [ ] Integración con CRM (opcional)
 
 ## 🧪 Testing
 
-### Flujo de Prueba Básico:
+### Flujo de Prueba Completo:
 
 1. **Registro de Cliente**:
    ```
    - Ir a /auth/registro
    - Clic en "Busco una Agencia"
-   - Completar Paso 1 (cuenta)
-   - Completar Paso 2 (negocio)
+   - Completar Paso 1 (cuenta): nombre, email, contraseña
+   - Completar Paso 2 (negocio): nombre negocio, Instagram, presupuesto, categorías
    - Verificar redirección a /dashboard
    ```
 
-2. **Verificar Perfil Creado**:
+2. **Contactar Agencia**:
+   ```
+   - Buscar agencia en /agencias
+   - Entrar a perfil de agencia
+   - Clic en "Contactar Agencia"
+   - Verificar que se muestra info del perfil de cliente
+   - Seleccionar método de contacto
+   - Agregar mensaje (opcional)
+   - Enviar
+   - Verificar mensaje de éxito
+   ```
+
+3. **Probar Rate Limiting**:
+   ```
+   - Intentar contactar la misma agencia de nuevo
+   - Debe mostrar error: "Ya contactaste esta agencia recientemente"
+   - Esperar 24 horas o contactar otra agencia
+   ```
+
+4. **Dashboard de Leads (como agencia)**:
+   ```
+   - Login como dueño de agencia
+   - Ir a /mi-agencia/leads
+   - Verificar que aparece el lead del cliente
+   - Ver información: negocio, presupuesto, categorías, mensaje
+   - Probar paginación si hay +20 leads
+   ```
+
+5. **Dejar Reseña (como cliente autenticado)**:
+   ```
+   - Login como cliente
+   - Ir a perfil de agencia
+   - Scroll a sección "Reseñas"
+   - Seleccionar calificación (estrellas)
+   - Escribir comentario (opcional)
+   - Enviar
+   - Verificar mensaje "pendiente de aprobación"
+   ```
+
+6. **Verificar Datos en BD**:
    ```sql
-   -- En Supabase SQL Editor:
+   -- Ver perfiles de clientes:
    SELECT cp.*, u.full_name, u.email 
    FROM client_profiles cp 
    JOIN users u ON cp.user_id = u.id 
    ORDER BY cp.created_at DESC 
    LIMIT 10;
+
+   -- Ver contactos/leads:
+   SELECT 
+     ac.*,
+     u.full_name as client_name,
+     u.email as client_email,
+     a.name as agency_name
+   FROM agency_contacts ac
+   JOIN users u ON ac.client_user_id = u.id
+   JOIN agencies a ON ac.agency_id = a.id
+   ORDER BY ac.created_at DESC
+   LIMIT 20;
+
+   -- Ver reseñas con autores:
+   SELECT 
+     r.*,
+     u.full_name as author_name,
+     a.name as agency_name
+   FROM reviews r
+   JOIN users u ON r.user_id = u.id
+   JOIN agencies a ON r.agency_id = a.id
+   WHERE r.user_id IS NOT NULL
+   ORDER BY r.created_at DESC;
    ```
 
-3. **Probar Tracking** (cuando esté implementado):
-   ```
-   - Login como cliente
-   - Buscar agencia
-   - Intentar contactar → debe guardar en agency_contacts
-   ```
+## 🎉 Estado del Proyecto
 
-## 🔧 Próximos Pasos Inmediatos
+**Sistema MVP 100% Funcional**:
+- ✅ Registro de clientes con wizard de 2 pasos
+- ✅ Perfiles de cliente con datos de negocio
+- ✅ Modal de contacto con autenticación requerida
+- ✅ Tracking completo de contactos con rate limiting
+- ✅ Dashboard de leads para agencias con paginación
+- ✅ Sistema de reseñas autenticadas con nombres reales
+- ✅ Prevención de spam y duplicados
+- ✅ UI/UX consistente y responsive
 
-1. Implementar tracking de contactos (requiere login)
-2. Crear dashboard básico de leads para agencias
-3. Actualizar sistema de reseñas para mostrar nombres
+**Listo para Testing en Producción** ✨
 
 ## 📝 Notas Técnicas
 

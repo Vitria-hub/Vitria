@@ -23,11 +23,31 @@ Implementado el sistema base para registro de clientes y tracking de contactos c
 - `createClientProfileSchema`: Validación de datos de perfil de cliente
 - `trackAgencyContactSchema`: Validación para tracking de contactos
 
-**Pendiente para Segunda Iteración**:
-- Modificar botones de contacto para requerir autenticación y guardar en `agency_contacts`
-- Dashboard de leads para agencias mostrando clientes que las contactaron
-- Actualizar sistema de reseñas para mostrar nombre real del autor
-- Dashboard para clientes con historial de contactos y favoritos
+**Sistema de Tracking de Contactos (✅ COMPLETADO)**:
+- Botón "Contactar Agencia" ahora requiere autenticación
+- Modal `ContactAgencyModal` con autocomplete de datos del cliente y validación completa
+- Rate limiting: 1 contacto por agencia cada 24 horas para prevenir spam
+- Snapshot de datos del cliente guardado en `agency_contacts` (negocio, presupuesto, categorías)
+- Manejo completo de errores y estados de carga
+
+**Dashboard de Leads para Agencias (✅ COMPLETADO)**:
+- Página `/mi-agencia/leads` mostrando clientes que contactaron
+- Estadísticas: total leads, leads del mes, método preferido
+- Tabla con: nombre cliente, negocio, presupuesto, categorías, mensaje, fecha
+- Paginación funcional (20 leads por página)
+- Ownership checks para seguridad
+
+**Sistema de Reseñas Mejorado (✅ COMPLETADO)**:
+- Reseñas ahora requieren autenticación
+- Nombre completo del autor mostrado con avatar de inicial
+- Prevención de reseñas duplicadas (1 por usuario por agencia)
+- UI mejorada con mejor jerarquía visual
+
+**Pendiente para Futuras Iteraciones**:
+- Dashboard para clientes (`/dashboard/cliente`) con favoritos e historial
+- Notificaciones por email a agencias cuando reciben leads
+- Exportación de leads a CSV
+- Políticas de privacidad y términos formales
 
 ## November 12, 2025 - Category Migration Script & Loading States
 
