@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface PortfolioItem {
   id: string;
   title: string;
@@ -21,11 +23,15 @@ export default function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
       {items.map((item) => (
         <div key={item.id} className="rounded-lg border-2 border-gray-200 overflow-hidden hover:border-primary transition">
           {item.media_urls && item.media_urls.length > 0 && (
-            <img
-              src={item.media_urls[0]}
-              alt={item.title}
-              className="w-full h-48 object-cover"
-            />
+            <div className="relative w-full h-48">
+              <Image
+                src={item.media_urls[0]}
+                alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover"
+              />
+            </div>
           )}
           <div className="p-4">
             <h4 className="font-bold text-dark">{item.title}</h4>

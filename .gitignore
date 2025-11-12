@@ -40,6 +40,10 @@ next-env.d.ts
 .config
 .local
 
+# test scripts with credentials
+scripts/*test*.mjs
+scripts/check-*.mjs
+
 # public
 public/sitemap.xml
 public/robots.txt
