@@ -1,13 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signInWithGoogle } from '@/lib/auth';
-import { Building2 } from 'lucide-react';
+import { signUp, signInWithGoogle } from '@/lib/auth';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import { Building2, ArrowRight } from 'lucide-react';
 
 export default function AgencyRegisterPage() {
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const router = useRouter();
 
   const handleGoogleSignUp = async () => {
     setError('');
@@ -20,6 +30,31 @@ export default function AgencyRegisterPage() {
     } catch (err: any) {
       setError(err.message || 'Error al continuar con Google');
       setGoogleLoading(false);
+    }
+  };
+
+  const handleStep1Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await signUp(email, password, fullName, 'agency');
+      router.push('/dashboard/crear-agencia');
+    } catch (err: any) {
+      setError(err.message || 'Error al crear la cuenta');
+      setLoading(false);
     }
   };
 
@@ -44,9 +79,10 @@ export default function AgencyRegisterPage() {
           )}
 
           <button
+            type="button"
             onClick={handleGoogleSignUp}
             disabled={googleLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-lg font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-lg font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed mb-6"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19.8055 10.2292C19.8055 9.55057 19.7501 8.86719 19.6296 8.19922H10.2002V12.0491H15.6014C15.3771 13.2911 14.6571 14.3898 13.6026 15.0878V17.5866H16.8248C18.7172 15.8449 19.8055 13.2728 19.8055 10.2292Z" fill="#4285F4"/>
@@ -56,6 +92,74 @@ export default function AgencyRegisterPage() {
             </svg>
             {googleLoading ? 'Conectando...' : 'Continuar con Google'}
           </button>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-dark/60">o crea tu cuenta con email</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleStep1Submit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Nombre Completo *
+              </label>
+              <Input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Juan Pérez"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Email *
+              </label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tu@email.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Contraseña *
+              </label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Confirmar Contraseña *
+              </label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <Button type="submit" variant="primary" className="w-full" disabled={loading}>
+              {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
+              {!loading && <ArrowRight className="w-4 h-4 ml-2" />}
+            </Button>
+          </form>
 
           <div className="mt-6 p-4 bg-lilac/10 rounded-lg">
             <h3 className="font-semibold text-dark mb-2">¿Qué incluye?</h3>
