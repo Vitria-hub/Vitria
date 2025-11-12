@@ -1,5 +1,6 @@
 import { router, publicProcedure } from '../trpc';
 import { db } from '../db';
+import { enforcePremiumFreshness } from '../utils/premiumExpiration';
 
 export const sponsorRouter = router({
   listHome: publicProcedure.query(async () => {
@@ -15,6 +16,23 @@ export const sponsorRouter = router({
 
     if (error) throw error;
 
-    return data || [];
+    const sponsoredSlots = data || [];
+    
+    const freshSlots = await Promise.all(
+      sponsoredSlots.map(async (slot) => {
+        if (!slot.agency) {
+          return slot;
+        }
+        
+        const freshAgencies = await enforcePremiumFreshness([slot.agency]);
+        
+        return {
+          ...slot,
+          agency: freshAgencies[0],
+        };
+      })
+    );
+
+    return freshSlots;
   }),
 });

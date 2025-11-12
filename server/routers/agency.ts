@@ -2,6 +2,7 @@ import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { agencyListSchema, agencyBySlugSchema, createAgencySchema } from '@/lib/validators';
 import { db } from '../db';
+import { enforcePremiumFreshness, enforceSingleAgencyPremiumFreshness } from '../utils/premiumExpiration';
 
 export const agencyRouter = router({
   list: publicProcedure
@@ -65,8 +66,10 @@ export const agencyRouter = router({
 
       if (error) throw error;
 
+      const freshAgencies = await enforcePremiumFreshness(data || []);
+
       return {
-        agencies: data || [],
+        agencies: freshAgencies,
         total: count || 0,
         page,
         totalPages: Math.ceil((count || 0) / limit),
@@ -84,7 +87,9 @@ export const agencyRouter = router({
 
       if (error) throw error;
 
-      return data;
+      const freshAgency = await enforceSingleAgencyPremiumFreshness(data);
+
+      return freshAgency;
     }),
 
   myAgency: protectedProcedure
@@ -105,7 +110,11 @@ export const agencyRouter = router({
 
       if (error && error.code !== 'PGRST116') throw error;
 
-      return data || null;
+      if (!data) return null;
+
+      const freshAgency = await enforceSingleAgencyPremiumFreshness(data);
+
+      return freshAgency;
     }),
 
   create: protectedProcedure

@@ -37,7 +37,20 @@ A comprehensive analytics infrastructure tracks user interactions such as agency
 ## Premium Management System
 
 **Phase 1 (Current): Manual Admin Management**
-The platform features a manual premium management system operated by administrators. Admins can activate/deactivate premium status for agencies through the admin panel (`/admin/agencias`), selecting from preset durations (30/90/365 days) or custom date ranges. The system automatically calculates and stores expiration dates in the `premium_until` field. Premium agencies display a distinctive gold badge with crown icon on agency cards and profile pages. The schema includes an optional `whatsapp_number` field to support the hybrid contact model: basic agencies use trackable contact forms, while premium agencies can offer direct WhatsApp contact. Premium expiration is tracked but automatic enforcement of expiration is pending implementation.
+The platform features a manual premium management system operated by administrators. Admins can activate/deactivate premium status for agencies through the admin panel (`/admin/agencias`), selecting from preset durations (30/90/365 days) or custom date ranges. The system automatically calculates and stores expiration dates in the `premium_until` field. Premium agencies display a distinctive gold badge with crown icon on agency cards and profile pages. The schema includes an optional `whatsapp_number` field to support the hybrid contact model: basic agencies use trackable contact forms, while premium agencies can offer direct WhatsApp contact.
+
+**Premium Expiration Automation (Dual-Layer Strategy):**
+The platform uses a two-layer approach to ensure premium status expires automatically:
+
+1. **Query-Time Verification**: All agency queries automatically check `premium_until` and demote expired agencies in real-time using `enforcePremiumFreshness` helpers. This guarantees users never see stale premium flags even if scheduled cleanup fails.
+
+2. **Scheduled Cleanup**: External cron service (cron-job.org, GitHub Actions, or Vercel Cron) calls `/api/cron/expire-premium` hourly/daily. This endpoint is protected with `CRON_SECRET` environment variable (configured in Replit Secrets). Manual cleanup is also available via `admin.cleanExpiredPremium` tRPC endpoint.
+
+**Cron Setup Instructions:**
+- Add `CRON_SECRET` to Replit Secrets (generate random string)
+- Configure external cron to call: `POST https://vitria.replit.app/api/cron/expire-premium`
+- Add header: `Authorization: Bearer YOUR_CRON_SECRET`
+- Recommended frequency: Every hour or daily at midnight
 
 **Phase 2 (Planned): Stripe Automation**
 Future integration will automate premium subscription management via Stripe, handling payments, renewals, and automatic expiration enforcement.
