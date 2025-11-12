@@ -67,7 +67,7 @@ export default function Hero() {
             Encuentra la agencia que necesitas en Chile
           </h1>
           <p className="text-lg md:text-xl mb-10 opacity-95 max-w-3xl mx-auto">
-            Marketing, publicidad, diseño, audiovisual, desarrollo web y más. <strong>100% gratis</strong> para agencias y clientes. Creamos comunidad para apoyarnos entre todos.
+            Marketing, publicidad, diseño, audiovisual, desarrollo web y más. Conectamos negocios con agencias especializadas en todo Chile.
           </p>
 
           <form onSubmit={handleSearch} className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto mb-12">

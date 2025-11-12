@@ -2,7 +2,7 @@ import Hero from '@/components/Hero';
 import CarouselSponsored from '@/components/CarouselSponsored';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3 } from 'lucide-react';
+import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3, Heart } from 'lucide-react';
 
 export default function Home() {
   const categories = [
@@ -299,6 +299,36 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="mb-24 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl p-12 md:p-16 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-40 h-40 opacity-5">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+          <div className="absolute bottom-0 right-0 w-40 h-40 opacity-5">
+            <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          </div>
+          
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <Heart className="w-16 h-16 mx-auto mb-6 text-accent" />
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-6">
+              Creamos Comunidad, No Solo Listados
+            </h2>
+            <div className="space-y-4 text-lg text-dark/80 leading-relaxed">
+              <p>
+                Vitria nace de una necesidad real que vivimos como dueños de agencia: <strong className="text-primary">a las agencias nos cuesta encontrar clientes, y a los clientes les cuesta encontrar agencias confiables</strong>.
+              </p>
+              <p>
+                Por eso creamos esta plataforma: un espacio donde todas las agencias chilenas —grandes, pequeñas, especializadas o multidisciplinarias— puedan <strong className="text-primary">mostrar su trabajo, conectar con clientes potenciales y crecer juntos</strong>.
+              </p>
+              <p>
+                No buscamos monetizar desde el día uno. Nuestro objetivo es construir una <strong className="text-primary">comunidad donde todos nos apoyemos</strong>: agencias que encuentran leads cualificados y clientes que toman decisiones informadas con datos reales.
+              </p>
+              <p className="text-xl font-semibold text-primary pt-4">
+                Bienvenido a la comunidad de agencias de Chile 🇨🇱
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="grid md:grid-cols-2 gap-8 mb-20">
           <div className="bg-gradient-to-br from-primary to-secondary text-white rounded-2xl p-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
@@ -308,24 +338,24 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-3xl font-bold mb-4">¿Tienes una Agencia?</h2>
               <p className="text-lg mb-6 opacity-95">
-                Únete a la comunidad de agencias más grande de Chile y conecta con nuevos clientes
+                Forma parte de nuestra comunidad y haz crecer tu agencia con leads de calidad
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-                  <span>Perfil profesional gratuito</span>
+                  <span>Perfil completo y portfolio visible</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-                  <span>Gestión de reseñas y portfolio</span>
+                  <span>Reseñas que generan confianza</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-                  <span>Dashboard con métricas detalladas</span>
+                  <span>Métricas para medir tu impacto</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
-                  <span>Leads cualificados mensualmente</span>
+                  <span>Conexión directa con clientes potenciales</span>
                 </li>
               </ul>
               <Link
@@ -345,24 +375,24 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-3xl font-bold mb-4 text-primary">¿Buscas una Agencia?</h2>
               <p className="text-lg mb-6 text-dark/80">
-                Encuentra la agencia perfecta para hacer crecer tu negocio con confianza
+                Descubre agencias especializadas y toma decisiones informadas con datos reales
               </p>
               <ul className="space-y-3 mb-8 text-dark/90">
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                  <span>Acceso gratuito a todos los perfiles</span>
+                  <span>Explora perfiles completos con portfolios</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                  <span>Filtros avanzados por especialidad</span>
+                  <span>Filtra por especialidad y ubicación</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                  <span>Reseñas verificadas de clientes reales</span>
+                  <span>Lee reseñas de otros clientes</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                  <span>Comparación directa entre agencias</span>
+                  <span>Compara opciones antes de decidir</span>
                 </li>
               </ul>
               <Link
