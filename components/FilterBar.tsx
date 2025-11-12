@@ -4,14 +4,28 @@ import Input from './Input';
 import { Search } from 'lucide-react';
 
 const REGIONS = ['RM', 'V', 'VIII', 'IV', 'VII', 'IX', 'X'];
-const SERVICES = ['marketing', 'branding', 'design', 'pr', 'ecommerce', 'social-media', 'seo'];
+const SERVICES = [
+  'Marketing Digital',
+  'SEO',
+  'SEM',
+  'Branding',
+  'Diseño Gráfico',
+  'Publicidad',
+  'Content Marketing',
+  'Desarrollo Web',
+  'E-commerce',
+  'Gestión RRSS',
+  'RRPP',
+  'Producción Audiovisual'
+];
 const PRICE_RANGES = ['$', '$$', '$$$'];
 
 interface FilterBarProps {
   onFilterChange: (filters: any) => void;
+  currentFilters?: any;
 }
 
-export default function FilterBar({ onFilterChange }: FilterBarProps) {
+export default function FilterBar({ onFilterChange, currentFilters = {} }: FilterBarProps) {
   return (
     <div className="bg-white p-6 rounded-lg border-2 border-gray-200 space-y-4">
       <div className="relative">
@@ -19,6 +33,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         <input
           type="text"
           placeholder="Buscar agencias..."
+          value={currentFilters.q || ''}
           className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
           onChange={(e) => onFilterChange({ q: e.target.value })}
         />
@@ -26,6 +41,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <select
+          value={currentFilters.region || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
           onChange={(e) => onFilterChange({ region: e.target.value })}
         >
@@ -38,6 +54,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         </select>
 
         <select
+          value={currentFilters.service || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
           onChange={(e) => onFilterChange({ service: e.target.value })}
         >
@@ -50,6 +67,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         </select>
 
         <select
+          value={currentFilters.priceRange || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
           onChange={(e) => onFilterChange({ priceRange: e.target.value })}
         >
@@ -62,6 +80,7 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         </select>
 
         <select
+          value={currentFilters.sort || 'premium'}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
           onChange={(e) => onFilterChange({ sort: e.target.value })}
         >
