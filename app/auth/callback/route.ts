@@ -1,0 +1,99 @@
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+
+export async function GET(request: Request) {
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get('code');
+  const origin = requestUrl.origin;
+
+  if (!code) {
+    return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
+  }
+
+  try {
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (error) {
+      console.error('OAuth exchange error:', error);
+      return NextResponse.redirect(`${origin}/auth/login?error=exchange_failed`);
+    }
+
+    if (!data.session?.user) {
+      return NextResponse.redirect(`${origin}/auth/login?error=no_session`);
+    }
+
+    const session = data.session;
+    const user = session.user;
+
+    const metadataRole = user.user_metadata?.role || 'user';
+    const allowedRoles = ['user', 'agency'];
+    const intendedRole = allowedRoles.includes(metadataRole) ? metadataRole : 'user';
+    
+    const fullName = user.user_metadata?.full_name || 
+                   user.user_metadata?.name || 
+                   user.email?.split('@')[0] || 
+                   'Usuario';
+
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('auth_id', user.id)
+      .single();
+
+    let dbUserId = existingUser?.id;
+    let finalRole: 'user' | 'agency' | 'admin';
+
+    if (!existingUser) {
+      const { data: newUser } = await supabase.from('users').insert({
+        auth_id: user.id,
+        full_name: fullName,
+        role: intendedRole as 'user' | 'agency',
+      }).select().single();
+      
+      dbUserId = newUser?.id;
+      finalRole = intendedRole as 'user' | 'agency';
+    } else {
+      finalRole = existingUser.role as 'user' | 'agency' | 'admin';
+    }
+
+    if (finalRole === 'admin') {
+      return NextResponse.redirect(`${origin}/admin`);
+    }
+
+    if (finalRole === 'user') {
+      const { data: clientProfile } = await supabase
+        .from('client_profiles')
+        .select('*')
+        .eq('user_id', dbUserId)
+        .single();
+
+      if (!clientProfile) {
+        return NextResponse.redirect(`${origin}/auth/registro/cliente/perfil`);
+      }
+
+      return NextResponse.redirect(`${origin}/dashboard`);
+    }
+
+    if (finalRole === 'agency') {
+      const { data: agency } = await supabase
+        .from('agencies')
+        .select('*')
+        .eq('owner_id', dbUserId)
+        .single();
+
+      if (!agency) {
+        return NextResponse.redirect(`${origin}/dashboard/crear-agencia`);
+      }
+
+      return NextResponse.redirect(`${origin}/dashboard`);
+    }
+
+    return NextResponse.redirect(`${origin}/dashboard`);
+    
+  } catch (err) {
+    console.error('Callback error:', err);
+    return NextResponse.redirect(`${origin}/auth/login?error=callback_failed`);
+  }
+}

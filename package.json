@@ -10,6 +10,7 @@
     "seed": "ts-node --compiler-options {\\\"module\\\":\\\"commonjs\\\"} seed/seed.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.47.0",
     "@tanstack/react-query": "^5.62.9",
     "@trpc/client": "^11.0.0",

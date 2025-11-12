@@ -82,8 +82,12 @@ Implementado el sistema base para registro de clientes y tracking de contactos c
 - `app/auth/registro/cliente/perfil/page.tsx`: Nueva página para onboarding post-OAuth
 - `app/auth/registro/agencia/page.tsx`: Nueva página de registro de agencias
 
-**Nota Técnica**:
-El callback OAuth actual es un Client Component (compatible con arquitectura existente). Para máxima seguridad en producción, se recomienda migrar a Server Component con validación server-side del código OAuth, pero la implementación actual incluye protecciones básicas suficientes para MVP.
+**Arquitectura de Seguridad**:
+- Route Handler server-side (`app/auth/callback/route.ts`) con validación completa
+- Intercambio de código OAuth usando `@supabase/ssr` y cliente del servidor
+- Whitelist de roles server-side para nuevos usuarios (solo 'user' y 'agency' permitidos)
+- Rol de base de datos es autoritativo para usuarios existentes (nunca se sobrescribe via OAuth)
+- Protección total contra escalación de privilegios: admin solo creatable manualmente en BD
 
 ## November 12, 2025 - Price Range Filter & Display
 
