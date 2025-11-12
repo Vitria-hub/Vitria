@@ -9,8 +9,8 @@
 - **Puerto**: 5000
 
 ### 🔐 Credenciales de Admin
-- **Email**: contacto@scalelab.cl
-- **Contraseña**: Scalelab2026
+- **Configuración**: Las credenciales de administrador deben ser configuradas de forma segura
+- **IMPORTANTE**: Cambiar contraseña predeterminada inmediatamente después del primer acceso
 - **Rol**: admin (verificado en base de datos)
 
 ### 🗄️ Base de Datos

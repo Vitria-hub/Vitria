@@ -1,12 +1,62 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import { Quicksand } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Providers } from '@/lib/providers';
 
+const quicksand = Quicksand({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quicksand',
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#1B5568',
+};
+
 export const metadata: Metadata = {
-  title: 'Vitria - Directorio de Agencias de Marketing en Chile',
+  metadataBase: new URL('https://vitria.replit.app'),
+  title: {
+    default: 'Vitria - Directorio de Agencias de Marketing en Chile',
+    template: '%s | Vitria',
+  },
   description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
+  keywords: ['agencias de marketing', 'publicidad chile', 'diseño gráfico', 'branding', 'agencias digitales'],
+  authors: [{ name: 'Vitria' }],
+  creator: 'Vitria',
+  publisher: 'Vitria',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_CL',
+    url: 'https://vitria.replit.app',
+    siteName: 'Vitria',
+    title: 'Vitria - Directorio de Agencias de Marketing en Chile',
+    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vitria - Directorio de Agencias de Marketing en Chile',
+    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -15,8 +65,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body>
+    <html lang="es" className={quicksand.variable}>
+      <body className={quicksand.className}>
         <Providers>
           <Navbar />
           <main className="min-h-screen">{children}</main>
