@@ -1,7 +1,8 @@
 import Hero from '@/components/Hero';
 import CarouselSponsored from '@/components/CarouselSponsored';
 import Link from 'next/link';
-import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3 } from 'lucide-react';
 
 export default function Home() {
   const categories = [
@@ -60,19 +61,67 @@ export default function Home() {
       quote: "Gracias a Vitria encontramos la agencia perfecta para lanzar nuestro producto. El proceso fue transparente y los resultados superaron nuestras expectativas.",
       author: "María González",
       role: "CEO & Fundadora en TechStart Chile",
-      initials: "MG"
+      image: "/stock_images/hispanic_businesswom_bd8902ea.jpg"
     },
     {
       quote: "La plataforma me ayudó a comparar diferentes agencias de marketing digital. Pude ver portfolios, leer reseñas reales y tomar una decisión informada.",
       author: "Carlos Rojas",
       role: "Gerente de Marketing en RestauranteVerde",
-      initials: "CR"
+      image: "/stock_images/hispanic_businesswom_becfbc99.jpg"
     },
     {
       quote: "Como pequeña empresaria, necesitaba una agencia que entendiera mi presupuesto. En Vitria encontré opciones perfectas para mi negocio.",
       author: "Andrea Silva",
       role: "Propietaria en Boutique Luna",
-      initials: "AS"
+      image: "/stock_images/hispanic_businesswom_77e4e1e5.jpg"
+    }
+  ];
+
+  const stats = [
+    {
+      value: "500+",
+      label: "Agencias Verificadas",
+      icon: Award,
+      color: "text-mint"
+    },
+    {
+      value: "10,000+",
+      label: "Proyectos Completados",
+      icon: Rocket,
+      color: "text-accent"
+    },
+    {
+      value: "95%",
+      label: "Satisfacción de Clientes",
+      icon: Star,
+      color: "text-secondary"
+    },
+    {
+      value: "4.8/5",
+      label: "Calificación Promedio",
+      icon: BarChart3,
+      color: "text-lilac"
+    }
+  ];
+
+  const howItWorks = [
+    {
+      step: "1",
+      title: "Busca y Compara",
+      description: "Usa filtros avanzados para encontrar agencias que se ajusten a tu industria, presupuesto y ubicación.",
+      icon: Search
+    },
+    {
+      step: "2",
+      title: "Revisa y Evalúa",
+      description: "Examina portfolios, lee reseñas verificadas y compara propuestas de múltiples agencias.",
+      icon: CheckCircle
+    },
+    {
+      step: "3",
+      title: "Conecta y Crece",
+      description: "Contacta directamente con las agencias seleccionadas y empieza a hacer crecer tu marca.",
+      icon: Rocket
     }
   ];
 
@@ -83,6 +132,78 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <section className="mb-20">
           <CarouselSponsored />
+        </section>
+
+        <section className="mb-24 bg-gradient-to-br from-mint/10 via-lilac/10 to-secondary/10 rounded-3xl p-12">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+              El Marketplace de Agencias más Grande de Chile
+            </h2>
+            <p className="text-lg text-dark/70 max-w-2xl mx-auto">
+              Conectamos empresas chilenas con las mejores agencias del país
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <div key={index} className="text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
+                  <Icon className={`w-12 h-12 mx-auto mb-4 ${stat.color}`} />
+                  <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-semibold text-dark/70">
+                    {stat.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+              ¿Cómo Funciona Vitria?
+            </h2>
+            <p className="text-lg text-dark/70 max-w-2xl mx-auto">
+              Encuentra la agencia perfecta en solo 3 pasos
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {howItWorks.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div key={index} className="relative text-center">
+                  <div className="mb-6 relative inline-block">
+                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-xl">
+                      <Icon className="w-12 h-12 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-12 h-12 rounded-full bg-accent flex items-center justify-center font-bold text-2xl text-dark shadow-lg">
+                      {item.step}
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-dark/70">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/agencias"
+              className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-dark transition shadow-lg text-lg"
+            >
+              Empezar Ahora <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </section>
 
         <section className="mb-20">
@@ -144,13 +265,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-lg transition">
-                <p className="text-dark/80 mb-6 italic">&ldquo;{testimonial.quote}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-                    {testimonial.initials}
+                <p className="text-dark/80 mb-6 italic leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-4 border-mint/30">
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.author}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <div>
-                    <div className="font-semibold text-dark">{testimonial.author}</div>
+                    <div className="font-bold text-dark">{testimonial.author}</div>
                     <div className="text-sm text-dark/60">{testimonial.role}</div>
                   </div>
                 </div>
