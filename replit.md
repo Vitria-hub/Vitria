@@ -17,9 +17,9 @@ Transformed the entire homepage to reflect Vitria's authentic mission as a commu
 - **Streamlined Layout**: Removed redundant statistics from hero, keeping focus on the search tool
 
 **New Mission Section**:
-- **"Creamos Comunidad, No Solo Listados"**: Added dedicated section between testimonials and CTAs explaining Vitria's origin story
-- **Authentic Narrative**: Explains founders' experience as agency owners facing the pain points Vitria solves
-- **Community Philosophy**: Makes clear the platform's goal is building mutual support ecosystem, not immediate monetization
+- **"Creamos Comunidad, No Solo Listados"**: Added dedicated section between testimonials and CTAs explaining Vitria's purpose
+- **Subtle Messaging**: Focuses on the "why" (bridging gap between agencies and clients) without explicit mentions of monetization or founders' personal story
+- **Community Philosophy**: Emphasizes mutual growth - agencies find opportunities, clients make informed decisions, ecosystem strengthens
 - **Visual Design**: Soft gradient background with isotipos, Heart icon, and centered text for emotional connection
 
 **Enhanced CTAs**:

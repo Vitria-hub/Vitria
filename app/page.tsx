@@ -314,13 +314,13 @@ export default function Home() {
             </h2>
             <div className="space-y-4 text-lg text-dark/80 leading-relaxed">
               <p>
-                Vitria nace de una necesidad real que vivimos como dueños de agencia: <strong className="text-primary">a las agencias nos cuesta encontrar clientes, y a los clientes les cuesta encontrar agencias confiables</strong>.
+                <strong className="text-primary">A las agencias les cuesta encontrar clientes cualificados. A los clientes les cuesta encontrar agencias confiables.</strong>
               </p>
               <p>
-                Por eso creamos esta plataforma: un espacio donde todas las agencias chilenas —grandes, pequeñas, especializadas o multidisciplinarias— puedan <strong className="text-primary">mostrar su trabajo, conectar con clientes potenciales y crecer juntos</strong>.
+                Creamos esta plataforma para ser ese puente: un espacio donde todas las agencias chilenas —grandes, pequeñas, especializadas o multidisciplinarias— puedan <strong className="text-primary">mostrar su trabajo real y conectar con quienes realmente necesitan sus servicios</strong>.
               </p>
               <p>
-                No buscamos monetizar desde el día uno. Nuestro objetivo es construir una <strong className="text-primary">comunidad donde todos nos apoyemos</strong>: agencias que encuentran leads cualificados y clientes que toman decisiones informadas con datos reales.
+                Nuestro objetivo es construir una <strong className="text-primary">comunidad donde todos crecemos juntos</strong>: agencias que encuentran oportunidades, clientes que toman decisiones con información transparente, y un ecosistema más fuerte para todos.
               </p>
               <p className="text-xl font-semibold text-primary pt-4">
                 Bienvenido a la comunidad de agencias de Chile 🇨🇱
