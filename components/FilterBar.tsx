@@ -5,7 +5,11 @@ import { Search } from 'lucide-react';
 import { MAIN_CATEGORIES } from '@/lib/categories';
 
 const REGIONS = ['RM', 'V', 'VIII', 'IV', 'VII', 'IX', 'X'];
-const PRICE_RANGES = ['$', '$$', '$$$'];
+const PRICE_RANGES = [
+  { value: '$', label: '$ - Económico (Startups)' },
+  { value: '$$', label: '$$ - Estándar (Pymes)' },
+  { value: '$$$', label: '$$$ - Premium (Empresas)' },
+];
 
 interface FilterBarProps {
   onFilterChange: (filters: any) => void;
@@ -60,8 +64,8 @@ export default function FilterBar({ onFilterChange, currentFilters = {} }: Filte
         >
           <option value="">Cualquier precio</option>
           {PRICE_RANGES.map((range) => (
-            <option key={range} value={range}>
-              {range}
+            <option key={range.value} value={range.value}>
+              {range.label}
             </option>
           ))}
         </select>
