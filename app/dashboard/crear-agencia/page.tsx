@@ -347,9 +347,9 @@ export default function CrearAgenciaPage() {
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[
-                  { value: '$', label: 'Económico', desc: 'Ideal para startups' },
-                  { value: '$$', label: 'Estándar', desc: 'Ideal para pymes' },
-                  { value: '$$$', label: 'Premium', desc: 'Ideal para empresas' },
+                  { value: '$', label: 'Económico', desc: 'Menos de $1M CLP' },
+                  { value: '$$', label: 'Estándar', desc: '$1M a $3M CLP' },
+                  { value: '$$$', label: 'Premium', desc: '$3M a $5M CLP' },
                 ].map((price) => (
                   <label
                     key={price.value}

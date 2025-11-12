@@ -145,9 +145,9 @@ export default function ClientProfilePage() {
                   >
                     <div className="text-2xl mb-1">{range}</div>
                     <div className="text-xs">
-                      {range === '$' && 'Hasta $1M CLP'}
-                      {range === '$$' && '$1M - $5M CLP'}
-                      {range === '$$$' && 'Más de $5M CLP'}
+                      {range === '$' && 'Menos de $1M CLP'}
+                      {range === '$$' && '$1M a $3M CLP'}
+                      {range === '$$$' && '$3M a $5M CLP'}
                     </div>
                   </button>
                 ))}
