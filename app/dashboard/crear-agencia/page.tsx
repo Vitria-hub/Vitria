@@ -8,6 +8,7 @@ import Input from '@/components/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { MAIN_CATEGORIES } from '@/lib/categories';
+import { SPECIALTY_CATEGORIES } from '@/lib/specialties';
 
 const INDUSTRIES = [
   'Retail', 'Tech/Startups', 'E-commerce', 'Salud', 'Educación',
@@ -37,6 +38,7 @@ export default function CrearAgenciaPage() {
     region: '',
     services: [] as string[],
     categories: [] as string[],
+    specialties: [] as string[],
     employeesMin: undefined as number | undefined,
     employeesMax: undefined as number | undefined,
     priceRange: '' as '' | '$' | '$$' | '$$$',
@@ -302,6 +304,67 @@ export default function CrearAgenciaPage() {
                 </div>
               </div>
             )}
+
+            {/* Especialidades Técnicas */}
+            <div className="border-t-2 border-gray-200 pt-6">
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Especialidades Técnicas (opcional)
+              </label>
+              <p className="text-sm text-dark/60 mb-4">
+                Selecciona las plataformas, herramientas y tecnologías que dominas. Esto ayuda a los clientes a encontrarte más fácilmente.
+              </p>
+              
+              <div className="space-y-6">
+                {SPECIALTY_CATEGORIES.map((category) => (
+                  <div key={category.id} className="bg-lilac/10 rounded-lg p-4">
+                    <h3 className="font-bold text-dark mb-3 flex items-center gap-2">
+                      <span className="text-primary">{category.label}</span>
+                      <span className="text-xs text-dark/50 font-normal">
+                        ({formData.specialties.filter(s => category.specialties.includes(s)).length} seleccionadas)
+                      </span>
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {category.specialties.map((specialty) => (
+                        <label
+                          key={specialty}
+                          className={`flex items-center gap-2 px-3 py-2 text-sm border rounded-md cursor-pointer transition ${
+                            formData.specialties.includes(specialty)
+                              ? 'border-secondary bg-secondary/10 text-secondary font-medium'
+                              : 'border-gray-200 bg-white hover:border-secondary/50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.specialties.includes(specialty)}
+                            onChange={() => setFormData({
+                              ...formData,
+                              specialties: toggleArrayItem(formData.specialties, specialty)
+                            })}
+                            className="w-4 h-4"
+                          />
+                          <span>{specialty}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {formData.specialties.length > 0 && (
+                <div className="mt-4 p-3 bg-secondary/5 border border-secondary/20 rounded-lg">
+                  <p className="text-sm text-dark font-medium">
+                    ✓ {formData.specialties.length} especialidad{formData.specialties.length !== 1 ? 'es' : ''} seleccionada{formData.specialties.length !== 1 ? 's' : ''}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.specialties.map((spec) => (
+                      <span key={spec} className="text-xs px-2 py-1 bg-secondary/20 text-secondary rounded-full">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

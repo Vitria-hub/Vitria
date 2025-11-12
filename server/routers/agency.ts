@@ -138,6 +138,7 @@ export const agencyRouter = router({
           location_region: input.region || null,
           services: input.services || [],
           categories: input.categories || [],
+          specialties: input.specialties || [],
           employees_min: input.employeesMin || null,
           employees_max: input.employeesMax || null,
           price_range: input.priceRange || null,

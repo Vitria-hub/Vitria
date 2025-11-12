@@ -37,6 +37,7 @@ export type Database = {
           price_range: string | null;
           services: string[];
           categories: string[];
+          specialties: string[];
           is_verified: boolean;
           is_premium: boolean;
           premium_until: string | null;

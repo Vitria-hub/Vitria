@@ -55,6 +55,7 @@ export const createAgencySchema = z.object({
   // Paso 2: Servicios y Categoría
   services: z.array(z.string()).min(1, 'Selecciona al menos un servicio'),
   categories: z.array(z.string()).min(1, 'Selecciona al menos una categoría'),
+  specialties: z.array(z.string()).optional(),
   
   // Paso 3: Detalles del Negocio
   employeesMin: z.number().min(1).optional(),
