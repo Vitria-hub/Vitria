@@ -62,3 +62,19 @@ export const createAgencySchema = z.object({
   priceRange: z.enum(['$', '$$', '$$$']),
   industries: z.array(z.string()).optional(),
 });
+
+export const createClientProfileSchema = z.object({
+  businessName: z.string().min(2, 'El nombre del negocio debe tener al menos 2 caracteres'),
+  businessInstagram: z.string().optional(),
+  budgetRange: z.enum(['$', '$$', '$$$'], {
+    required_error: 'Selecciona un rango de presupuesto'
+  }),
+  desiredCategories: z.array(z.string()).min(1, 'Selecciona al menos una categoría de servicio que buscas'),
+  aboutBusiness: z.string().min(20, 'Cuéntanos un poco más sobre tu negocio (mínimo 20 caracteres)').optional(),
+});
+
+export const trackAgencyContactSchema = z.object({
+  agencyId: z.string().uuid(),
+  contactMethod: z.enum(['email', 'phone', 'website', 'form']),
+  message: z.string().optional(),
+});
