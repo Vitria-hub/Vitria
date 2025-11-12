@@ -4,6 +4,31 @@ Vitria is an agency directory platform for the Chilean market, connecting market
 
 # Recent Changes
 
+## November 12, 2025 - Sistema de Registro y Tracking de Clientes (MVP)
+
+Implementado el sistema base para registro de clientes y tracking de contactos con agencias:
+
+**Nuevas Tablas de Base de Datos**:
+- `client_profiles`: Almacena información del negocio/proyecto del cliente (nombre, Instagram, presupuesto, categorías buscadas)
+- `agency_contacts`: Tabla de tracking para saber qué clientes contactan qué agencias y por qué medio
+
+**Flujos de Registro Separados**:
+- Página selectora en `/auth/registro` donde el usuario elige si es Cliente o Agencia
+- Registro de clientes en `/auth/registro/cliente` con wizard de 2 pasos:
+  * Paso 1: Datos de cuenta (nombre, email, contraseña)
+  * Paso 2: Datos del negocio (nombre negocio, Instagram, presupuesto $/$$/$$, categorías que busca, descripción proyecto)
+- Router tRPC `client` con endpoints para crear y gestionar perfiles de clientes
+
+**Validadores y Schemas**:
+- `createClientProfileSchema`: Validación de datos de perfil de cliente
+- `trackAgencyContactSchema`: Validación para tracking de contactos
+
+**Pendiente para Segunda Iteración**:
+- Modificar botones de contacto para requerir autenticación y guardar en `agency_contacts`
+- Dashboard de leads para agencias mostrando clientes que las contactaron
+- Actualizar sistema de reseñas para mostrar nombre real del autor
+- Dashboard para clientes con historial de contactos y favoritos
+
 ## November 12, 2025 - Category Migration Script & Loading States
 
 **Migration Script for Production**:
