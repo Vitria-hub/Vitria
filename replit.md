@@ -2,6 +2,23 @@
 
 Vitria is an agency directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with clients. It offers advanced search, review management, premium listings, integrated payments, comprehensive analytics, and SEO-optimized blog content. Built with a Next.js 14 monorepo using the App Router, tRPC for type-safe APIs, and Supabase for authentication and PostgreSQL, Vitria aims to be the leading agency directory in Chile, providing a modern, user-friendly experience for both agencies and clients. The platform's core vision is to build a community, not just a listing service, by bridging the gap between agencies and clients in Chile, facilitating mutual growth, and strengthening the local marketing ecosystem.
 
+# Recent Changes
+
+## November 12, 2025 - Category Migration Script & Loading States
+
+**Migration Script for Production**:
+- Created `scripts/migrate-categories.sql` to migrate existing agencies from legacy `services` to new `categories`
+- Maps 40+ legacy service names (e.g., "Marketing Digital", "Branding") to 8 simplified main categories
+- Safe to run multiple times: includes duplicate checks and proper WHERE clause precedence
+- Documented in `scripts/README.md` with Supabase SQL Editor instructions
+- Maintains backward compatibility by keeping `services` field intact
+
+**UX Improvements - Loading States**:
+- Replaced basic text loading indicator with animated skeleton loader in `/agencias` page
+- Skeleton shows 6 placeholder cards with pulse animation during data fetching
+- Triggers on both initial load (`isLoading`) and filter/search refetches (`isFetching`)
+- Provides immediate visual feedback, eliminating user confusion about app responsiveness
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
