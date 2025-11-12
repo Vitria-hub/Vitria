@@ -6,6 +6,22 @@
 
 # Recent Changes
 
+## November 12, 2025 - Community-Focused Messaging & Brand Integration
+
+Updated homepage messaging to reflect platform's core mission of building community in the Chilean agency ecosystem:
+
+**Hero Section Updates**:
+- **Authentic Value Proposition**: Changed title to "Encuentra la agencia que necesitas en Chile" emphasizing inclusivity for all agency types
+- **Community Message**: Updated subtitle highlighting free access and community building ("100% gratis para agencias y clientes. Creamos comunidad para apoyarnos entre todos")
+- **Visual Enhancement**: Added subtle Vitria isotipos (opacity 5%) in hero background for brand consistency
+- **Streamlined Layout**: Removed redundant statistics from hero (kept comprehensive stats section below)
+
+**Platform Philosophy**:
+- Free platform for both agencies and clients (no monetization in initial phase)
+- Focuses on solving real pain points: agencies struggle to find clients, clients struggle to find trustworthy agencies
+- Community-driven approach for organic growth and mutual support
+- Founders are agency owners themselves who experienced these challenges firsthand
+
 ## November 12, 2025 - Homepage Enhancement & SEO Blog System
 
 Implemented major visual improvements to homepage and created complete blog system optimized for Google and AI search engines:

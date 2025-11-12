@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import Button from './Button';
 import { Search, MapPin } from 'lucide-react';
 import { useState } from 'react';
@@ -53,13 +54,20 @@ export default function Hero() {
     <div className="relative bg-gradient-to-br from-primary via-secondary to-primary text-white py-24 overflow-hidden">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTEyIDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTEyIDQyYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6TTM2IDQyYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
       
+      <div className="absolute top-10 left-10 w-32 h-32 md:w-48 md:h-48 opacity-5">
+        <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+      </div>
+      <div className="absolute bottom-10 right-10 w-40 h-40 md:w-56 md:h-56 opacity-5">
+        <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+      </div>
+      
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Encuentra la agencia ideal para tu negocio en Chile
+            Encuentra la agencia que necesitas en Chile
           </h1>
           <p className="text-lg md:text-xl mb-10 opacity-95 max-w-3xl mx-auto">
-            Conecta con las mejores agencias de marketing, publicidad y diseño. Revisa portfolios, lee reseñas reales y encuentra el socio perfecto para hacer crecer tu marca.
+            Marketing, publicidad, diseño, audiovisual, desarrollo web y más. <strong>100% gratis</strong> para agencias y clientes. Creamos comunidad para apoyarnos entre todos.
           </p>
 
           <form onSubmit={handleSearch} className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto mb-12">
