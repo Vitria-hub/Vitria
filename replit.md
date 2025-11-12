@@ -1,130 +1,6 @@
 # Overview
 
-Vitria is an agency directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with clients. It offers advanced search, review management, premium listings, integrated payments, comprehensive analytics, and SEO-optimized blog content. Built with a Next.js 14 monorepo using the App Router, tRPC for type-safe APIs, and Supabase for authentication and PostgreSQL, Vitria aims to be the leading agency directory in Chile, providing a modern, user-friendly experience for both agencies and clients. The platform's core vision is to build a community, not just a listing service, by bridging the gap between agencies and clients in Chile, facilitating mutual growth, and strengthening the local marketing ecosystem.
-
-# Recent Changes
-
-## November 12, 2025 - Sistema de Registro y Tracking de Clientes (MVP)
-
-Implementado el sistema base para registro de clientes y tracking de contactos con agencias:
-
-**Nuevas Tablas de Base de Datos**:
-- `client_profiles`: Almacena información del negocio/proyecto del cliente (nombre, Instagram, presupuesto, categorías buscadas)
-- `agency_contacts`: Tabla de tracking para saber qué clientes contactan qué agencias y por qué medio
-
-**Flujos de Registro Separados**:
-- Página selectora en `/auth/registro` donde el usuario elige si es Cliente o Agencia
-- Registro de clientes en `/auth/registro/cliente` con wizard de 2 pasos:
-  * Paso 1: Datos de cuenta (nombre, email, contraseña)
-  * Paso 2: Datos del negocio (nombre negocio, Instagram, presupuesto $/$$/$$, categorías que busca, descripción proyecto)
-- Router tRPC `client` con endpoints para crear y gestionar perfiles de clientes
-
-**Validadores y Schemas**:
-- `createClientProfileSchema`: Validación de datos de perfil de cliente
-- `trackAgencyContactSchema`: Validación para tracking de contactos
-
-**Sistema de Tracking de Contactos (✅ COMPLETADO)**:
-- Botón "Contactar Agencia" ahora requiere autenticación
-- Modal `ContactAgencyModal` con autocomplete de datos del cliente y validación completa
-- Rate limiting: 1 contacto por agencia cada 24 horas para prevenir spam
-- Snapshot de datos del cliente guardado en `agency_contacts` (negocio, presupuesto, categorías)
-- Manejo completo de errores y estados de carga
-
-**Dashboard de Leads para Agencias (✅ COMPLETADO)**:
-- Página `/mi-agencia/leads` mostrando clientes que contactaron
-- Estadísticas: total leads, leads del mes, método preferido
-- Tabla con: nombre cliente, negocio, presupuesto, categorías, mensaje, fecha
-- Paginación funcional (20 leads por página)
-- Ownership checks para seguridad
-
-**Sistema de Reseñas Mejorado (✅ COMPLETADO)**:
-- Reseñas ahora requieren autenticación
-- Nombre completo del autor mostrado con avatar de inicial
-- Prevención de reseñas duplicadas (1 por usuario por agencia)
-- UI mejorada con mejor jerarquía visual
-
-**Pendiente para Futuras Iteraciones**:
-- Dashboard para clientes (`/dashboard/cliente`) con favoritos e historial
-- Notificaciones por email a agencias cuando reciben leads
-- Exportación de leads a CSV
-- Políticas de privacidad y términos formales
-
-## November 12, 2025 - Google OAuth Login (Clientes y Agencias)
-
-**Implementación de Login con Google**:
-- Agregado botón "Continuar con Google" en registro de clientes (`/auth/registro/cliente`)
-- Creada página de registro de agencias con Google OAuth (`/auth/registro/agencia`)
-- Callback OAuth actualizado para manejar roles (user/agency) y redirecciones de onboarding
-- Página de perfil de cliente post-OAuth (`/auth/registro/cliente/perfil`) para completar datos de negocio
-
-**Flujo de Clientes con Google**:
-1. Usuario hace clic en "Continuar con Google" desde `/auth/registro/cliente`
-2. Autenticación con Google → callback crea usuario con rol 'user'
-3. Si no tiene perfil de cliente → redirección a `/auth/registro/cliente/perfil`
-4. Completa datos de negocio (presupuesto, categorías) → `/dashboard`
-
-**Flujo de Agencias con Google**:
-1. Usuario hace clic en "Continuar con Google" desde `/auth/registro/agencia`
-2. Autenticación con Google → callback crea usuario con rol 'agency'
-3. Si no tiene agencia registrada → redirección a `/dashboard/crear-agencia`
-4. Completa perfil de agencia → `/mi-agencia`
-
-**Seguridad y Validación**:
-- Whitelist de roles: solo 'user' y 'agency' permitidos via OAuth
-- Protección de rol 'admin': nunca se puede asignar o sobrescribir via OAuth
-- Metadata de Supabase (server-side) usada para determinar rol
-- Validación de rol en callback antes de persistir en base de datos
-
-**Archivos Modificados/Creados**:
-- `lib/auth.ts`: Actualizado `signInWithGoogle()` para aceptar opciones de rol
-- `app/auth/callback/page.tsx`: Mejorado callback con validación de roles y redirecciones
-- `app/auth/registro/cliente/page.tsx`: Agregado botón de Google en paso 1
-- `app/auth/registro/cliente/perfil/page.tsx`: Nueva página para onboarding post-OAuth
-- `app/auth/registro/agencia/page.tsx`: Nueva página de registro de agencias
-
-**Arquitectura de Seguridad**:
-- Route Handler server-side (`app/auth/callback/route.ts`) con validación completa
-- Intercambio de código OAuth usando `@supabase/ssr` y cliente del servidor
-- Whitelist de roles server-side para nuevos usuarios (solo 'user' y 'agency' permitidos)
-- Rol de base de datos es autoritativo para usuarios existentes (nunca se sobrescribe via OAuth)
-- Protección total contra escalación de privilegios: admin solo creatable manualmente en BD
-
-## November 12, 2025 - Price Range Filter & Display
-
-**Price Range Filtering**:
-- Added price filter dropdown in FilterBar with options: "Cualquier precio", "$", "$$", "$$$"
-- Backend correctly handles empty selection by converting `""` to `undefined` to prevent Zod validation errors
-- Filter applies equality check on `price_range` field only when value is truthy
-- "Cualquier precio" option shows ALL agencies without price filtering
-
-**Price Range Display in Search Results**:
-- Extended AgencyCard interface to include `price_range: string | null`
-- Price badge shown alongside location in tertiary metadata row
-- Visual design: DollarSign icon with yellow accent badge (`bg-accent/10 text-accent`)
-- Normalizes display by removing spaces (e.g., "$ $" → "$$") for consistent formatting
-- Responsive layout with `flex-wrap` for mobile screens
-- Conditionally hidden for agencies without price data (legacy compatibility)
-
-**Technical Implementation**:
-- `components/AgencyCard.tsx`: Added price_range field and badge rendering
-- `app/agencias/page.tsx`: Filter processing converts empty strings to undefined
-- `server/routers/agency.ts`: Price filtering with falsy check (`if (priceRange)`)
-- Schema validation: `createAgencySchema` requires price_range on agency creation
-
-## November 12, 2025 - Category Migration Script & Loading States
-
-**Migration Script for Production**:
-- Created `scripts/migrate-categories.sql` to migrate existing agencies from legacy `services` to new `categories`
-- Maps 40+ legacy service names (e.g., "Marketing Digital", "Branding") to 8 simplified main categories
-- Safe to run multiple times: includes duplicate checks and proper WHERE clause precedence
-- Documented in `scripts/README.md` with Supabase SQL Editor instructions
-- Maintains backward compatibility by keeping `services` field intact
-
-**UX Improvements - Loading States**:
-- Replaced basic text loading indicator with animated skeleton loader in `/agencias` page
-- Skeleton shows 6 placeholder cards with pulse animation during data fetching
-- Triggers on both initial load (`isLoading`) and filter/search refetches (`isFetching`)
-- Provides immediate visual feedback, eliminating user confusion about app responsiveness
+Vitria is an agency directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with clients. Its core purpose is to be the leading agency directory in Chile, offering advanced search, review management, premium listings, integrated payments, comprehensive analytics, and SEO-optimized blog content. The platform aims to foster a community by bridging the gap between agencies and clients, facilitating mutual growth, and strengthening the local marketing ecosystem.
 
 # User Preferences
 
@@ -134,27 +10,27 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-The frontend uses Next.js 14 with the App Router, combining server and client components. It follows an Atomic Design pattern with reusable, type-safe components styled using TailwindCSS and `class-variance-authority`. A custom design system with brand colors (primary: #1B5568, accent: #F5D35E) ensures UI consistency. tRPC React Query hooks manage state and data fetching, providing caching and invalidation. The UI features a simplified category system for agency search, a community-focused homepage with clear CTAs, and a comprehensive blog system with SEO optimization. Mobile responsiveness is implemented across all components, including navigation and carousels.
+The frontend is built with Next.js 14 and the App Router, utilizing a combination of server and client components. It follows an Atomic Design pattern with reusable, type-safe components styled using TailwindCSS and `class-variance-authority`. A custom design system defines brand colors (primary: #1B5568, accent: #F5D35E) for UI consistency. tRPC React Query hooks handle state and data fetching, including caching and invalidation. The UI features a simplified category system for agency search, a community-focused homepage with clear Calls to Action (CTAs), and an SEO-optimized blog. Mobile responsiveness is implemented across all components.
 
 ## Backend Architecture
 
-The backend utilizes tRPC for a type-safe RPC-style API, with route handlers organized by domain and input validation via Zod. A single API endpoint processes all requests. Data access is managed directly through the Supabase client using a query builder. Business logic encompasses advanced agency filtering (supporting both new category and legacy service parameters), a review moderation system, comprehensive metrics tracking for agencies, and sponsored content management. Analytics endpoints include secure tracking for views, contacts, and searches, with admin-only access for KPIs and agency performance ranking.
+The backend uses tRPC for a type-safe RPC-style API, with route handlers organized by domain and input validation via Zod. A single API endpoint processes all requests. Data access is managed through the Supabase client. Business logic includes advanced agency filtering (supporting both categories and legacy services), a review moderation system, comprehensive metrics tracking for agencies, and sponsored content management. Analytics endpoints securely track views, contacts, and searches, with an admin-only dashboard for KPIs and performance ranking.
 
 ## Database Design
 
-Supabase (PostgreSQL) serves as the database, featuring tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, `sponsored_slots`, and `subscriptions`. It uses UUID primary keys and foreign key relationships. Key tables store owner relationships, service categories, and rating information, while `agency_metrics_daily` tracks time-series data. Database indexing is optimized for performance, especially for carousel and analytics queries.
+Supabase (PostgreSQL) is the database, featuring tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, `sponsored_slots`, `subscriptions`, `client_profiles`, and `agency_contacts`. It uses UUID primary keys and foreign key relationships, storing owner relationships, service categories, and rating information. `agency_metrics_daily` tracks time-series data. Database indexing is optimized for performance, particularly for carousel and analytics queries.
 
 ## Authentication System
 
-Supabase Auth handles email/password authentication and user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding process allows role selection, and agency owners can securely manage their profiles.
+Supabase Auth manages email/password and Google OAuth authentication, along with user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding process includes role selection, and agency owners can securely manage their profiles. OAuth callbacks handle role assignment and redirection to onboarding flows for clients and agencies.
 
 ## SEO Implementation
 
-SEO is managed using the `next-seo` package for global and page-specific metadata. `next-sitemap` generates `sitemap.xml` and `robots.txt` post-build. Blog content is structured with H2/H3, Q&A formats, and rich media for AI and search engine optimization.
+SEO is managed using the `next-seo` package for global and page-specific metadata. `next-sitemap` generates `sitemap.xml` and `robots.txt` post-build. Blog content is structured with H2/H3, Q&A formats, and rich media for optimal indexing.
 
 ## Analytics System
 
-A comprehensive analytics infrastructure tracks user interactions, including agency profile views, contact button clicks, and detailed search analytics (queries, filters, results, zero-result searches). Frontend tracking uses custom React hooks with smart deduplication. The backend provides tRPC endpoints for tracking with service role authentication, and an admin dashboard displays real-time KPIs, top agency rankings, and allows data export with period filters. Agency owners have a dedicated dashboard to view their specific performance metrics, including views, contacts, conversion rates, and top keywords.
+A comprehensive analytics infrastructure tracks user interactions such as agency profile views, contact button clicks, and detailed search analytics (queries, filters, results, zero-result searches). Frontend tracking uses custom React hooks with smart deduplication. The backend provides tRPC endpoints for tracking with service role authentication. An admin dashboard displays real-time KPIs, top agency rankings, and allows data export. Agency owners have a dedicated dashboard to view their specific performance metrics.
 
 # External Dependencies
 
@@ -176,10 +52,3 @@ A comprehensive analytics infrastructure tracks user interactions, including age
 - **@trpc/server**: Core tRPC framework.
 - **zod**: Schema validation.
 - **@supabase/supabase-js**: Supabase client for database interactions.
-
-## Development Tools
-
-- **TypeScript**: Type safety.
-- **ESLint, Prettier**: Code quality and formatting.
-- **PostCSS, Autoprefixer**: CSS processing.
-- **ts-node, next-sitemap**: Development utilities and build processes.
