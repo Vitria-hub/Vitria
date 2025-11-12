@@ -6,7 +6,7 @@ export const agencyRouter = router({
   list: publicProcedure
     .input(agencyListSchema)
     .query(async ({ input }) => {
-      const { q, region, city, service, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
+      const { q, region, city, service, category, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
       const offset = (page - 1) * limit;
 
       let query = db.from('agencies').select('*', { count: 'exact' });
@@ -21,6 +21,10 @@ export const agencyRouter = router({
 
       if (city) {
         query = query.eq('location_city', city);
+      }
+
+      if (category) {
+        query = query.overlaps('categories', [category]);
       }
 
       if (service) {

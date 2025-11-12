@@ -5,6 +5,7 @@ export const agencyListSchema = z.object({
   region: z.string().optional(),
   city: z.string().optional(),
   service: z.string().optional(),
+  category: z.string().optional(),
   sizeMin: z.number().optional(),
   sizeMax: z.number().optional(),
   priceRange: z.enum(['$', '$$', '$$$']).optional(),

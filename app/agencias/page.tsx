@@ -19,13 +19,13 @@ function AgenciasContent() {
   const lastSearchTracked = useRef<string>('');
 
   useEffect(() => {
-    const searchQuery = searchParams.get('search');
+    const categoryParam = searchParams.get('category');
     const regionParam = searchParams.get('region');
     
     const newFilters: any = {};
     
-    if (searchQuery) {
-      newFilters.service = searchQuery;
+    if (categoryParam) {
+      newFilters.category = categoryParam;
     }
     
     if (regionParam) {

@@ -7,26 +7,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
-
-const SERVICES = [
-  'SEO', 'SEM', 'Marketing Digital', 'Branding', 'Diseño Gráfico', 
-  'Identidad Corporativa', 'Publicidad', 'Campañas ATL', 'Campañas BTL',
-  'Copywriting', 'Content Marketing', 'Blogs', 'Producción Audiovisual',
-  'Fotografía', 'Video Corporativo', 'Desarrollo Web', 'E-commerce',
-  'Apps Móviles', 'Gestión RRSS', 'Community Management', 'Influencers',
-  'RRPP', 'Comunicación Corporativa', 'Eventos'
-];
-
-const CATEGORIES = [
-  'Marketing Digital',
-  'Publicidad',
-  'Diseño y Branding',
-  'Contenido',
-  'Audiovisual',
-  'Desarrollo Web',
-  'Relaciones Públicas',
-  'Social Media',
-];
+import { MAIN_CATEGORIES } from '@/lib/categories';
 
 const INDUSTRIES = [
   'Retail', 'Tech/Startups', 'E-commerce', 'Salud', 'Educación',
@@ -233,67 +214,94 @@ export default function CrearAgenciaPage() {
 
         {/* PASO 2: Servicios y Categoría */}
         {currentStep === 2 && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <h2 className="text-2xl font-bold text-dark mb-6">Servicios y Especialidad</h2>
             
             <div>
               <label className="block text-sm font-semibold text-dark mb-3">
-                ¿Qué servicios ofreces? * (selecciona al menos 1)
+                ¿Qué categorías principales ofreces? * (selecciona todas las que apliquen)
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {SERVICES.map((service) => (
+              <p className="text-sm text-dark/60 mb-4">
+                Puedes seleccionar múltiples categorías si tu agencia ofrece varios servicios
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {MAIN_CATEGORIES.map((category) => (
                   <label
-                    key={service}
-                    className={`flex items-center gap-2 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
-                      formData.services.includes(service)
-                        ? 'border-primary bg-primary/5 text-primary font-semibold'
+                    key={category.id}
+                    className={`flex flex-col gap-2 px-5 py-4 border-2 rounded-lg cursor-pointer transition ${
+                      formData.categories.includes(category.id)
+                        ? 'border-primary bg-primary/5 text-primary'
                         : 'border-gray-200 hover:border-primary/50'
                     }`}
                   >
-                    <input
-                      type="checkbox"
-                      checked={formData.services.includes(service)}
-                      onChange={() => setFormData({
-                        ...formData,
-                        services: toggleArrayItem(formData.services, service)
-                      })}
-                      className="w-4 h-4"
-                    />
-                    <span className="text-sm">{service}</span>
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.categories.includes(category.id)}
+                        onChange={() => setFormData({
+                          ...formData,
+                          categories: toggleArrayItem(formData.categories, category.id)
+                        })}
+                        className="w-5 h-5 mt-0.5"
+                      />
+                      <div className="flex-1">
+                        <div className="font-bold text-base mb-1">{category.label}</div>
+                        <div className={`text-xs ${formData.categories.includes(category.id) ? 'text-primary/80' : 'text-dark/60'}`}>
+                          {category.description}
+                        </div>
+                      </div>
+                    </div>
                   </label>
                 ))}
               </div>
-              <p className="text-sm text-dark/60 mt-2">Seleccionados: {formData.services.length}</p>
+              <p className="text-sm text-dark/60 mt-3">
+                Categorías seleccionadas: {formData.categories.length}
+              </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-dark mb-3">
-                Categoría Principal * (selecciona al menos 1)
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {CATEGORIES.map((category) => (
-                  <label
-                    key={category}
-                    className={`flex items-center gap-3 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
-                      formData.categories.includes(category)
-                        ? 'border-primary bg-primary/5 text-primary font-semibold'
-                        : 'border-gray-200 hover:border-primary/50'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={formData.categories.includes(category)}
-                      onChange={() => setFormData({
-                        ...formData,
-                        categories: toggleArrayItem(formData.categories, category)
-                      })}
-                      className="w-4 h-4"
-                    />
-                    <span>{category}</span>
-                  </label>
-                ))}
+            {/* Servicios específicos por categoría */}
+            {formData.categories.length > 0 && (
+              <div className="border-t-2 border-gray-200 pt-6">
+                <label className="block text-sm font-semibold text-dark mb-3">
+                  Servicios específicos (opcional)
+                </label>
+                <p className="text-sm text-dark/60 mb-4">
+                  Marca los servicios específicos que ofreces dentro de tus categorías
+                </p>
+                
+                <div className="space-y-6">
+                  {MAIN_CATEGORIES.filter(cat => formData.categories.includes(cat.id)).map((category) => (
+                    <div key={category.id} className="bg-gray-50 rounded-lg p-4">
+                      <h3 className="font-bold text-primary mb-3">{category.label}</h3>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {category.services.map((service) => (
+                          <label
+                            key={service}
+                            className={`flex items-center gap-2 px-3 py-2 text-sm border rounded cursor-pointer transition ${
+                              formData.services.includes(service)
+                                ? 'border-primary bg-white text-primary font-medium'
+                                : 'border-gray-200 bg-white hover:border-primary/50'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={formData.services.includes(service)}
+                              onChange={() => setFormData({
+                                ...formData,
+                                services: toggleArrayItem(formData.services, service)
+                              })}
+                              className="w-4 h-4"
+                            />
+                            <span>{service}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 

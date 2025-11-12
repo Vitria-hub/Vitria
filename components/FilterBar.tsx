@@ -2,22 +2,9 @@
 
 import Input from './Input';
 import { Search } from 'lucide-react';
+import { MAIN_CATEGORIES } from '@/lib/categories';
 
 const REGIONS = ['RM', 'V', 'VIII', 'IV', 'VII', 'IX', 'X'];
-const SERVICES = [
-  'Marketing Digital',
-  'SEO',
-  'SEM',
-  'Branding',
-  'Diseño Gráfico',
-  'Publicidad',
-  'Content Marketing',
-  'Desarrollo Web',
-  'E-commerce',
-  'Gestión RRSS',
-  'RRPP',
-  'Producción Audiovisual'
-];
 const PRICE_RANGES = ['$', '$$', '$$$'];
 
 interface FilterBarProps {
@@ -54,14 +41,14 @@ export default function FilterBar({ onFilterChange, currentFilters = {} }: Filte
         </select>
 
         <select
-          value={currentFilters.service || ''}
+          value={currentFilters.category || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
-          onChange={(e) => onFilterChange({ service: e.target.value })}
+          onChange={(e) => onFilterChange({ category: e.target.value })}
         >
-          <option value="">Todos los servicios</option>
-          {SERVICES.map((service) => (
-            <option key={service} value={service}>
-              {service}
+          <option value="">Todas las categorías</option>
+          {MAIN_CATEGORIES.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.label}
             </option>
           ))}
         </select>
