@@ -58,9 +58,13 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
               </span>
             </div>
             {agency.price_range && (
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-secondary/10 text-secondary rounded-md font-semibold">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-secondary/10 text-secondary rounded-md font-semibold text-xs">
                 <DollarSign className="w-3.5 h-3.5" />
-                <span>{agency.price_range.replace(/\s/g, '')}</span>
+                <span>
+                  {agency.price_range === '$' && 'Menos de $1M'}
+                  {agency.price_range === '$$' && '$1M a $3M'}
+                  {agency.price_range === '$$$' && '$3M a $5M'}
+                </span>
               </div>
             )}
           </div>
