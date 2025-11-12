@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS agency_contacts (
   agency_id UUID NOT NULL REFERENCES agencies(id) ON DELETE CASCADE,
   contact_method TEXT NOT NULL CHECK (contact_method IN ('email', 'phone', 'website', 'form')),
   message TEXT,
+  business_name TEXT,
+  budget_range TEXT,
+  desired_categories TEXT[],
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

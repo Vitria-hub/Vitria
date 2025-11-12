@@ -6,6 +6,7 @@ import { metricsRouter } from './metrics';
 import { adminRouter } from './admin';
 import { analyticsRouter } from './analytics';
 import { clientRouter } from './client';
+import { contactRouter } from './contact';
 
 export const appRouter = router({
   agency: agencyRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   admin: adminRouter,
   analytics: analyticsRouter,
   client: clientRouter,
+  contact: contactRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,21 +1,34 @@
-import { router, publicProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { createReviewSchema } from '@/lib/validators';
 import { db } from '../db';
 import { z } from 'zod';
 
 export const reviewRouter = router({
-  create: publicProcedure
+  create: protectedProcedure
     .input(createReviewSchema)
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.user.id;
+
+      const { data: existingReview } = await db
+        .from('reviews')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('agency_id', input.agencyId)
+        .single();
+
+      if (existingReview) {
+        throw new Error('Ya has dejado una reseña para esta agencia');
+      }
+
       const { data, error } = await db
         .from('reviews')
         .insert({
           agency_id: input.agencyId,
-          user_id: null,
+          user_id: userId,
           rating: input.rating,
           comment: input.comment,
           status: 'pending',
-        })
+        } as any)
         .select()
         .single();
 
@@ -29,7 +42,13 @@ export const reviewRouter = router({
     .query(async ({ input }) => {
       let query = db
         .from('reviews')
-        .select('*')
+        .select(`
+          *,
+          author:users!user_id (
+            id,
+            full_name
+          )
+        `)
         .eq('agency_id', input.agencyId);
 
       if (input.status) {

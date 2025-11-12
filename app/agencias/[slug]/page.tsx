@@ -6,6 +6,7 @@ import RatingStars from '@/components/RatingStars';
 import PortfolioGrid from '@/components/PortfolioGrid';
 import ReviewForm from '@/components/ReviewForm';
 import Button from '@/components/Button';
+import ContactAgencyModal from '@/components/ContactAgencyModal';
 import { MapPin, Globe, Mail, Phone, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -163,6 +164,14 @@ export default function AgencyDetailPage() {
                   Contactar Agencia
                 </Button>
               </div>
+
+              <ContactAgencyModal
+                agencyId={agency.id}
+                agencyName={agency.name}
+                agencyEmail={agency.email}
+                isOpen={showContactForm}
+                onClose={() => setShowContactForm(false)}
+              />
             </div>
           </div>
         </div>
@@ -195,13 +204,25 @@ export default function AgencyDetailPage() {
               {reviews && reviews.length > 0 ? (
                 reviews.map((review: any) => (
                   <div key={review.id} className="bg-white border-2 border-gray-200 rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <RatingStars rating={review.rating} size="sm" />
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                          <span className="text-primary font-bold text-sm">
+                            {review.author?.full_name?.charAt(0)?.toUpperCase() || '?'}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-dark">
+                            {review.author?.full_name || 'Usuario Anónimo'}
+                          </p>
+                          <RatingStars rating={review.rating} size="sm" />
+                        </div>
+                      </div>
                       <span className="text-sm text-dark/60">
-                        {new Date(review.created_at).toLocaleDateString()}
+                        {new Date(review.created_at).toLocaleDateString('es-CL')}
                       </span>
                     </div>
-                    {review.comment && <p className="text-dark/80">{review.comment}</p>}
+                    {review.comment && <p className="text-dark/80 leading-relaxed">{review.comment}</p>}
                   </div>
                 ))
               ) : (
@@ -232,20 +253,6 @@ export default function AgencyDetailPage() {
         </div>
       </div>
 
-      {showContactForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold text-primary mb-4">Contactar Agencia</h3>
-            <p className="text-dark/70 mb-4">
-              Envía un mensaje directamente a {agency.name} a través de su email:{' '}
-              <a href={`mailto:${agency.email}`} className="text-primary font-semibold">
-                {agency.email}
-              </a>
-            </p>
-            <Button onClick={() => setShowContactForm(false)}>Cerrar</Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
