@@ -34,6 +34,14 @@ SEO is managed using the `next-seo` package for global and page-specific metadat
 
 A comprehensive analytics infrastructure tracks user interactions such as agency profile views, contact button clicks, and detailed search analytics (queries, filters, results, zero-result searches). Frontend tracking uses custom React hooks with smart deduplication. The backend provides tRPC endpoints for tracking with service role authentication. An admin dashboard displays real-time KPIs, top agency rankings, and allows data export. Agency owners have a dedicated dashboard to view their specific performance metrics.
 
+## Premium Management System
+
+**Phase 1 (Current): Manual Admin Management**
+The platform features a manual premium management system operated by administrators. Admins can activate/deactivate premium status for agencies through the admin panel (`/admin/agencias`), selecting from preset durations (30/90/365 days) or custom date ranges. The system automatically calculates and stores expiration dates in the `premium_until` field. Premium agencies display a distinctive gold badge with crown icon on agency cards and profile pages. The schema includes an optional `whatsapp_number` field to support the hybrid contact model: basic agencies use trackable contact forms, while premium agencies can offer direct WhatsApp contact. Premium expiration is tracked but automatic enforcement of expiration is pending implementation.
+
+**Phase 2 (Planned): Stripe Automation**
+Future integration will automate premium subscription management via Stripe, handling payments, renewals, and automatic expiration enforcement.
+
 # External Dependencies
 
 ## Core Infrastructure
