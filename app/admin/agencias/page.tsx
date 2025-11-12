@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2 } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
@@ -13,6 +13,8 @@ export default function AdminAgenciesPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [premiumModal, setPremiumModal] = useState<{ agencyId: string; currentStatus: boolean } | null>(null);
+  const [durationDays, setDurationDays] = useState(30);
 
   const { data, isLoading, refetch } = trpc.admin.listAgencies.useQuery(
     { page, limit: 20, status: statusFilter },
@@ -25,6 +27,13 @@ export default function AdminAgenciesPage() {
 
   const deleteMutation = trpc.admin.deleteAgency.useMutation({
     onSuccess: () => refetch(),
+  });
+
+  const premiumMutation = trpc.admin.setPremium.useMutation({
+    onSuccess: () => {
+      refetch();
+      setPremiumModal(null);
+    },
   });
 
   useEffect(() => {
@@ -46,6 +55,26 @@ export default function AdminAgenciesPage() {
   const handleDelete = (agencyId: string) => {
     if (confirm('¿Estás seguro de eliminar esta agencia? Esta acción no se puede deshacer.')) {
       deleteMutation.mutate({ agencyId });
+    }
+  };
+
+  const handlePremiumToggle = (agencyId: string, currentStatus: boolean) => {
+    if (currentStatus) {
+      if (confirm('¿Desactivar premium para esta agencia?')) {
+        premiumMutation.mutate({ agencyId, isPremium: false });
+      }
+    } else {
+      setPremiumModal({ agencyId, currentStatus });
+    }
+  };
+
+  const handlePremiumConfirm = () => {
+    if (premiumModal) {
+      premiumMutation.mutate({
+        agencyId: premiumModal.agencyId,
+        isPremium: true,
+        durationDays,
+      });
     }
   };
 
@@ -95,6 +124,7 @@ export default function AdminAgenciesPage() {
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Dueño</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Ubicación</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Estado</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-dark">Premium</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Acciones</th>
                     </tr>
                   </thead>
@@ -130,6 +160,23 @@ export default function AdminAgenciesPage() {
                           )}
                         </td>
                         <td className="px-6 py-4">
+                          {agency.is_premium ? (
+                            <div>
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-semibold rounded-full mb-1">
+                                <Crown className="w-4 h-4" />
+                                Premium
+                              </span>
+                              {agency.premium_until && (
+                                <div className="text-xs text-dark/60">
+                                  Hasta: {new Date(agency.premium_until).toLocaleDateString('es-CL')}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-dark/60">Básico</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleVerify(agency.id, !agency.is_verified)}
@@ -141,6 +188,17 @@ export default function AdminAgenciesPage() {
                               ) : (
                                 <CheckCircle className="w-5 h-5 text-green-600" />
                               )}
+                            </button>
+                            <button
+                              onClick={() => handlePremiumToggle(agency.id, agency.is_premium)}
+                              className={`p-2 rounded-lg transition ${
+                                agency.is_premium 
+                                  ? 'hover:bg-orange-50' 
+                                  : 'hover:bg-yellow-50'
+                              }`}
+                              title={agency.is_premium ? 'Desactivar Premium' : 'Activar Premium'}
+                            >
+                              <Crown className={`w-5 h-5 ${agency.is_premium ? 'text-orange-600' : 'text-gray-400'}`} />
                             </button>
                             <button
                               onClick={() => handleDelete(agency.id)}
@@ -184,6 +242,90 @@ export default function AdminAgenciesPage() {
           <div className="text-center py-12 bg-white border-2 border-gray-200 rounded-xl">
             <Building2 className="w-16 h-16 text-dark/30 mx-auto mb-4" />
             <p className="text-dark/60">No se encontraron agencias</p>
+          </div>
+        )}
+
+        {premiumModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+              <div className="flex items-center gap-3 mb-6">
+                <Crown className="w-8 h-8 text-yellow-500" />
+                <h2 className="text-2xl font-bold text-primary">Activar Premium</h2>
+              </div>
+              
+              <p className="text-dark/70 mb-6">
+                Selecciona la duración del acceso premium para esta agencia:
+              </p>
+
+              <div className="space-y-3 mb-6">
+                <button
+                  onClick={() => setDurationDays(30)}
+                  className={`w-full p-4 rounded-lg border-2 text-left transition ${
+                    durationDays === 30 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-gray-200 hover:border-primary/50'
+                  }`}
+                >
+                  <div className="font-semibold text-dark">30 días (1 mes)</div>
+                  <div className="text-sm text-dark/60">Ideal para pruebas o campañas cortas</div>
+                </button>
+
+                <button
+                  onClick={() => setDurationDays(90)}
+                  className={`w-full p-4 rounded-lg border-2 text-left transition ${
+                    durationDays === 90 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-gray-200 hover:border-primary/50'
+                  }`}
+                >
+                  <div className="font-semibold text-dark">90 días (3 meses)</div>
+                  <div className="text-sm text-dark/60">Perfecto para trimestre</div>
+                </button>
+
+                <button
+                  onClick={() => setDurationDays(365)}
+                  className={`w-full p-4 rounded-lg border-2 text-left transition ${
+                    durationDays === 365 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-gray-200 hover:border-primary/50'
+                  }`}
+                >
+                  <div className="font-semibold text-dark">365 días (1 año)</div>
+                  <div className="text-sm text-dark/60">Máximo valor por inversión</div>
+                </button>
+
+                <div className="p-4 rounded-lg border-2 border-gray-200">
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Duración personalizada (días):
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={durationDays}
+                    onChange={(e) => setDurationDays(parseInt(e.target.value) || 30)}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setPremiumModal(null)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant="primary"
+                  className="flex-1"
+                  onClick={handlePremiumConfirm}
+                  disabled={premiumMutation.isPending}
+                >
+                  {premiumMutation.isPending ? 'Activando...' : 'Activar Premium'}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>

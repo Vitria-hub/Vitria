@@ -98,6 +98,38 @@ export const adminRouter = router({
       return { success: true };
     }),
 
+  setPremium: adminProcedure
+    .input(z.object({
+      agencyId: z.string().uuid(),
+      isPremium: z.boolean(),
+      durationDays: z.number().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const updateData: any = {
+        is_premium: input.isPremium,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (input.isPremium && input.durationDays) {
+        const premiumUntil = new Date();
+        premiumUntil.setDate(premiumUntil.getDate() + input.durationDays);
+        updateData.premium_until = premiumUntil.toISOString();
+      } else if (!input.isPremium) {
+        updateData.premium_until = null;
+      }
+
+      const { data, error } = await db
+        .from('agencies')
+        .update(updateData)
+        .eq('id', input.agencyId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }),
+
   listReviews: adminProcedure
     .input(z.object({
       page: z.number().default(1),

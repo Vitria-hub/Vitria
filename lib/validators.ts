@@ -49,6 +49,7 @@ export const createAgencySchema = z.object({
   website: z.string().url('URL inválida').optional().or(z.literal('')),
   email: z.string().email('Email inválido'),
   phone: z.string().min(8, 'Teléfono inválido'),
+  whatsappNumber: z.string().min(8, 'Número de WhatsApp inválido').optional().or(z.literal('')),
   city: z.string().min(2, 'Ciudad requerida'),
   region: z.string().min(1, 'Región requerida'),
   
