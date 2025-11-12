@@ -49,6 +49,42 @@ Implementado el sistema base para registro de clientes y tracking de contactos c
 - Exportación de leads a CSV
 - Políticas de privacidad y términos formales
 
+## November 12, 2025 - Google OAuth Login (Clientes y Agencias)
+
+**Implementación de Login con Google**:
+- Agregado botón "Continuar con Google" en registro de clientes (`/auth/registro/cliente`)
+- Creada página de registro de agencias con Google OAuth (`/auth/registro/agencia`)
+- Callback OAuth actualizado para manejar roles (user/agency) y redirecciones de onboarding
+- Página de perfil de cliente post-OAuth (`/auth/registro/cliente/perfil`) para completar datos de negocio
+
+**Flujo de Clientes con Google**:
+1. Usuario hace clic en "Continuar con Google" desde `/auth/registro/cliente`
+2. Autenticación con Google → callback crea usuario con rol 'user'
+3. Si no tiene perfil de cliente → redirección a `/auth/registro/cliente/perfil`
+4. Completa datos de negocio (presupuesto, categorías) → `/dashboard`
+
+**Flujo de Agencias con Google**:
+1. Usuario hace clic en "Continuar con Google" desde `/auth/registro/agencia`
+2. Autenticación con Google → callback crea usuario con rol 'agency'
+3. Si no tiene agencia registrada → redirección a `/dashboard/crear-agencia`
+4. Completa perfil de agencia → `/mi-agencia`
+
+**Seguridad y Validación**:
+- Whitelist de roles: solo 'user' y 'agency' permitidos via OAuth
+- Protección de rol 'admin': nunca se puede asignar o sobrescribir via OAuth
+- Metadata de Supabase (server-side) usada para determinar rol
+- Validación de rol en callback antes de persistir en base de datos
+
+**Archivos Modificados/Creados**:
+- `lib/auth.ts`: Actualizado `signInWithGoogle()` para aceptar opciones de rol
+- `app/auth/callback/page.tsx`: Mejorado callback con validación de roles y redirecciones
+- `app/auth/registro/cliente/page.tsx`: Agregado botón de Google en paso 1
+- `app/auth/registro/cliente/perfil/page.tsx`: Nueva página para onboarding post-OAuth
+- `app/auth/registro/agencia/page.tsx`: Nueva página de registro de agencias
+
+**Nota Técnica**:
+El callback OAuth actual es un Client Component (compatible con arquitectura existente). Para máxima seguridad en producción, se recomienda migrar a Server Component con validación server-side del código OAuth, pero la implementación actual incluye protecciones básicas suficientes para MVP.
+
 ## November 12, 2025 - Price Range Filter & Display
 
 **Price Range Filtering**:

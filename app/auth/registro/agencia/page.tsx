@@ -1,0 +1,98 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { signInWithGoogle } from '@/lib/auth';
+import { Building2 } from 'lucide-react';
+
+export default function AgencyRegisterPage() {
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleGoogleSignUp = async () => {
+    setError('');
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle({ 
+        role: 'agency',
+        redirectPath: '/dashboard/crear-agencia'
+      });
+    } catch (err: any) {
+      setError(err.message || 'Error al continuar con Google');
+      setGoogleLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Building2 className="w-10 h-10 text-dark" />
+          </div>
+          <h1 className="text-4xl font-bold text-primary mb-2">Registra tu Agencia</h1>
+          <p className="text-dark/70 text-lg">
+            Únete a Vitria y conecta con clientes potenciales
+          </p>
+        </div>
+
+        <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
+          {error && (
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+              {error}
+            </div>
+          )}
+
+          <button
+            onClick={handleGoogleSignUp}
+            disabled={googleLoading}
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-lg font-semibold hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.8055 10.2292C19.8055 9.55057 19.7501 8.86719 19.6296 8.19922H10.2002V12.0491H15.6014C15.3771 13.2911 14.6571 14.3898 13.6026 15.0878V17.5866H16.8248C18.7172 15.8449 19.8055 13.2728 19.8055 10.2292Z" fill="#4285F4"/>
+              <path d="M10.2002 20.0006C12.9511 20.0006 15.2726 19.1151 16.8294 17.5865L13.6072 15.0877C12.7085 15.6979 11.5537 16.0433 10.2049 16.0433C7.54356 16.0433 5.28961 14.2831 4.49246 11.9175H1.16309V14.4927C2.75562 17.8478 6.29152 20.0006 10.2002 20.0006Z" fill="#34A853"/>
+              <path d="M4.48714 11.9175C4.07256 10.6755 4.07256 9.32892 4.48714 8.08691V5.51172H1.16244C-0.387475 8.67662 -0.387475 12.3278 1.16244 15.4927L4.48714 11.9175Z" fill="#FBBC04"/>
+              <path d="M10.2002 3.95805C11.6248 3.936 13.0026 4.47247 14.0363 5.45722L16.8897 2.60385C15.1844 0.990871 12.9371 0.0808105 10.2002 0.10619C6.29152 0.10619 2.75562 2.25897 1.16309 5.51185L4.4878 8.08704C5.28027 5.71676 7.53889 3.95805 10.2002 3.95805Z" fill="#EA4335"/>
+            </svg>
+            {googleLoading ? 'Conectando...' : 'Continuar con Google'}
+          </button>
+
+          <div className="mt-6 p-4 bg-lilac/10 rounded-lg">
+            <h3 className="font-semibold text-dark mb-2">¿Qué incluye?</h3>
+            <ul className="space-y-2 text-sm text-dark/80">
+              <li className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2"></div>
+                <span>Perfil profesional completo con portfolio</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2"></div>
+                <span>Recibe leads de clientes interesados</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2"></div>
+                <span>Métricas y analytics de tu perfil</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2"></div>
+                <span>Opciones premium para destacar</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-6 text-center text-sm text-dark/60">
+            ¿Ya tienes cuenta?{' '}
+            <Link href="/auth/login" className="text-primary font-semibold hover:underline">
+              Inicia sesión aquí
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-6 text-center">
+          <Link href="/auth/registro" className="text-sm text-dark/60 hover:text-primary transition">
+            ← Volver a opciones de registro
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -15,32 +16,67 @@ export default function AuthCallbackPage() {
         if (error) throw error;
 
         if (session?.user) {
+          const metadataRole = session.user.user_metadata?.role || 'user';
+          const allowedRoles = ['user', 'agency'];
+          const intendedRole = allowedRoles.includes(metadataRole) ? metadataRole : 'user';
+          
+          const fullName = session.user.user_metadata?.full_name || 
+                         session.user.user_metadata?.name || 
+                         session.user.email?.split('@')[0] || 
+                         'Usuario';
+
           const { data: existingUser } = await supabase
             .from('users')
             .select('*')
             .eq('auth_id', session.user.id)
             .single();
 
-          if (!existingUser) {
-            const fullName = session.user.user_metadata?.full_name || 
-                           session.user.user_metadata?.name || 
-                           session.user.email?.split('@')[0] || 
-                           'Usuario';
+          let dbUserId = existingUser?.id;
 
-            await supabase.from('users').insert({
+          if (!existingUser) {
+            const { data: newUser } = await supabase.from('users').insert({
               auth_id: session.user.id,
               full_name: fullName,
-              role: 'user',
-            });
+              role: intendedRole as 'user' | 'agency',
+            }).select().single();
+            
+            dbUserId = newUser?.id;
+          } else {
+            if (existingUser.role !== intendedRole && existingUser.role !== 'admin') {
+              await supabase
+                .from('users')
+                .update({ role: intendedRole as 'user' | 'agency' })
+                .eq('auth_id', session.user.id);
+            }
           }
 
-          const { data: userData } = await supabase
-            .from('users')
-            .select('role')
-            .eq('auth_id', session.user.id)
-            .single();
+          if (intendedRole === 'user') {
+            const { data: clientProfile } = await supabase
+              .from('client_profiles')
+              .select('*')
+              .eq('user_id', dbUserId)
+              .single();
 
-          if (userData?.role === 'admin') {
+            if (!clientProfile) {
+              router.push('/auth/registro/cliente/perfil');
+              return;
+            }
+          }
+
+          if (intendedRole === 'agency') {
+            const { data: agencyProfile } = await supabase
+              .from('agencies')
+              .select('*')
+              .eq('owner_id', dbUserId)
+              .single();
+
+            if (!agencyProfile) {
+              router.push('/dashboard/crear-agencia');
+              return;
+            }
+          }
+
+          if (existingUser?.role === 'admin') {
             router.push('/admin');
           } else {
             router.push('/dashboard');
@@ -55,7 +91,7 @@ export default function AuthCallbackPage() {
     };
 
     handleCallback();
-  }, [router]);
+  }, [router, searchParams]);
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">

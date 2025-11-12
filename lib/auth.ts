@@ -37,11 +37,26 @@ export async function signIn(email: string, password: string) {
   return data;
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(options?: {
+  role?: 'user' | 'agency';
+  redirectPath?: string;
+  metadata?: Record<string, any>;
+}) {
+  const role = options?.role || 'user';
+  const allowedRoles = ['user', 'agency'];
+  const safeRole = allowedRoles.includes(role) ? role : 'user';
+  
+  const redirectPath = options?.redirectPath || '/dashboard';
+  const metadata = options?.metadata || {};
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
+      data: {
+        role: safeRole,
+        ...metadata,
+      },
     },
   });
 
