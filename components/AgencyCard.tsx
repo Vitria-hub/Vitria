@@ -58,7 +58,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
               </span>
             </div>
             {agency.price_range && (
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-accent/10 text-accent rounded-md font-semibold">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-secondary/10 text-secondary rounded-md font-semibold">
                 <DollarSign className="w-3.5 h-3.5" />
                 <span>{agency.price_range.replace(/\s/g, '')}</span>
               </div>
