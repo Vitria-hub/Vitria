@@ -154,6 +154,7 @@ export const agencyRouter = router({
           .insert({
             name: input.name,
             slug,
+            logo_url: input.logo_url || null,
             description: input.description || null,
             website: input.website || null,
             email: input.email || null,

@@ -45,6 +45,7 @@ export const contactFormSchema = z.object({
 export const createAgencySchema = z.object({
   // Paso 1: Información Básica
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  logo_url: z.string().url('URL de logo inválida').optional().or(z.literal('')),
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres'),
   website: z.string().url('URL inválida').optional().or(z.literal('')),
   email: z.string().email('Email inválido'),
