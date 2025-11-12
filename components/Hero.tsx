@@ -111,17 +111,6 @@ export default function Hero() {
               Ver Agencias Disponibles
             </Button>
           </form>
-
-          <div className="grid grid-cols-2 gap-8 max-w-lg mx-auto mt-16">
-            <div>
-              <div className="text-4xl font-bold text-accent mb-2">150+</div>
-              <div className="text-sm opacity-90">Agencias Registradas</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-accent mb-2">4.8★</div>
-              <div className="text-sm opacity-90">Promedio Reseñas</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
