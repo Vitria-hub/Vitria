@@ -19,7 +19,7 @@ export default function ClientProfilePage() {
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
-  const createProfileMutation = trpc.client.createProfile.useMutation();
+  const createProfileMutation = trpc.clientProfile.createProfile.useMutation();
 
   useEffect(() => {
     const checkAuth = async () => {

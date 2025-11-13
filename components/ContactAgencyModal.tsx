@@ -28,7 +28,7 @@ export default function ContactAgencyModal({
   const [contactMethod, setContactMethod] = useState<'email' | 'phone' | 'website' | 'form'>('email');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const { data: clientProfile } = trpc.client.getMyProfile.useQuery(undefined, {
+  const { data: clientProfile } = trpc.clientProfile.getMyProfile.useQuery(undefined, {
     enabled: !!user,
   });
 

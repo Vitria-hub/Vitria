@@ -24,9 +24,9 @@ export default function ClientProfileEditPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const { data: existingProfile, isLoading: profileLoading } = trpc.client.getMyProfile.useQuery();
-  const createProfileMutation = trpc.client.createProfile.useMutation();
-  const updateProfileMutation = trpc.client.updateProfile.useMutation();
+  const { data: existingProfile, isLoading: profileLoading } = trpc.clientProfile.getMyProfile.useQuery();
+  const createProfileMutation = trpc.clientProfile.createProfile.useMutation();
+  const updateProfileMutation = trpc.clientProfile.updateProfile.useMutation();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -97,7 +97,7 @@ export default function ClientProfileEditPage() {
         setSuccessMessage('Perfil creado correctamente');
       }
 
-      await utils.client.getMyProfile.invalidate();
+      await utils.clientProfile.getMyProfile.invalidate();
       setIsEditing(false);
     } catch (err: any) {
       setError(err.message || 'Error al guardar el perfil');

@@ -15,7 +15,7 @@ export const appRouter = router({
   metrics: metricsRouter,
   admin: adminRouter,
   analytics: analyticsRouter,
-  client: clientRouter,
+  clientProfile: clientRouter,
   contact: contactRouter,
 });
 

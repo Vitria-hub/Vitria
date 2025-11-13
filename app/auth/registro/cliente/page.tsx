@@ -30,7 +30,7 @@ export default function ClientRegisterPage() {
   const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
 
-  const createProfileMutation = trpc.client.createProfile.useMutation();
+  const createProfileMutation = trpc.clientProfile.createProfile.useMutation();
 
   useEffect(() => {
     const checkSession = async () => {
