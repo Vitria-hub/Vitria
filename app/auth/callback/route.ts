@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   
-  const origin = requestUrl.origin;
+  const headersList = await headers();
+  const host = headersList.get('host');
+  const protocol = headersList.get('x-forwarded-proto') || 'https';
+  const origin = `${protocol}://${host}`;
   
   const cookieStore = await cookies();
   const pendingRole = cookieStore.get('pending_oauth_role')?.value;
