@@ -79,12 +79,29 @@ export default function ClientRegisterPage() {
 
     try {
       const { signIn } = await import('@/lib/auth');
+      const { createClient } = await import('@/utils/supabase/client');
       
       await signUp(email, password, fullName, 'user');
       
       await signIn(email, password);
       
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const supabase = createClient();
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      while (attempts < maxAttempts) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          break;
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
+        attempts++;
+      }
+      
+      const { data: { session: finalSession } } = await supabase.auth.getSession();
+      if (!finalSession) {
+        throw new Error('No se pudo establecer la sesión. Por favor, intenta iniciar sesión manualmente.');
+      }
       
       await createProfileMutation.mutateAsync({
         businessName,
@@ -96,7 +113,12 @@ export default function ClientRegisterPage() {
 
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Error al crear la cuenta');
+      console.error('Client registration error:', err);
+      if (err.message?.includes('No auth token')) {
+        setError('Error al crear el perfil. Por favor, intenta iniciar sesión manualmente.');
+      } else {
+        setError(err.message || 'Error al crear la cuenta');
+      }
       setLoading(false);
     }
   };

@@ -34,9 +34,15 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 
 4. **Role Immutability**: Once a user is created with a role, that role is permanently stored in the database and cannot be changed through subsequent OAuth login attempts, preventing accidental role changes.
 
-**Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation (password confirmation, minimum 6 characters). Both flows redirect to respective onboarding pages after account creation:
-- Client registration → `/auth/registro/cliente/perfil` (business profile setup)
-- Agency registration → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
+**Email/Password Authentication:** Both client and agency registration support email/password authentication with automatic session creation:
+- **Email Confirmation**: DISABLED in Supabase (Authentication → Providers → Email → "Confirm email" set to OFF). Users can login immediately after registration without email verification.
+- **Auto-Login After Registration**: After successful signup via email/password, the system automatically calls `signIn()` to create an active session, allowing immediate access to the platform.
+- **Password Requirements**: Minimum 6 characters with confirmation validation during registration.
+- **Error Handling**: Clear error messages for common issues (invalid credentials, email already exists, password mismatch).
+
+**Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation. Both flows automatically log users in and redirect to respective onboarding pages:
+- Client registration → Auto-login → `/auth/registro/cliente/perfil` (2-step: account creation + business profile setup)
+- Agency registration → Auto-login → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
 
 **Agency Profile Creation:** The 3-step agency creation wizard includes immediate logo upload functionality in Step 1. Agencies can upload their logo (JPG, PNG, WebP, max 5MB) during profile creation, with real-time preview and validation. Logos are stored in Supabase Storage (`agency-logos` bucket) and automatically linked to the agency profile. The upload flow uses functional state updates to preserve concurrent form edits during async operations.
 
