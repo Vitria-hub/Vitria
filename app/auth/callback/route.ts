@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -22,36 +22,10 @@ export async function GET(request: Request) {
     return NextResponse.redirect(redirectUrl.toString());
   }
 
-  const verificationUrl = new URL('/auth/verificar-sesion', origin);
-  if (pendingRole) {
-    verificationUrl.searchParams.set('role', pendingRole);
-  }
-
-  let response = NextResponse.redirect(verificationUrl.toString());
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            try {
-              cookieStore.set(name, value, options);
-            } catch (error) {
-            }
-            response.cookies.set(name, value, options);
-          });
-        },
-      },
-    }
-  );
-
   try {
     console.log('Attempting to exchange code for session with code:', code.substring(0, 10) + '...');
+    
+    const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
     if (error) {
@@ -66,9 +40,14 @@ export async function GET(request: Request) {
 
     console.log('OAuth exchange successful, redirecting to session verification');
     
-    response.cookies.set('pending_oauth_role', '', { maxAge: 0, path: '/' });
+    const verificationUrl = new URL('/auth/verificar-sesion', origin);
+    if (pendingRole) {
+      verificationUrl.searchParams.set('role', pendingRole);
+    }
     
-    return response;
+    cookieStore.set('pending_oauth_role', '', { maxAge: 0, path: '/' });
+    
+    return NextResponse.redirect(verificationUrl.toString());
     
   } catch (err) {
     console.error('Callback error:', err);
