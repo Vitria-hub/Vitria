@@ -12,7 +12,7 @@ export function getTRPCClient() {
     links: [
       httpBatchLink({
         url: typeof window !== 'undefined' 
-          ? `${process.env.NEXT_PUBLIC_SITE_URL || window.location.origin}/api/trpc`
+          ? `${window.location.origin}/api/trpc`
           : '/api/trpc',
         async headers() {
           const supabase = createClient();

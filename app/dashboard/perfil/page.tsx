@@ -12,6 +12,7 @@ import Link from 'next/link';
 export default function ClientProfileEditPage() {
   const { user, userData, loading: authLoading } = useAuth();
   const router = useRouter();
+  const utils = trpc.useUtils();
   
   const [businessName, setBusinessName] = useState('');
   const [businessInstagram, setBusinessInstagram] = useState('');
@@ -21,6 +22,7 @@ export default function ClientProfileEditPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const { data: existingProfile, isLoading: profileLoading } = trpc.client.getMyProfile.useQuery();
   const createProfileMutation = trpc.client.createProfile.useMutation();
@@ -44,9 +46,27 @@ export default function ClientProfileEditPage() {
     }
   }, [existingProfile]);
 
+  const resetFormToProfile = (profile: typeof existingProfile) => {
+    if (profile) {
+      setBusinessName(profile.business_name || '');
+      setBusinessInstagram(profile.business_instagram || '');
+      setBudgetRange(profile.budget_range as '$' | '$$' | '$$$');
+      setDesiredCategories(profile.desired_categories || []);
+      setAboutBusiness(profile.about_business || '');
+    }
+  };
+
+  const handleCancel = () => {
+    resetFormToProfile(existingProfile);
+    setError('');
+    setSuccessMessage('');
+    setIsEditing(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (!budgetRange) {
       setError('Selecciona un rango de presupuesto');
@@ -71,12 +91,14 @@ export default function ClientProfileEditPage() {
 
       if (existingProfile) {
         await updateProfileMutation.mutateAsync(profileData);
+        setSuccessMessage('Perfil actualizado correctamente');
       } else {
         await createProfileMutation.mutateAsync(profileData);
+        setSuccessMessage('Perfil creado correctamente');
       }
 
+      await utils.client.getMyProfile.invalidate();
       setIsEditing(false);
-      router.refresh();
     } catch (err: any) {
       setError(err.message || 'Error al guardar el perfil');
     } finally {
@@ -145,6 +167,12 @@ export default function ClientProfileEditPage() {
         {error && (
           <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
             {error}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+            {successMessage}
           </div>
         )}
 
@@ -296,7 +324,7 @@ export default function ClientProfileEditPage() {
                 <Button 
                   type="button" 
                   variant="secondary" 
-                  onClick={() => setIsEditing(false)}
+                  onClick={handleCancel}
                   disabled={submitting}
                 >
                   Cancelar
