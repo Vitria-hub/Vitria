@@ -20,15 +20,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: authUser, error: authCheckError } = await supabaseAdmin.auth.admin.getUserById(auth_id);
-    
-    if (authCheckError || !authUser.user) {
-      return NextResponse.json(
-        { message: 'Invalid auth_id - user does not exist in auth system' },
-        { status: 403 }
-      );
-    }
-
     const { data: existingUser } = await supabaseAdmin
       .from('users')
       .select('*')
