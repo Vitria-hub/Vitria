@@ -72,7 +72,65 @@ export default function CrearAgenciaPage() {
     createMutation.mutate(submitData);
   };
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
+  const [validationError, setValidationError] = useState('');
+
+  const validateStep = (step: number): boolean => {
+    setValidationError('');
+    
+    if (step === 1) {
+      if (!formData.name || formData.name.length < 2) {
+        setValidationError('El nombre de la agencia es requerido (mínimo 2 caracteres)');
+        return false;
+      }
+      if (!formData.description || formData.description.length < 50) {
+        setValidationError('La descripción es requerida (mínimo 50 caracteres)');
+        return false;
+      }
+      if (!formData.email || !formData.email.includes('@')) {
+        setValidationError('Email de contacto válido es requerido');
+        return false;
+      }
+      if (!formData.phone || formData.phone.length < 8) {
+        setValidationError('Teléfono válido es requerido (mínimo 8 caracteres)');
+        return false;
+      }
+      if (!formData.city || formData.city.length < 2) {
+        setValidationError('Ciudad es requerida');
+        return false;
+      }
+      if (!formData.region) {
+        setValidationError('Región es requerida');
+        return false;
+      }
+    }
+    
+    if (step === 2) {
+      if (formData.categories.length === 0) {
+        setValidationError('Debes seleccionar al menos una categoría principal');
+        return false;
+      }
+    }
+    
+    if (step === 3) {
+      if (!formData.employeesMin || !formData.employeesMax) {
+        setValidationError('Debes seleccionar el tamaño del equipo');
+        return false;
+      }
+      if (!formData.priceRange) {
+        setValidationError('Debes seleccionar un rango de precios');
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep((prev) => Math.min(prev + 1, 3));
+    }
+  };
+  
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const toggleArrayItem = (array: string[], item: string) => {
@@ -589,6 +647,12 @@ export default function CrearAgenciaPage() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {validationError && (
+          <div className="bg-orange-50 border-2 border-orange-200 text-orange-700 px-4 py-3 rounded-lg mt-6">
+            {validationError}
           </div>
         )}
 
