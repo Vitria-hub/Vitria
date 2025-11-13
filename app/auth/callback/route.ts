@@ -17,11 +17,13 @@ export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     
+    console.log('Attempting to exchange code for session');
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
     if (error) {
       console.error('OAuth exchange error:', error);
-      return NextResponse.redirect(`${origin}/auth/login?error=exchange_failed`);
+      console.error('Error details:', JSON.stringify(error));
+      return NextResponse.redirect(`${origin}/auth/login?error=exchange_failed&message=${encodeURIComponent(error.message)}`);
     }
 
     if (!data.session?.user) {
