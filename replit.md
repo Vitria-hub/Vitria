@@ -34,6 +34,8 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 
 4. **Role Immutability**: Once a user is created with a role, that role is permanently stored in the database and cannot be changed through subsequent OAuth login attempts, preventing accidental role changes.
 
+**OAuth Callback Session Cookie Fix**: The OAuth callback (`/app/auth/callback/route.ts`) creates the redirect response BEFORE initializing the Supabase client. This ensures that when `exchangeCodeForSession()` writes session cookies via the `setAll` callback, those cookies are attached to the redirect response that gets returned to the browser. Previously, the redirect was created after cookie-writing, causing session cookies to be discarded and leaving users stuck on the login page after successful OAuth authentication.
+
 **Email/Password Authentication:** Both client and agency registration support email/password authentication with automatic session creation:
 - **Email Confirmation**: DISABLED in Supabase (Authentication → Providers → Email → "Confirm email" set to OFF). Users can login immediately after registration without email verification.
 - **Auto-Login After Registration**: After successful signup via email/password, the system automatically calls `signIn()` to create an active session, allowing immediate access to the platform.
