@@ -53,7 +53,7 @@ export async function signInWithGoogle(options?: {
     document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Lax`;
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_SITE_URL;
   const redirectUrl = new URL('/auth/callback', baseUrl);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
