@@ -594,7 +594,7 @@ export default function CrearAgenciaPage() {
 
         {createMutation.error && (
           <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mt-6">
-            Error al crear la agencia. Inténtalo de nuevo.
+            {createMutation.error.message}
           </div>
         )}
 
