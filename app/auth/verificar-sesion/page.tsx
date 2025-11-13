@@ -26,33 +26,50 @@ function VerificarSesionContent() {
         }
 
         const user = session.user;
-        const roleParam = searchParams.get('role');
         
-        if (!roleParam) {
-          console.log('No role specified - redirecting to account type selection');
-          router.push('/auth/seleccionar-tipo');
-          return;
-        }
-
-        const intendedRole = roleParam;
-
-        console.log('Session verification - intended role:', intendedRole);
+        console.log('Session verification - checking for existing user');
         
-        const response = await fetch('/api/auth/create-user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            auth_id: user.id,
-            full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario',
-            role: intendedRole,
-          }),
-        });
+        const { data: existingUser, error: userCheckError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('auth_id', user.id)
+          .single();
 
-        if (!response.ok) {
-          throw new Error('Failed to create/verify user');
+        let dbUser;
+
+        if (existingUser) {
+          console.log('Existing user found with role:', existingUser.role);
+          dbUser = existingUser;
+        } else {
+          console.log('New user - checking for role parameter');
+          const roleParam = searchParams.get('role');
+          
+          if (!roleParam) {
+            console.log('No role specified for new user - redirecting to account type selection');
+            router.push('/auth/seleccionar-tipo');
+            return;
+          }
+
+          const intendedRole = roleParam;
+          console.log('Creating new user with role:', intendedRole);
+          
+          const response = await fetch('/api/auth/create-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              auth_id: user.id,
+              full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario',
+              role: intendedRole,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to create user');
+          }
+
+          const responseData = await response.json();
+          dbUser = responseData.user;
         }
-
-        const { user: dbUser } = await response.json();
 
         if (dbUser.role === 'admin') {
           router.push('/admin');

@@ -25,24 +25,39 @@ export default function SeleccionarTipoPage() {
         return;
       }
 
-      const response = await fetch('/api/auth/create-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          auth_id: session.user.id,
-          full_name: session.user.user_metadata?.full_name || 
-                    session.user.user_metadata?.name || 
-                    session.user.email?.split('@')[0] || 
-                    'Usuario',
-          role,
-        }),
-      });
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('*')
+        .eq('auth_id', session.user.id)
+        .single();
 
-      if (!response.ok) {
-        throw new Error('Error al crear el perfil');
+      let dbUser;
+
+      if (existingUser) {
+        console.log('Existing user found, using database role:', existingUser.role);
+        dbUser = existingUser;
+      } else {
+        console.log('Creating new user with selected role:', role);
+        const response = await fetch('/api/auth/create-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            auth_id: session.user.id,
+            full_name: session.user.user_metadata?.full_name || 
+                      session.user.user_metadata?.name || 
+                      session.user.email?.split('@')[0] || 
+                      'Usuario',
+            role,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al crear el perfil');
+        }
+
+        const responseData = await response.json();
+        dbUser = responseData.user;
       }
-
-      const { user: dbUser } = await response.json();
 
       if (dbUser.role === 'agency') {
         const { data: agency } = await supabase
