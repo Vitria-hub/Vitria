@@ -83,13 +83,45 @@ export const agencyRouter = router({
         .from('agencies')
         .select('*')
         .eq('slug', input.slug)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Database error: ${error.message}`,
+        });
+      }
+      
+      if (!data) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agency not found',
+        });
+      }
 
-      const freshAgency = await enforceSingleAgencyPremiumFreshness(data);
+      const agency: any = data;
 
-      return freshAgency;
+      if (agency.is_premium && agency.premium_until) {
+        const now = new Date();
+        const premiumUntil = new Date(agency.premium_until);
+        
+        if (premiumUntil < now) {
+          await db
+            .from('agencies')
+            .update({
+              is_premium: false,
+              updated_at: now.toISOString(),
+            } as any)
+            .eq('id', agency.id);
+
+          return {
+            ...agency,
+            is_premium: false,
+          };
+        }
+      }
+
+      return agency;
     }),
 
   myAgency: protectedProcedure

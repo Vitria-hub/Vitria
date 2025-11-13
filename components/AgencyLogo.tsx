@@ -48,13 +48,13 @@ export default function AgencyLogo({
   
   if (hasValidLogo) {
     return (
-      <div className={`relative ${sizeClasses[size]} ${className} rounded-lg overflow-hidden border-2 border-gray-200`}>
+      <div className={`relative ${sizeClasses[size]} ${className} flex-shrink-0`}>
         <Image
           src={logoUrl}
           alt={name}
-          fill
-          className="object-cover"
-          sizes={size === 'sm' ? '48px' : size === 'md' ? '64px' : size === 'lg' ? '96px' : '128px'}
+          width={size === 'sm' ? 48 : size === 'md' ? 64 : size === 'lg' ? 96 : 128}
+          height={size === 'sm' ? 48 : size === 'md' ? 64 : size === 'lg' ? 96 : 128}
+          className="rounded-lg border-2 border-gray-200 object-cover w-full h-full"
         />
       </div>
     );

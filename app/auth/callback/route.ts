@@ -9,7 +9,8 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
+    console.log('No code found, checking for token in fragment (implicit flow)');
+    return NextResponse.redirect(`${origin}/auth/verificar-sesion?role=${roleParam || ''}`);
   }
 
   try {
