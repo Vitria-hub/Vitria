@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
@@ -15,9 +16,13 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Log all cookies to debug PKCE issue
+    const allCookies = (await cookies()).getAll();
+    console.log('All cookies received:', allCookies.map(c => ({ name: c.name, hasValue: !!c.value })));
+    
     const supabase = await createClient();
     
-    console.log('Attempting to exchange code for session');
+    console.log('Attempting to exchange code for session with code:', code.substring(0, 10) + '...');
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
     if (error) {

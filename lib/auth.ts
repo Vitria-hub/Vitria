@@ -1,6 +1,7 @@
-import { supabase } from './supabase';
+import { createClient } from '@/utils/supabase/client';
 
 export async function signUp(email: string, password: string, fullName: string, role: 'user' | 'agency' = 'user') {
+  const supabase = createClient();
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
@@ -29,6 +30,7 @@ export async function signUp(email: string, password: string, fullName: string, 
 }
 
 export async function signIn(email: string, password: string) {
+  const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -42,6 +44,7 @@ export async function signInWithGoogle(options?: {
   role?: 'user' | 'agency';
   redirectPath?: string;
 }) {
+  const supabase = createClient();
   const role = options?.role || 'user';
   const allowedRoles = ['user', 'agency'];
   const safeRole = allowedRoles.includes(role) ? role : 'user';
@@ -66,11 +69,13 @@ export async function signInWithGoogle(options?: {
 }
 
 export async function signOut() {
+  const supabase = createClient();
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
 
 export async function getCurrentUser() {
+  const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return null;
@@ -85,6 +90,7 @@ export async function getCurrentUser() {
 }
 
 export async function getSession() {
+  const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
   return session;
 }
