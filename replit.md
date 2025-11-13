@@ -52,6 +52,23 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 
 **Password Recovery Flow:** Complete password reset functionality allows users to recover forgotten passwords via email. Users request a recovery link at `/auth/recuperar-contrasena`, receive a time-limited token via email, and update their password at `/auth/actualizar-contrasena`. The flow includes token validation, password strength requirements (min 6 chars), and automatic session termination post-update. Server-side middleware protects admin (`/admin`) and agency (`/mi-agencia`) routes with role-based access control.
 
+**Session Guard System:** All authentication pages (`/auth/login`, `/auth/registro/agencia`, `/auth/registro/cliente`) implement intelligent session guards that prevent users from getting stuck on auth pages while preserving onboarding flows:
+
+1. **Onboarding-Aware Redirects**: Session guards check not only if a session exists, but also whether the user has completed their onboarding:
+   - For agencies: Queries `agencies` table to verify profile completion
+   - For clients: Queries `client_profiles` table to verify profile completion
+   - Incomplete onboarding → Redirect to appropriate onboarding page
+   - Complete onboarding → Redirect to dashboard
+
+2. **OAuth Flow Protection**: When new users register via Google OAuth:
+   - User clicks "Registrarme con Google" on registration page
+   - OAuth callback creates user in database with appropriate role
+   - `/auth/verificar-sesion` detects new user without profile and redirects to onboarding
+   - Session guard allows onboarding flow to complete without interruption
+   - After onboarding completion, session guard redirects to dashboard
+
+3. **Prevent Auth Page Loops**: Authenticated users who navigate to login/register pages are automatically redirected to their appropriate destination based on role and onboarding status, preventing them from seeing auth forms when already logged in.
+
 ## SEO Implementation
 
 SEO is managed using the `next-seo` package for global and page-specific metadata. `next-sitemap` generates `sitemap.xml` and `robots.txt` post-build. Blog content is structured with H2/H3, Q&A formats, and rich media for optimal indexing.
