@@ -24,6 +24,14 @@ Supabase (PostgreSQL) is the database, featuring tables for `users`, `agencies`,
 
 Supabase Auth manages email/password and Google OAuth authentication, along with user sessions. A role-based authorization model (`user`, `agency`, `admin`) is enforced, with protected tRPC procedures validating session tokens and verifying ownership. The onboarding process includes role selection, and agency owners can securely manage their profiles. OAuth callbacks handle role assignment and redirection to onboarding flows for clients and agencies.
 
+**OAuth Role Preservation System:** The platform uses a robust dual-path approach to preserve user role during Google OAuth authentication:
+
+1. **Optimistic Cookie Path**: Before initiating OAuth, the system sets a `pending_oauth_role` cookie (10-minute expiry, SameSite=Lax) containing the intended role. The server callback reads this cookie and passes the role to session verification.
+
+2. **Fallback to Manual Selection**: If the cookie is unavailable (Safari private mode, third-party cookie blocking), users are redirected to `/auth/seleccionar-tipo` where they manually choose between "Cliente" or "Agencia" account types. This ensures no default to 'user' role and provides explicit role selection when automated detection fails.
+
+3. **Role Immutability**: The `/api/auth/create-user` endpoint preserves existing user roles from the database. Once a user is created with a role, that role cannot be downgraded or changed through subsequent OAuth attempts, preventing accidental role changes.
+
 **Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation (password confirmation, minimum 6 characters). Both flows redirect to respective onboarding pages after account creation:
 - Client registration → `/auth/registro/cliente/perfil` (business profile setup)
 - Agency registration → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
