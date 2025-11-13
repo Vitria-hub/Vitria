@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signUp, signInWithGoogle } from '@/lib/auth';
+import { createClient } from '@/utils/supabase/client';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -26,9 +27,35 @@ export default function ClientRegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
 
   const createProfileMutation = trpc.client.createProfile.useMutation();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('role')
+          .eq('auth_id', session.user.id)
+          .single();
+
+        if (userData?.role === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/dashboard');
+        }
+      } else {
+        setCheckingSession(false);
+      }
+    };
+    
+    checkSession();
+  }, [router]);
 
   const handleGoogleSignUp = async () => {
     setError('');
@@ -144,6 +171,17 @@ export default function ClientRegisterPage() {
         : [...prev, categoryId]
     );
   };
+
+  if (checkingSession) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+          <p className="text-dark/60">Verificando sesión...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
