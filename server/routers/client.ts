@@ -32,7 +32,8 @@ export const clientRouter = router({
         .single();
 
       if (error) {
-        throw new Error('Error al crear el perfil de cliente');
+        console.error('Database error creating client profile:', error);
+        throw new Error(`Error al crear el perfil de cliente: ${error.message}`);
       }
 
       return data;
@@ -70,7 +71,8 @@ export const clientRouter = router({
         .single();
 
       if (error) {
-        throw new Error('Error al actualizar el perfil');
+        console.error('Database error updating client profile:', error);
+        throw new Error(`Error al actualizar el perfil: ${error.message}`);
       }
 
       return data;
