@@ -10,7 +10,7 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend Architecture
 
-The frontend is built with Next.js 14 and the App Router, utilizing a combination of server and client components. It follows an Atomic Design pattern with reusable, type-safe components styled using TailwindCSS and `class-variance-authority`. A custom design system defines brand colors (primary: #1B5568, accent: #F5D35E) for UI consistency. tRPC React Query hooks handle state and data fetching, including caching and invalidation. The UI features a simplified category system for agency search, a community-focused homepage with clear Calls to Action (CTAs), and an SEO-optimized blog. Mobile responsiveness is implemented across all components.
+The frontend is built with Next.js 14 and the App Router, utilizing a combination of server and client components. It follows an Atomic Design pattern with reusable, type-safe components styled using TailwindCSS and `class-variance-authority`. A custom design system defines brand colors (primary: #1B5568, accent: #F5D35E) for UI consistency. tRPC React Query hooks handle state and data fetching, including caching and invalidation. The tRPC client uses `window.location.origin` to determine the API URL dynamically in browser environments, ensuring compatibility across development and production domains. The UI features a simplified category system for agency search, a community-focused homepage with clear Calls to Action (CTAs), and an SEO-optimized blog. Mobile responsiveness is implemented across all components.
 
 ## Backend Architecture
 
@@ -29,6 +29,8 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 - Agency registration → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
 
 **Agency Profile Creation:** The 3-step agency creation wizard includes immediate logo upload functionality in Step 1. Agencies can upload their logo (JPG, PNG, WebP, max 5MB) during profile creation, with real-time preview and validation. Logos are stored in Supabase Storage (`agency-logos` bucket) and automatically linked to the agency profile. The upload flow uses functional state updates to preserve concurrent form edits during async operations.
+
+**Client Profile Management:** Clients can create and manage their business profiles at `/dashboard/perfil`. The profile page supports both view and edit modes with proper state management. After creating a profile during onboarding at `/auth/registro/cliente/perfil`, clients are redirected to their profile page to view their information. The edit form includes tRPC cache invalidation (`utils.client.getMyProfile.invalidate()`) to ensure fresh data after mutations, and a cancel handler that resets form fields to pristine server data. Success and error messages provide clear feedback during profile operations. The dashboard includes a "Gestionar Perfil" button for easy access to profile management.
 
 **Password Recovery Flow:** Complete password reset functionality allows users to recover forgotten passwords via email. Users request a recovery link at `/auth/recuperar-contrasena`, receive a time-limited token via email, and update their password at `/auth/actualizar-contrasena`. The flow includes token validation, password strength requirements (min 6 chars), and automatic session termination post-update. Server-side middleware protects admin (`/admin`) and agency (`/mi-agencia`) routes with role-based access control.
 
