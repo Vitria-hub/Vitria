@@ -1,12 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-export const dynamic = 'force-dynamic';
-
-export default function VerificarSesionPage() {
+function VerificarSesionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -110,5 +108,20 @@ export default function VerificarSesionPage() {
         <p className="text-dark/60">Verificando sesión...</p>
       </div>
     </div>
+  );
+}
+
+export default function VerificarSesionPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+          <p className="text-dark/60">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <VerificarSesionContent />
+    </Suspense>
   );
 }
