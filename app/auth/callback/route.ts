@@ -26,7 +26,8 @@ export async function GET(request: Request) {
   if (pendingRole) {
     verificationUrl.searchParams.set('role', pendingRole);
   }
-  const response = NextResponse.redirect(verificationUrl.toString());
+
+  let response = NextResponse.redirect(verificationUrl.toString());
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,7 +39,10 @@ export async function GET(request: Request) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            try {
+              cookieStore.set(name, value, options);
+            } catch (error) {
+            }
             response.cookies.set(name, value, options);
           });
         },
