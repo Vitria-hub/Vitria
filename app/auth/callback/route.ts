@@ -22,7 +22,11 @@ export async function GET(request: Request) {
     return NextResponse.redirect(redirectUrl.toString());
   }
 
-  let response = NextResponse.next();
+  const verificationUrl = new URL('/auth/verificar-sesion', origin);
+  if (pendingRole) {
+    verificationUrl.searchParams.set('role', pendingRole);
+  }
+  const response = NextResponse.redirect(verificationUrl.toString());
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,11 +61,6 @@ export async function GET(request: Request) {
     }
 
     console.log('OAuth exchange successful, redirecting to session verification');
-    const verificationUrl = new URL('/auth/verificar-sesion', origin);
-    if (pendingRole) {
-      verificationUrl.searchParams.set('role', pendingRole);
-    }
-    response = NextResponse.redirect(verificationUrl.toString());
     
     response.cookies.set('pending_oauth_role', '', { maxAge: 0, path: '/' });
     
