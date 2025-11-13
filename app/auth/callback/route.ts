@@ -6,7 +6,8 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   const roleParam = requestUrl.searchParams.get('role');
-  const origin = requestUrl.origin;
+  
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
 
   if (!code) {
     console.log('No code found, checking for token in fragment (implicit flow)');
