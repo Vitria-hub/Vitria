@@ -230,4 +230,67 @@ export const agencyRouter = router({
         });
       }
     }),
+
+  update: protectedProcedure
+    .input(createAgencySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { data: userData } = await db
+        .from('users')
+        .select('id')
+        .eq('auth_id', ctx.userId)
+        .single();
+
+      if (!userData) throw new Error('User not found');
+
+      const { data: existingAgency } = await db
+        .from('agencies')
+        .select('id, slug')
+        .eq('owner_id', userData.id)
+        .single();
+
+      if (!existingAgency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'No se encontró la agencia para actualizar',
+        });
+      }
+
+      try {
+        const updateData: any = {
+          name: input.name,
+          logo_url: input.logo_url || null,
+          description: input.description || null,
+          website: input.website || null,
+          email: input.email || null,
+          phone: input.phone || null,
+          location_city: input.city || null,
+          location_region: input.region || null,
+          services: input.services || [],
+          categories: input.categories || [],
+          specialties: input.specialties || [],
+          employees_min: input.employeesMin || null,
+          employees_max: input.employeesMax || null,
+          price_range: input.priceRange || null,
+        };
+
+        const { data, error } = await db
+          .from('agencies')
+          .update(updateData)
+          .eq('id', existingAgency.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        return data;
+      } catch (error: any) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Error al actualizar la agencia: ${error.message}`,
+        });
+      }
+    }),
 });
