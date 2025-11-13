@@ -56,6 +56,10 @@ export type Database = {
           premium_until: string | null;
           avg_rating: number;
           reviews_count: number;
+          approval_status: 'pending' | 'approved' | 'rejected';
+          rejection_reason: string | null;
+          approved_at: string | null;
+          reviewed_by: string | null;
           created_at: string;
           updated_at: string;
         };
