@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
+  const roleParam = requestUrl.searchParams.get('role');
   const origin = requestUrl.origin;
 
   if (!code) {
@@ -27,7 +29,7 @@ export async function GET(request: Request) {
     const session = data.session;
     const user = session.user;
 
-    const metadataRole = user.user_metadata?.role || 'user';
+    const metadataRole = roleParam || user.user_metadata?.role || 'user';
     const allowedRoles = ['user', 'agency'];
     const intendedRole = allowedRoles.includes(metadataRole) ? metadataRole : 'user';
     
@@ -36,7 +38,7 @@ export async function GET(request: Request) {
                    user.email?.split('@')[0] || 
                    'Usuario';
 
-    const { data: existingUser } = await supabase
+    const { data: existingUser } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('auth_id', user.id)
@@ -46,11 +48,16 @@ export async function GET(request: Request) {
     let finalRole: 'user' | 'agency' | 'admin';
 
     if (!existingUser) {
-      const { data: newUser } = await supabase.from('users').insert({
+      const { data: newUser, error: insertError } = await supabaseAdmin.from('users').insert({
         auth_id: user.id,
         full_name: fullName,
         role: intendedRole as 'user' | 'agency',
       }).select().single();
+      
+      if (insertError) {
+        console.error('Error creating user:', insertError);
+        return NextResponse.redirect(`${origin}/auth/login?error=user_creation_failed`);
+      }
       
       dbUserId = newUser?.id;
       finalRole = intendedRole as 'user' | 'agency';
@@ -63,7 +70,7 @@ export async function GET(request: Request) {
     }
 
     if (finalRole === 'user') {
-      const { data: clientProfile } = await supabase
+      const { data: clientProfile } = await supabaseAdmin
         .from('client_profiles')
         .select('*')
         .eq('user_id', dbUserId)
@@ -77,7 +84,7 @@ export async function GET(request: Request) {
     }
 
     if (finalRole === 'agency') {
-      const { data: agency } = await supabase
+      const { data: agency } = await supabaseAdmin
         .from('agencies')
         .select('*')
         .eq('owner_id', dbUserId)

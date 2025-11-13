@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { supabaseAdmin } from './supabase-admin';
 
 export async function signUp(email: string, password: string, fullName: string, role: 'user' | 'agency' = 'user') {
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -15,7 +16,7 @@ export async function signUp(email: string, password: string, fullName: string, 
   if (authError) throw authError;
 
   if (authData.user) {
-    const { error: userError } = await supabase.from('users').insert({
+    const { error: userError } = await supabaseAdmin.from('users').insert({
       auth_id: authData.user.id,
       full_name: fullName,
       role,
@@ -40,22 +41,21 @@ export async function signIn(email: string, password: string) {
 export async function signInWithGoogle(options?: {
   role?: 'user' | 'agency';
   redirectPath?: string;
-  metadata?: Record<string, any>;
 }) {
   const role = options?.role || 'user';
   const allowedRoles = ['user', 'agency'];
   const safeRole = allowedRoles.includes(role) ? role : 'user';
-  
-  const redirectPath = options?.redirectPath || '/dashboard';
-  const metadata = options?.metadata || {};
+
+  const redirectUrl = new URL('/auth/callback', window.location.origin);
+  redirectUrl.searchParams.set('role', safeRole);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-      data: {
-        role: safeRole,
-        ...metadata,
+      redirectTo: redirectUrl.toString(),
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
       },
     },
   });
