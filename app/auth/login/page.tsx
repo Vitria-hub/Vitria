@@ -40,17 +40,7 @@ export default function LoginPage() {
         }
 
         if (userData.role === 'agency') {
-          const { data: agency } = await supabase
-            .from('agencies')
-            .select('id')
-            .eq('owner_id', userData.id)
-            .single();
-
-          if (!agency) {
-            router.push('/dashboard/crear-agencia');
-          } else {
-            router.push('/dashboard');
-          }
+          router.push('/dashboard');
           return;
         }
 

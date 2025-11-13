@@ -12,7 +12,7 @@ export default function EditarPerfilPage() {
     if (!isLoading && agency) {
       router.push(`/agencias/${agency.slug}`);
     } else if (!isLoading && !agency) {
-      router.push('/dashboard/crear-agencia');
+      router.push('/dashboard');
     }
   }, [agency, isLoading, router]);
 

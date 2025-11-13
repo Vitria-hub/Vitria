@@ -42,9 +42,9 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 - **Password Requirements**: Minimum 6 characters with confirmation validation during registration.
 - **Error Handling**: Clear error messages for common issues (invalid credentials, email already exists, password mismatch).
 
-**Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation. Both flows automatically log users in and redirect to respective onboarding pages:
-- Client registration → Auto-login → `/auth/registro/cliente/perfil` (2-step: account creation + business profile setup)
-- Agency registration → Auto-login → `/dashboard/crear-agencia` (3-step agency profile creation with logo upload)
+**Registration Flows:** Both client and agency registration offer dual authentication options: (1) Google OAuth for quick signup, and (2) email/password with form validation. Both flows automatically log users in and redirect to the dashboard:
+- Client registration → Auto-login → `/dashboard` (profile creation is optional, shown via CTA in dashboard)
+- Agency registration → Auto-login → `/dashboard` (agency creation is optional, shown via CTA in dashboard)
 
 **Agency Profile Creation:** The 3-step agency creation wizard includes immediate logo upload functionality in Step 1. Agencies can upload their logo (JPG, PNG, WebP, max 5MB) during profile creation, with real-time preview and validation. Logos are stored in Supabase Storage (`agency-logos` bucket) and automatically linked to the agency profile. The upload flow uses functional state updates to preserve concurrent form edits during async operations.
 
@@ -52,22 +52,27 @@ Supabase Auth manages email/password and Google OAuth authentication, along with
 
 **Password Recovery Flow:** Complete password reset functionality allows users to recover forgotten passwords via email. Users request a recovery link at `/auth/recuperar-contrasena`, receive a time-limited token via email, and update their password at `/auth/actualizar-contrasena`. The flow includes token validation, password strength requirements (min 6 chars), and automatic session termination post-update. Server-side middleware protects admin (`/admin`) and agency (`/mi-agencia`) routes with role-based access control.
 
-**Session Guard System:** All authentication pages (`/auth/login`, `/auth/registro/agencia`, `/auth/registro/cliente`) implement intelligent session guards that prevent users from getting stuck on auth pages while preserving onboarding flows:
+**Dual-Role Architecture:** Users can have BOTH client and agency roles simultaneously. The system no longer forces profile completion during authentication:
 
-1. **Onboarding-Aware Redirects**: Session guards check not only if a session exists, but also whether the user has completed their onboarding:
-   - For agencies: Queries `agencies` table to verify profile completion
-   - For clients: Queries `client_profiles` table to verify profile completion
-   - Incomplete onboarding → Redirect to appropriate onboarding page
-   - Complete onboarding → Redirect to dashboard
+1. **Optional Profile Creation**: Both client profiles and agency profiles are now optional. After authentication, all users land on `/dashboard` regardless of whether they have created profiles.
 
-2. **OAuth Flow Protection**: When new users register via Google OAuth:
-   - User clicks "Registrarme con Google" on registration page
-   - OAuth callback creates user in database with appropriate role
-   - `/auth/verificar-sesion` detects new user without profile and redirects to onboarding
-   - Session guard allows onboarding flow to complete without interruption
-   - After onboarding completion, session guard redirects to dashboard
+2. **Dashboard-Based Profile Creation**: The dashboard dynamically shows appropriate CTAs based on what profiles the user is missing:
+   - Users without a client profile see a "Completar Perfil de Cliente" CTA
+   - Users without an agency see a "Crear Mi Agencia" CTA
+   - Users with both profiles see full dashboard with both client and agency sections
+   - CTA logic uses query status checking (`status === 'success'`) to ensure CTAs only appear when profile absence is definitively confirmed
 
-3. **Prevent Auth Page Loops**: Authenticated users who navigate to login/register pages are automatically redirected to their appropriate destination based on role and onboarding status, preventing them from seeing auth forms when already logged in.
+3. **Authentication Flow**: All authentication entry points (login, signup, OAuth callbacks, session verification) route directly to `/dashboard`:
+   - No forced redirects to profile completion pages
+   - No checks for profile existence during login/signup
+   - Profile creation is initiated voluntarily from dashboard CTAs
+
+4. **Error Handling**: Dashboard includes robust error handling for tRPC queries:
+   - Loading states prevent premature CTA display
+   - Error states show clear user messages with reload instructions
+   - CTAs only appear when queries successfully confirm profile doesn't exist
+
+5. **Session Guard System**: Authenticated users who navigate to login/register pages are automatically redirected to `/dashboard`, preventing auth page loops while allowing new users to complete their chosen signup flow.
 
 ## SEO Implementation
 

@@ -86,17 +86,6 @@ function VerificarSesionContent() {
         }
 
         if (dbUser.role === 'agency') {
-          const { data: agency } = await supabase
-            .from('agencies')
-            .select('*')
-            .eq('owner_id', dbUser.id)
-            .single();
-
-          if (!agency) {
-            router.push('/dashboard/crear-agencia');
-            return;
-          }
-
           router.push('/dashboard');
           return;
         }

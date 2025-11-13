@@ -44,17 +44,7 @@ export default function AgencyRegisterPage() {
         }
 
         if (userData.role === 'agency') {
-          const { data: agency } = await supabase
-            .from('agencies')
-            .select('id')
-            .eq('owner_id', userData.id)
-            .single();
-
-          if (!agency) {
-            router.push('/dashboard/crear-agencia');
-          } else {
-            router.push('/dashboard');
-          }
+          router.push('/dashboard');
           return;
         }
 
@@ -78,7 +68,7 @@ export default function AgencyRegisterPage() {
     try {
       await signInWithGoogle({ 
         role: 'agency',
-        redirectPath: '/dashboard/crear-agencia'
+        redirectPath: '/dashboard'
       });
     } catch (err: any) {
       setError(err.message || 'Error al continuar con Google');
@@ -137,7 +127,7 @@ export default function AgencyRegisterPage() {
       while (attempts < maxAttempts) {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
-          router.push('/dashboard/crear-agencia');
+          router.push('/dashboard');
           return;
         }
         await new Promise(resolve => setTimeout(resolve, 200));
