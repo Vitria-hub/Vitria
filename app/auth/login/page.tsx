@@ -51,7 +51,14 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión');
+      console.error('Login error:', err);
+      if (err.message?.includes('Email not confirmed') || err.message?.includes('not confirmed')) {
+        setError('Debes confirmar tu email antes de iniciar sesión. Revisa tu correo.');
+      } else if (err.message?.includes('Invalid login credentials')) {
+        setError('Email o contraseña incorrectos');
+      } else {
+        setError(err.message || 'Error al iniciar sesión');
+      }
     } finally {
       setLoading(false);
     }

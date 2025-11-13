@@ -50,10 +50,28 @@ export default function AgencyRegisterPage() {
     setLoading(true);
 
     try {
-      await signUp(email, password, fullName, 'agency');
+      const { signIn } = await import('@/lib/auth');
+      
+      const signUpResult = await signUp(email, password, fullName, 'agency');
+      
+      if (signUpResult.user && !signUpResult.user.confirmed_at) {
+        setError('Revisa tu correo para confirmar tu cuenta antes de continuar');
+        setLoading(false);
+        return;
+      }
+      
+      await signIn(email, password);
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       router.push('/dashboard/crear-agencia');
     } catch (err: any) {
-      setError(err.message || 'Error al crear la cuenta');
+      console.error('Registration error:', err);
+      if (err.message?.includes('Email not confirmed')) {
+        setError('Debes confirmar tu email antes de poder iniciar sesión. Revisa tu correo.');
+      } else {
+        setError(err.message || 'Error al crear la cuenta');
+      }
       setLoading(false);
     }
   };
