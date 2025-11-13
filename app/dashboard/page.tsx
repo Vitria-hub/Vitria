@@ -153,6 +153,23 @@ export default function DashboardPage() {
       ) : (
         <div className="space-y-6">
           <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-primary">
+                Mi Perfil de Cliente
+              </h2>
+              <Link href="/dashboard/perfil">
+                <Button variant="primary">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Gestionar Perfil
+                </Button>
+              </Link>
+            </div>
+            <p className="text-dark/60">
+              Completa tu perfil para recibir recomendaciones personalizadas de agencias que se ajusten a tus necesidades.
+            </p>
+          </div>
+
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
             <h2 className="text-2xl font-bold text-primary mb-4">
               Agencias Favoritas
             </h2>

@@ -2,36 +2,47 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { getCurrentUser } from '@/lib/auth';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MAIN_CATEGORIES } from '@/lib/categories';
+import Link from 'next/link';
 
-export default function ClientProfilePage() {
+export default function ClientProfileEditPage() {
+  const { user, userData, loading: authLoading } = useAuth();
+  const router = useRouter();
+  
   const [businessName, setBusinessName] = useState('');
   const [businessInstagram, setBusinessInstagram] = useState('');
   const [budgetRange, setBudgetRange] = useState<'$' | '$$' | '$$$' | ''>('');
   const [desiredCategories, setDesiredCategories] = useState<string[]>([]);
   const [aboutBusiness, setAboutBusiness] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
 
+  const { data: existingProfile, isLoading: profileLoading } = trpc.client.getMyProfile.useQuery();
   const createProfileMutation = trpc.client.createProfile.useMutation();
+  const updateProfileMutation = trpc.client.updateProfile.useMutation();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const user = await getCurrentUser();
-      if (!user) {
-        router.push('/auth/login');
-        return;
-      }
-      setLoading(false);
-    };
-    checkAuth();
-  }, [router]);
+    if (!authLoading && !user) {
+      router.push('/auth/login');
+    }
+  }, [user, authLoading, router]);
+
+  useEffect(() => {
+    if (existingProfile) {
+      setBusinessName(existingProfile.business_name || '');
+      setBusinessInstagram(existingProfile.business_instagram || '');
+      setBudgetRange(existingProfile.budget_range as '$' | '$$' | '$$$');
+      setDesiredCategories(existingProfile.desired_categories || []);
+      setAboutBusiness(existingProfile.about_business || '');
+    } else {
+      setIsEditing(true);
+    }
+  }, [existingProfile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,17 +61,25 @@ export default function ClientProfilePage() {
     setSubmitting(true);
 
     try {
-      await createProfileMutation.mutateAsync({
+      const profileData = {
         businessName,
         businessInstagram: businessInstagram || undefined,
         budgetRange,
         desiredCategories,
         aboutBusiness: aboutBusiness || undefined,
-      });
+      };
 
-      router.push('/dashboard/perfil');
+      if (existingProfile) {
+        await updateProfileMutation.mutateAsync(profileData);
+      } else {
+        await createProfileMutation.mutateAsync(profileData);
+      }
+
+      setIsEditing(false);
+      router.refresh();
     } catch (err: any) {
-      setError(err.message || 'Error al crear el perfil');
+      setError(err.message || 'Error al guardar el perfil');
+    } finally {
       setSubmitting(false);
     }
   };
@@ -73,7 +92,7 @@ export default function ClientProfilePage() {
     );
   };
 
-  if (loading) {
+  if (authLoading || profileLoading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="text-center">
@@ -84,23 +103,98 @@ export default function ClientProfilePage() {
     );
   }
 
+  if (!user) {
+    return null;
+  }
+
+  if (userData?.role !== 'user') {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="bg-yellow-50 border-2 border-yellow-200 text-yellow-700 px-6 py-4 rounded-lg">
+          Esta página es solo para clientes. Las agencias pueden gestionar su perfil desde el dashboard.
+        </div>
+        <Link href="/dashboard" className="inline-block mt-4">
+          <Button variant="secondary">Volver al Dashboard</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="max-w-2xl w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Completa tu Perfil</h1>
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-primary mb-2">
+            {existingProfile ? 'Mi Perfil de Cliente' : 'Completar Perfil'}
+          </h1>
           <p className="text-dark/70">
-            Cuéntanos sobre tu negocio para recomendarte las mejores agencias
+            {existingProfile 
+              ? 'Gestiona la información de tu negocio'
+              : 'Cuéntanos sobre tu negocio para recomendarte las mejores agencias'
+            }
           </p>
         </div>
+        {existingProfile && !isEditing && (
+          <Button variant="primary" onClick={() => setIsEditing(true)}>
+            Editar Perfil
+          </Button>
+        )}
+      </div>
 
-        <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-          {error && (
-            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
+      <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
+        {error && (
+          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            {error}
+          </div>
+        )}
+
+        {existingProfile && !isEditing ? (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-dark/60 mb-1">Nombre del Negocio</h3>
+              <p className="text-lg">{businessName}</p>
             </div>
-          )}
 
+            {businessInstagram && (
+              <div>
+                <h3 className="text-sm font-semibold text-dark/60 mb-1">Instagram</h3>
+                <p className="text-lg">{businessInstagram}</p>
+              </div>
+            )}
+
+            <div>
+              <h3 className="text-sm font-semibold text-dark/60 mb-1">Presupuesto</h3>
+              <p className="text-lg">{budgetRange}</p>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-dark/60 mb-1">Servicios de Interés</h3>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {desiredCategories.map(catId => {
+                  const category = MAIN_CATEGORIES.find(c => c.id === catId);
+                  return category ? (
+                    <span key={catId} className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-sm font-medium">
+                      {category.label}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            </div>
+
+            {aboutBusiness && (
+              <div>
+                <h3 className="text-sm font-semibold text-dark/60 mb-1">Sobre tu Proyecto</h3>
+                <p className="text-dark/80">{aboutBusiness}</p>
+              </div>
+            )}
+
+            <div className="pt-4 border-t border-gray-200">
+              <Link href="/dashboard">
+                <Button variant="secondary">Volver al Dashboard</Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
@@ -194,11 +288,23 @@ export default function ClientProfilePage() {
               />
             </div>
 
-            <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
-              {submitting ? 'Creando perfil...' : 'Completar Perfil'}
-            </Button>
+            <div className="flex gap-4">
+              <Button type="submit" variant="primary" className="flex-1" disabled={submitting}>
+                {submitting ? 'Guardando...' : existingProfile ? 'Guardar Cambios' : 'Completar Perfil'}
+              </Button>
+              {existingProfile && (
+                <Button 
+                  type="button" 
+                  variant="secondary" 
+                  onClick={() => setIsEditing(false)}
+                  disabled={submitting}
+                >
+                  Cancelar
+                </Button>
+              )}
+            </div>
           </form>
-        </div>
+        )}
       </div>
     </div>
   );
