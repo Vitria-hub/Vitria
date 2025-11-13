@@ -78,7 +78,13 @@ export default function ClientRegisterPage() {
     setLoading(true);
 
     try {
+      const { signIn } = await import('@/lib/auth');
+      
       await signUp(email, password, fullName, 'user');
+      
+      await signIn(email, password);
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       await createProfileMutation.mutateAsync({
         businessName,
