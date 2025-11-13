@@ -20,11 +20,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://vitria.replit.app'),
   title: {
-    default: 'Vitria - Directorio de Agencias de Marketing en Chile',
+    default: 'Vitria - Directorio de Agencias en Chile',
     template: '%s | Vitria',
   },
-  description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
-  keywords: ['agencias de marketing', 'publicidad chile', 'diseño gráfico', 'branding', 'agencias digitales'],
+  description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad, diseño, desarrollo y más en Chile.',
+  keywords: ['agencias chile', 'agencias de marketing', 'publicidad chile', 'diseño gráfico', 'branding', 'agencias digitales', 'desarrollo web'],
   authors: [{ name: 'Vitria' }],
   creator: 'Vitria',
   publisher: 'Vitria',
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
     locale: 'es_CL',
     url: 'https://vitria.replit.app',
     siteName: 'Vitria',
-    title: 'Vitria - Directorio de Agencias de Marketing en Chile',
-    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
+    title: 'Vitria - Directorio de Agencias en Chile',
+    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad, diseño, desarrollo y más en Chile.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vitria - Directorio de Agencias de Marketing en Chile',
-    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad y diseño en Chile.',
+    title: 'Vitria - Directorio de Agencias en Chile',
+    description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad, diseño, desarrollo y más en Chile.',
   },
   robots: {
     index: true,
