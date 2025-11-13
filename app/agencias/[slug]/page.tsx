@@ -7,6 +7,7 @@ import PortfolioGrid from '@/components/PortfolioGrid';
 import ReviewForm from '@/components/ReviewForm';
 import Button from '@/components/Button';
 import ContactAgencyModal from '@/components/ContactAgencyModal';
+import AgencyLogo from '@/components/AgencyLogo';
 import { MapPin, Globe, Mail, Phone, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -82,10 +83,11 @@ export default function AgencyDetailPage() {
 
         <div className="p-8">
           <div className="flex flex-col md:flex-row gap-6">
-            <img
-              src={agency.logo_url || '/logo-fallback.svg'}
-              alt={agency.name}
-              className="w-32 h-32 rounded-lg border-4 border-white shadow-lg object-cover"
+            <AgencyLogo 
+              name={agency.name}
+              logoUrl={agency.logo_url}
+              size="xl"
+              className="border-4 border-white shadow-lg"
             />
 
             <div className="flex-1">

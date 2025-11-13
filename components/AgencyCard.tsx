@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import RatingStars from './RatingStars';
 import Badge from './Badge';
+import AgencyLogo from './AgencyLogo';
 import { MapPin, DollarSign } from 'lucide-react';
 
 interface Agency {
@@ -30,10 +31,10 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
     >
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0">
-          <img
-            src={agency.logo_url || '/logo-fallback.svg'}
-            alt={agency.name}
-            className="h-16 w-16 rounded-lg object-cover border"
+          <AgencyLogo 
+            name={agency.name}
+            logoUrl={agency.logo_url}
+            size="md"
           />
         </div>
 

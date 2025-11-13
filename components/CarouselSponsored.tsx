@@ -4,6 +4,7 @@ import { trpc } from '@/lib/trpc';
 import type { RouterOutputs } from '@/server/routers/_app';
 import Link from 'next/link';
 import Image from 'next/image';
+import AgencyLogo from './AgencyLogo';
 import { ChevronLeft, ChevronRight, Star, MapPin, Users, CheckCircle, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
@@ -92,20 +93,12 @@ export default function CarouselSponsored() {
 
         <div className="grid md:grid-cols-[auto_1fr] gap-6 md:gap-8 items-start">
           <div className="flex-shrink-0 mx-auto md:mx-0">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-xl p-3 sm:p-4 shadow-xl flex items-center justify-center relative">
-              {logoUrl ? (
-                <Image 
-                  src={logoUrl} 
-                  alt={agency.name || 'Logo'}
-                  fill
-                  sizes="(max-width: 768px) 96px, 128px"
-                  className="object-contain p-2"
-                />
-              ) : (
-                <div className="w-full h-full bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold text-2xl sm:text-3xl">
-                  {agency.name?.charAt(0) || 'A'}
-                </div>
-              )}
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow-xl">
+              <AgencyLogo 
+                name={agency.name || 'Agencia'}
+                logoUrl={logoUrl}
+                size="lg"
+              />
             </div>
           </div>
 
