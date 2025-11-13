@@ -1,0 +1,71 @@
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { auth_id, full_name, role } = body;
+
+    if (!auth_id || !full_name || !role) {
+      return NextResponse.json(
+        { message: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    if (!['user', 'agency'].includes(role)) {
+      return NextResponse.json(
+        { message: 'Invalid role - only user and agency allowed' },
+        { status: 400 }
+      );
+    }
+
+    const { data: authUser, error: authCheckError } = await supabaseAdmin.auth.admin.getUserById(auth_id);
+    
+    if (authCheckError || !authUser.user) {
+      return NextResponse.json(
+        { message: 'Invalid auth_id - user does not exist in auth system' },
+        { status: 403 }
+      );
+    }
+
+    const { data: existingUser } = await supabaseAdmin
+      .from('users')
+      .select('id')
+      .eq('auth_id', auth_id)
+      .single();
+
+    if (existingUser) {
+      return NextResponse.json(
+        { message: 'User already exists', user: existingUser },
+        { status: 200 }
+      );
+    }
+
+    const { data: newUser, error } = await supabaseAdmin
+      .from('users')
+      .insert({
+        auth_id,
+        full_name,
+        role,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating user:', error);
+      return NextResponse.json(
+        { message: error.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ user: newUser }, { status: 201 });
+  } catch (error: any) {
+    console.error('Unexpected error:', error);
+    return NextResponse.json(
+      { message: error.message || 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

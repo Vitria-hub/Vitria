@@ -1,28 +1,28 @@
 import { supabase } from './supabase';
-import { supabaseAdmin } from './supabase-admin';
 
 export async function signUp(email: string, password: string, fullName: string, role: 'user' | 'agency' = 'user') {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        full_name: fullName,
-        role,
-      },
-    },
   });
 
   if (authError) throw authError;
 
   if (authData.user) {
-    const { error: userError } = await supabaseAdmin.from('users').insert({
-      auth_id: authData.user.id,
-      full_name: fullName,
-      role,
+    const response = await fetch('/api/auth/create-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        auth_id: authData.user.id,
+        full_name: fullName,
+        role,
+      }),
     });
 
-    if (userError) throw userError;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Error creating user profile');
+    }
   }
 
   return authData;
