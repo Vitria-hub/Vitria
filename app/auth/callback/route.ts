@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
+  const origin = requestUrl.origin;
   
   const cookieStore = await cookies();
   const pendingRole = cookieStore.get('pending_oauth_role')?.value;
