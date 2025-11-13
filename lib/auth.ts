@@ -49,9 +49,12 @@ export async function signInWithGoogle(options?: {
   const allowedRoles = ['user', 'agency'];
   const safeRole = allowedRoles.includes(role) ? role : 'user';
 
+  if (typeof window !== 'undefined') {
+    document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Lax`;
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
   const redirectUrl = new URL('/auth/callback', baseUrl);
-  redirectUrl.searchParams.set('role', safeRole);
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',

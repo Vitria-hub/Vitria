@@ -31,16 +31,19 @@ export async function POST(request: Request) {
 
     const { data: existingUser } = await supabaseAdmin
       .from('users')
-      .select('id')
+      .select('*')
       .eq('auth_id', auth_id)
       .single();
 
     if (existingUser) {
+      console.log('User already exists - preserving existing role:', existingUser.role);
       return NextResponse.json(
         { message: 'User already exists', user: existingUser },
         { status: 200 }
       );
     }
+    
+    console.log('Creating new user with role:', role);
 
     const { data: newUser, error } = await supabaseAdmin
       .from('users')

@@ -28,13 +28,23 @@ function VerificarSesionContent() {
         const user = session.user;
         const roleParam = searchParams.get('role');
         
+        if (!roleParam) {
+          console.log('No role specified - redirecting to account type selection');
+          router.push('/auth/seleccionar-tipo');
+          return;
+        }
+
+        const intendedRole = roleParam;
+
+        console.log('Session verification - intended role:', intendedRole);
+        
         const response = await fetch('/api/auth/create-user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             auth_id: user.id,
             full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario',
-            role: roleParam || 'user',
+            role: intendedRole,
           }),
         });
 
