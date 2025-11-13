@@ -55,7 +55,7 @@ export const createAgencySchema = z.object({
   region: z.string().min(1, 'Región requerida'),
   
   // Paso 2: Servicios y Categoría
-  services: z.array(z.string()).min(1, 'Selecciona al menos un servicio'),
+  services: z.array(z.string()).optional(),
   categories: z.array(z.string()).min(1, 'Selecciona al menos una categoría'),
   specialties: z.array(z.string()).optional(),
   
