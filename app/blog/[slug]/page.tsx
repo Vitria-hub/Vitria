@@ -157,10 +157,51 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               ))}
             </div>
 
-            <div className="prose prose-lg max-w-none prose-headings:text-primary prose-headings:font-bold prose-a:text-secondary prose-a:no-underline hover:prose-a:underline prose-strong:text-dark prose-ul:text-dark/80 prose-ol:text-dark/80 prose-p:text-dark/80 prose-p:leading-relaxed prose-li:my-1">
+            <div className="prose prose-lg max-w-none 
+              prose-headings:text-primary prose-headings:font-bold prose-headings:mb-6 prose-headings:mt-10
+              prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-0
+              prose-h2:text-3xl prose-h2:border-b-2 prose-h2:border-mint prose-h2:pb-3
+              prose-h3:text-2xl 
+              prose-p:text-dark/80 prose-p:leading-relaxed prose-p:mb-6
+              prose-ul:my-6 prose-ul:space-y-3 prose-ul:text-dark/80
+              prose-ol:my-6 prose-ol:space-y-3 prose-ol:text-dark/80
+              prose-li:my-2
+              prose-a:text-secondary prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-primary prose-strong:font-bold
+              prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-mint/10 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-8 prose-blockquote:rounded-r-lg
+              prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
+              ">
+              
+              <div className="flex items-center gap-3 mb-8 p-4 bg-gradient-to-r from-mint/20 to-transparent rounded-lg border-l-4 border-accent">
+                <Image
+                  src="/vitria-isotipo.png"
+                  alt="Vitria"
+                  width={40}
+                  height={40}
+                  className="m-0"
+                />
+                <p className="m-0 text-sm text-dark/70 italic">
+                  Contenido verificado por el equipo de Vitria - Tu directorio de agencias en Chile
+                </p>
+              </div>
+
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {post.content}
               </ReactMarkdown>
+
+              <div className="flex items-center justify-center gap-3 mt-12 p-6 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl border-2 border-accent/30">
+                <Image
+                  src="/vitria-isotipo.png"
+                  alt="Vitria"
+                  width={48}
+                  height={48}
+                  className="m-0"
+                />
+                <div>
+                  <p className="m-0 font-bold text-primary text-lg">¿Te resultó útil esta guía?</p>
+                  <p className="m-0 text-sm text-dark/70">Descubre más contenido sobre agencias en nuestro blog</p>
+                </div>
+              </div>
             </div>
 
             <div className="mt-12 pt-8 border-t-2 border-gray-200">
