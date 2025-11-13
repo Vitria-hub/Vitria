@@ -50,11 +50,6 @@ export async function signInWithGoogle(options?: {
   const redirectUrl = new URL('/auth/callback', baseUrl);
   redirectUrl.searchParams.set('role', safeRole);
 
-  console.log('DEBUG - NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL);
-  console.log('DEBUG - window.location.origin:', window.location.origin);
-  console.log('DEBUG - baseUrl:', baseUrl);
-  console.log('DEBUG - redirectUrl:', redirectUrl.toString());
-
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
