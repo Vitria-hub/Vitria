@@ -198,28 +198,39 @@ export default function CrearAgenciaPage() {
 
       {/* Progress Bar */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          {[1, 2, 3].map((step) => (
-            <div key={step} className="flex items-center flex-1">
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
-                step === currentStep ? 'bg-primary text-white' :
-                step < currentStep ? 'bg-accent text-dark' :
-                'bg-gray-200 text-gray-400'
-              }`}>
-                {step < currentStep ? <Check className="w-5 h-5" /> : step}
+        <div className="flex items-center mb-4">
+          {[
+            { num: 1, label: 'Información Básica' },
+            { num: 2, label: 'Servicios' },
+            { num: 3, label: 'Detalles del Negocio' }
+          ].map((step, index) => (
+            <div key={step.num} className="flex flex-col items-center flex-1">
+              <div className="flex items-center w-full">
+                {index > 0 && (
+                  <div className={`flex-1 h-1 ${
+                    step.num <= currentStep ? 'bg-accent' : 'bg-gray-200'
+                  }`} />
+                )}
+                <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold flex-shrink-0 ${
+                  step.num === currentStep ? 'bg-primary text-white' :
+                  step.num < currentStep ? 'bg-accent text-dark' :
+                  'bg-gray-200 text-gray-400'
+                }`}>
+                  {step.num < currentStep ? <Check className="w-5 h-5" /> : step.num}
+                </div>
+                {index < 2 && (
+                  <div className={`flex-1 h-1 ${
+                    step.num < currentStep ? 'bg-accent' : 'bg-gray-200'
+                  }`} />
+                )}
               </div>
-              {step < 3 && (
-                <div className={`flex-1 h-1 mx-2 ${
-                  step < currentStep ? 'bg-accent' : 'bg-gray-200'
-                }`} />
-              )}
+              <span className={`mt-2 text-xs sm:text-sm text-center ${
+                step.num === currentStep ? 'text-primary font-semibold' : 'text-dark/60'
+              }`}>
+                {step.label}
+              </span>
             </div>
           ))}
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className={currentStep === 1 ? 'text-primary font-semibold' : 'text-dark/60'}>Información Básica</span>
-          <span className={currentStep === 2 ? 'text-primary font-semibold' : 'text-dark/60'}>Servicios</span>
-          <span className={currentStep === 3 ? 'text-primary font-semibold' : 'text-dark/60'}>Detalles</span>
         </div>
       </div>
 
