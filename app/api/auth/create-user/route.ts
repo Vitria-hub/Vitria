@@ -48,6 +48,22 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error('Error creating user:', error);
+      
+      if (error.code === '23505') {
+        const { data: existingUserAfterError } = await supabaseAdmin
+          .from('users')
+          .select('*')
+          .eq('auth_id', auth_id)
+          .single();
+        
+        if (existingUserAfterError) {
+          return NextResponse.json(
+            { message: 'User already exists', user: existingUserAfterError },
+            { status: 200 }
+          );
+        }
+      }
+      
       return NextResponse.json(
         { message: error.message },
         { status: 500 }
