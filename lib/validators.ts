@@ -73,7 +73,7 @@ export const createClientProfileSchema = z.object({
     required_error: 'Selecciona un rango de presupuesto'
   }),
   desiredCategories: z.array(z.string()).min(1, 'Selecciona al menos una categoría de servicio que buscas'),
-  aboutBusiness: z.string().min(20, 'Cuéntanos un poco más sobre tu negocio (mínimo 20 caracteres)').optional(),
+  aboutBusiness: z.string().optional(),
 });
 
 export const trackAgencyContactSchema = z.object({

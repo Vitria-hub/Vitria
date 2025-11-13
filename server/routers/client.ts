@@ -18,16 +18,16 @@ export const clientRouter = router({
         throw new Error('Ya existe un perfil de cliente para este usuario');
       }
 
-      const { data, error } = await db
+      const { data, error } = await (db
         .from('client_profiles')
         .insert({
           user_id: userId,
           business_name: input.businessName,
-          business_instagram: input.businessInstagram,
+          business_instagram: input.businessInstagram || null,
           budget_range: input.budgetRange,
           desired_categories: input.desiredCategories,
-          about_business: input.aboutBusiness,
-        } as any)
+          about_business: input.aboutBusiness || null,
+        }) as any)
         .select()
         .single();
 
@@ -55,16 +55,16 @@ export const clientRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
 
-      const { data, error } = await db
+      const { data, error } = await (db
         .from('client_profiles')
         .update({
           business_name: input.businessName,
-          business_instagram: input.businessInstagram,
+          business_instagram: input.businessInstagram || null,
           budget_range: input.budgetRange,
           desired_categories: input.desiredCategories,
-          about_business: input.aboutBusiness,
+          about_business: input.aboutBusiness || null,
           updated_at: new Date().toISOString(),
-        } as any)
+        }) as any)
         .eq('user_id', userId)
         .select()
         .single();
