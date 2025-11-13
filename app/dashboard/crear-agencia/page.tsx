@@ -327,7 +327,13 @@ export default function CrearAgenciaPage() {
                 rows={4}
                 required
               />
-              <p className="text-sm text-dark/60 mt-1">{formData.description.length}/50 caracteres</p>
+              <p className={`text-sm mt-1 ${
+                formData.description.length >= 50 ? 'text-green-600 font-medium' : 'text-dark/60'
+              }`}>
+                {formData.description.length} caracteres
+                {formData.description.length < 50 && ` (mínimo: 50)`}
+                {formData.description.length >= 50 && ' ✓'}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
