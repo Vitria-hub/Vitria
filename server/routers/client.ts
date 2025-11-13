@@ -8,13 +8,17 @@ export const clientRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
 
-      const { data: existingProfile } = await db.rpc('check_client_profile_exists', { p_user_id: userId }).catch(() => null);
-
-      if (existingProfile) {
-        throw new Error('Ya existe un perfil de cliente para este usuario');
+      try {
+        const { data: existingCheck } = await (db.rpc as any)('check_client_profile_exists', { p_user_id: userId });
+        
+        if (existingCheck) {
+          throw new Error('Ya existe un perfil de cliente para este usuario');
+        }
+      } catch (err) {
+        // Ignore check errors, continue with creation
       }
 
-      const { data, error } = await db.rpc('create_client_profile', {
+      const { data, error } = await (db.rpc as any)('create_client_profile', {
         p_user_id: userId,
         p_business_name: input.businessName,
         p_budget_range: input.budgetRange,
@@ -28,7 +32,7 @@ export const clientRouter = router({
         throw new Error(`Error al crear el perfil de cliente: ${error.message}`);
       }
 
-      return data;
+      return data?.[0] || data;
     }),
 
   getMyProfile: protectedProcedure.query(async ({ ctx }) => {
