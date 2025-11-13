@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 
@@ -19,6 +19,7 @@ export default function RecuperarContrasenaPage() {
     setLoading(true);
 
     try {
+      const supabase = createClient();
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${baseUrl}/auth/actualizar-contrasena`,

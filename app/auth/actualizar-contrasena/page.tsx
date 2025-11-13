@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 
@@ -16,6 +16,7 @@ export default function ActualizarContrasenaPage() {
 
   useEffect(() => {
     const checkSession = async () => {
+      const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         setIsValidToken(true);
@@ -44,6 +45,7 @@ export default function ActualizarContrasenaPage() {
     setLoading(true);
 
     try {
+      const supabase = createClient();
       const { error: updateError } = await supabase.auth.updateUser({
         password: password
       });

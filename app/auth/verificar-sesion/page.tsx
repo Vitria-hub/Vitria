@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
@@ -15,6 +15,7 @@ function VerificarSesionContent() {
   useEffect(() => {
     const handleSession = async () => {
       try {
+        const supabase = createClient();
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError || !session) {

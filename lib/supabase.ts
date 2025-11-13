@@ -1,17 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+// DEPRECATED: Do not import the 'supabase' client from this file!
+// Instead, use:
+// - Browser/Client components: import { createClient } from '@/utils/supabase/client'
+// - Server components/API routes: import { createClient } from '@/utils/supabase/server'
+// - Admin operations: import { supabaseAdmin } from '@/lib/supabase-admin'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    flowType: 'pkce',
-    detectSessionInUrl: true,
-    autoRefreshToken: true,
-    persistSession: true,
-  },
-});
-
+// This file only exports TypeScript types for the database schema
 export type Database = {
   public: {
     Tables: {

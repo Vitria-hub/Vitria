@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn, signInWithGoogle } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 
@@ -34,6 +34,7 @@ export default function LoginPage() {
 
     try {
       const authData = await signIn(email, password);
+      const supabase = createClient();
       
       if (authData.user) {
         const { data: userData } = await supabase
