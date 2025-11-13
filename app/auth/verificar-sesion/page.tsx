@@ -4,6 +4,9 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+
 function VerificarSesionContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
