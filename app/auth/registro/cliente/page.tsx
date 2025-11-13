@@ -83,11 +83,25 @@ export default function ClientRegisterPage() {
       
       await signUp(email, password, fullName, 'user');
       
-      await signIn(email, password);
+      let signInData;
+      try {
+        signInData = await signIn(email, password);
+      } catch (signInError: any) {
+        console.error('Sign in error:', signInError);
+        if (signInError.message?.includes('Email not confirmed')) {
+          setError('Debes confirmar tu email antes de poder iniciar sesión. Revisa tu correo.');
+        } else if (signInError.message?.includes('Invalid')) {
+          setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
+        } else {
+          setError(signInError.message || 'Error al iniciar sesión. Intenta nuevamente.');
+        }
+        setLoading(false);
+        return;
+      }
       
       const supabase = createClient();
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 25;
       
       while (attempts < maxAttempts) {
         const { data: { session } } = await supabase.auth.getSession();
@@ -100,7 +114,7 @@ export default function ClientRegisterPage() {
       
       const { data: { session: finalSession } } = await supabase.auth.getSession();
       if (!finalSession) {
-        throw new Error('No se pudo establecer la sesión. Por favor, intenta iniciar sesión manualmente.');
+        throw new Error('La sesión tardó demasiado en establecerse. Por favor, intenta iniciar sesión desde la página de login.');
       }
       
       await createProfileMutation.mutateAsync({
