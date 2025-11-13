@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
-import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, CreditCard } from 'lucide-react';
+import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, userData, loading } = useAuth();
@@ -19,7 +19,8 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
-  const { data: userAgency } = trpc.agency.myAgency.useQuery();
+  const { data: userAgency, isLoading: agencyLoading, error: agencyError, status: agencyStatus } = trpc.agency.myAgency.useQuery();
+  const { data: clientProfile, isLoading: clientProfileLoading, error: clientProfileError, status: clientProfileStatus } = trpc.clientProfile.getMyProfile.useQuery();
 
   const mockMetrics = [
     { label: 'Vistas', value: 1234, icon: Eye, change: '+12%' },
@@ -28,10 +29,13 @@ export default function DashboardPage() {
     { label: 'Leads', value: 34, icon: TrendingUp, change: '+22%' },
   ];
 
-  if (loading) {
+  if (loading || agencyLoading || clientProfileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-dark/60">Cargando...</p>
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-dark/60">Cargando...</p>
+        </div>
       </div>
     );
   }
@@ -40,8 +44,12 @@ export default function DashboardPage() {
     return null;
   }
 
-  const isAgency = userData?.role === 'agency';
+  const hasAgency = !!userAgency;
+  const hasClientProfile = !!clientProfile;
   const agencySlug = userAgency?.slug;
+
+  const showAgencyCTA = agencyStatus === 'success' && !hasAgency;
+  const showClientCTA = clientProfileStatus === 'success' && !hasClientProfile;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -52,9 +60,16 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {isAgency ? (
-        agencySlug ? (
+      <div className="space-y-6">
+        {hasAgency && (
           <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+            <div className="bg-accent/10 border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-dark" />
+                <h2 className="text-xl font-bold text-dark">Mi Agencia</h2>
+              </div>
+            </div>
+            
             <div className="border-b border-gray-200">
               <nav className="flex">
                 <button
@@ -83,7 +98,7 @@ export default function DashboardPage() {
             <div className="p-8">
               {tab === 'profile' && (
                 <div>
-                  <h2 className="text-2xl font-bold text-dark mb-6">Gestionar Perfil</h2>
+                  <h3 className="text-lg font-bold text-dark mb-6">Gestionar Perfil de Agencia</h3>
                   <div className="space-y-4">
                     <Link href={`/agencias/${agencySlug}`}>
                       <Button variant="primary" className="w-full sm:w-auto">
@@ -98,9 +113,9 @@ export default function DashboardPage() {
                     </Link>
                   </div>
                   <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-                    <h3 className="font-bold text-dark mb-2">
+                    <h4 className="font-bold text-dark mb-2">
                       {userAgency?.name}
-                    </h3>
+                    </h4>
                     <p className="text-dark/60 text-sm">
                       {userAgency?.description || 'Sin descripción'}
                     </p>
@@ -110,7 +125,7 @@ export default function DashboardPage() {
 
               {tab === 'metrics' && (
                 <div>
-                  <h2 className="text-2xl font-bold text-dark mb-6">Métricas (Últimos 30 días)</h2>
+                  <h3 className="text-lg font-bold text-dark mb-6">Métricas (Últimos 30 días)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {mockMetrics.map((metric) => {
                       const Icon = metric.icon;
@@ -131,66 +146,122 @@ export default function DashboardPage() {
                   </div>
                 </div>
               )}
-
             </div>
           </div>
-        ) : (
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-12 text-center">
-            <Building2 className="w-16 h-16 text-primary mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              Registra tu Agencia
-            </h2>
-            <p className="text-dark/70 mb-6 max-w-md mx-auto">
-              Aún no tienes una agencia registrada. Crea tu perfil para comenzar a recibir clientes.
+        )}
+
+        {agencyError && (
+          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
+            <p className="text-yellow-800 font-semibold mb-2">Error al cargar información de agencia</p>
+            <p className="text-yellow-700 text-sm">
+              Hubo un problema al verificar si tienes una agencia. Por favor, recarga la página.
             </p>
-            <Link href="/dashboard/crear-agencia">
-              <Button variant="primary" size="lg">
-                Crear Mi Agencia
-              </Button>
-            </Link>
           </div>
-        )
-      ) : (
-        <div className="space-y-6">
+        )}
+
+        {showAgencyCTA && (
           <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-primary">
-                Mi Perfil de Cliente
-              </h2>
-              <Link href="/dashboard/perfil">
-                <Button variant="primary">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Gestionar Perfil
-                </Button>
-              </Link>
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <Building2 className="w-12 h-12 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-dark mb-2">
+                  ¿Tienes una agencia de marketing?
+                </h3>
+                <p className="text-dark/60 mb-4">
+                  Crea tu perfil de agencia para comenzar a recibir clientes y gestionar tu presencia en la plataforma.
+                </p>
+                <Link href="/dashboard/crear-agencia">
+                  <Button variant="primary">
+                    <Briefcase className="w-4 h-4 mr-2" />
+                    Crear Mi Agencia
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <p className="text-dark/60">
-              Completa tu perfil para recibir recomendaciones personalizadas de agencias que se ajusten a tus necesidades.
-            </p>
           </div>
+        )}
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              Agencias Favoritas
-            </h2>
-            <p className="text-dark/60">
-              Aún no has guardado agencias favoritas. Explora el directorio y guarda las que más te interesen.
-            </p>
-            <Link href="/agencias" className="inline-block mt-4">
-              <Button variant="primary">Explorar Agencias</Button>
-            </Link>
-          </div>
+        {hasClientProfile && (
+          <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+            <div className="bg-primary/10 border-b border-gray-200 px-6 py-4">
+              <div className="flex items-center gap-2">
+                <UserCircle className="w-5 h-5 text-primary" />
+                <h2 className="text-xl font-bold text-dark">Mi Perfil de Cliente</h2>
+              </div>
+            </div>
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              Mis Reseñas
-            </h2>
-            <p className="text-dark/60">
-              No has dejado reseñas aún. Comparte tu experiencia con otras empresas.
+            <div className="p-8 space-y-6">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-dark">Información del Negocio</h3>
+                  <Link href="/dashboard/perfil">
+                    <Button variant="outline" size="sm">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Editar
+                    </Button>
+                  </Link>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-dark font-semibold">{clientProfile.business_name}</p>
+                  <p className="text-dark/60 text-sm mt-1">Presupuesto: {clientProfile.budget_range}</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-bold text-dark mb-4">Agencias Favoritas</h3>
+                <p className="text-dark/60 mb-4">
+                  Aún no has guardado agencias favoritas. Explora el directorio y guarda las que más te interesen.
+                </p>
+                <Link href="/agencias">
+                  <Button variant="primary">Explorar Agencias</Button>
+                </Link>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-bold text-dark mb-4">Mis Reseñas</h3>
+                <p className="text-dark/60">
+                  No has dejado reseñas aún. Comparte tu experiencia con otras empresas.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {clientProfileError && (
+          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
+            <p className="text-yellow-800 font-semibold mb-2">Error al cargar perfil de cliente</p>
+            <p className="text-yellow-700 text-sm">
+              Hubo un problema al verificar tu perfil de cliente. Por favor, recarga la página.
             </p>
           </div>
-        </div>
-      )}
+        )}
+
+        {showClientCTA && (
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <UserCircle className="w-12 h-12 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-dark mb-2">
+                  ¿Buscas una agencia de marketing?
+                </h3>
+                <p className="text-dark/60 mb-4">
+                  Completa tu perfil de cliente para recibir recomendaciones personalizadas y contactar agencias.
+                </p>
+                <Link href="/dashboard/perfil">
+                  <Button variant="primary">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Completar Perfil de Cliente
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

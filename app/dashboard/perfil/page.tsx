@@ -129,30 +129,17 @@ export default function ClientProfileEditPage() {
     return null;
   }
 
-  if (userData?.role !== 'user') {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-yellow-50 border-2 border-yellow-200 text-yellow-700 px-6 py-4 rounded-lg">
-          Esta página es solo para clientes. Las agencias pueden gestionar su perfil desde el dashboard.
-        </div>
-        <Link href="/dashboard" className="inline-block mt-4">
-          <Button variant="secondary">Volver al Dashboard</Button>
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold text-primary mb-2">
-            {existingProfile ? 'Mi Perfil de Cliente' : 'Completar Perfil'}
+            {existingProfile ? 'Mi Perfil de Cliente' : 'Completar Perfil de Cliente'}
           </h1>
           <p className="text-dark/70">
             {existingProfile 
-              ? 'Gestiona la información de tu negocio'
-              : 'Cuéntanos sobre tu negocio para recomendarte las mejores agencias'
+              ? 'Gestiona tu información como cliente buscando agencias'
+              : 'Completa tu perfil de cliente para recibir recomendaciones personalizadas'
             }
           </p>
         </div>

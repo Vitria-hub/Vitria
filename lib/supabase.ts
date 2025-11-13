@@ -18,6 +18,19 @@ export type Database = {
           created_at: string;
         };
       };
+      client_profiles: {
+        Row: {
+          id: string;
+          user_id: string;
+          business_name: string;
+          business_instagram: string | null;
+          budget_range: '$' | '$$' | '$$$';
+          desired_categories: string[];
+          about_business: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+      };
       agencies: {
         Row: {
           id: string;

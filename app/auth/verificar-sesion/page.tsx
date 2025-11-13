@@ -81,17 +81,6 @@ function VerificarSesionContent() {
         }
 
         if (dbUser.role === 'user') {
-          const { data: clientProfile } = await supabase
-            .from('client_profiles')
-            .select('*')
-            .eq('user_id', dbUser.id)
-            .single();
-
-          if (!clientProfile) {
-            router.push('/auth/registro/cliente/perfil');
-            return;
-          }
-
           router.push('/dashboard');
           return;
         }

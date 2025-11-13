@@ -55,17 +55,7 @@ export default function LoginPage() {
         }
 
         if (userData.role === 'user') {
-          const { data: clientProfile } = await supabase
-            .from('client_profiles')
-            .select('id')
-            .eq('user_id', userData.id)
-            .single();
-
-          if (!clientProfile) {
-            router.push('/auth/registro/cliente/perfil');
-          } else {
-            router.push('/dashboard');
-          }
+          router.push('/dashboard');
           return;
         }
 
