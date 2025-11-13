@@ -29,15 +29,41 @@ export default function AgencyRegisterPage() {
       if (session?.user) {
         const { data: userData } = await supabase
           .from('users')
-          .select('role')
+          .select('id, role')
           .eq('auth_id', session.user.id)
           .single();
 
-        if (userData?.role === 'admin') {
-          router.push('/admin');
-        } else {
-          router.push('/dashboard');
+        if (!userData) {
+          setCheckingSession(false);
+          return;
         }
+
+        if (userData.role === 'admin') {
+          router.push('/admin');
+          return;
+        }
+
+        if (userData.role === 'agency') {
+          const { data: agency } = await supabase
+            .from('agencies')
+            .select('id')
+            .eq('owner_id', userData.id)
+            .single();
+
+          if (!agency) {
+            router.push('/dashboard/crear-agencia');
+          } else {
+            router.push('/dashboard');
+          }
+          return;
+        }
+
+        if (userData.role === 'user') {
+          router.push('/dashboard');
+          return;
+        }
+
+        router.push('/dashboard');
       } else {
         setCheckingSession(false);
       }
