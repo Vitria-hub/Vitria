@@ -181,9 +181,7 @@ export const agencyRouter = router({
       }
 
       try {
-        const { data, error } = await db
-          .from('agencies')
-          .insert({
+        const insertData: any = {
             name: input.name,
             slug,
             logo_url: input.logo_url || null,
@@ -195,12 +193,19 @@ export const agencyRouter = router({
             location_region: input.region || null,
             services: input.services || [],
             categories: input.categories || [],
-            specialties: input.specialties || [],
             employees_min: input.employeesMin || null,
             employees_max: input.employeesMax || null,
             price_range: input.priceRange || null,
             owner_id: userData.id,
-          })
+        };
+
+        if (input.specialties && input.specialties.length > 0) {
+          insertData.specialties = input.specialties;
+        }
+
+        const { data, error } = await db
+          .from('agencies')
+          .insert(insertData)
           .select()
           .single();
 
