@@ -12,7 +12,7 @@ export function getTRPCClient() {
     links: [
       httpBatchLink({
         url: typeof window !== 'undefined' 
-          ? `${window.location.origin}/api/trpc`
+          ? `${process.env.NEXT_PUBLIC_SITE_URL || window.location.origin}/api/trpc`
           : '/api/trpc',
         async headers() {
           const { data: { session } } = await supabase.auth.getSession();
