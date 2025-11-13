@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { createClient } from '@/utils/supabase/server';
+import { createServerClient } from '@supabase/ssr';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(request: Request) {
@@ -15,13 +15,28 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/auth/verificar-sesion?role=${roleParam || ''}`);
   }
 
+  const cookieStore = await cookies();
+  let response = NextResponse.next();
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
   try {
-    // Log all cookies to debug PKCE issue
-    const allCookies = (await cookies()).getAll();
-    console.log('All cookies received:', allCookies.map(c => ({ name: c.name, hasValue: !!c.value })));
-    
-    const supabase = await createClient();
-    
     console.log('Attempting to exchange code for session with code:', code.substring(0, 10) + '...');
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
@@ -75,7 +90,8 @@ export async function GET(request: Request) {
     }
 
     if (finalRole === 'admin') {
-      return NextResponse.redirect(`${origin}/admin`);
+      response = NextResponse.redirect(`${origin}/admin`);
+      return response;
     }
 
     if (finalRole === 'user') {
@@ -86,10 +102,12 @@ export async function GET(request: Request) {
         .single();
 
       if (!clientProfile) {
-        return NextResponse.redirect(`${origin}/auth/registro/cliente/perfil`);
+        response = NextResponse.redirect(`${origin}/auth/registro/cliente/perfil`);
+        return response;
       }
 
-      return NextResponse.redirect(`${origin}/dashboard`);
+      response = NextResponse.redirect(`${origin}/dashboard`);
+      return response;
     }
 
     if (finalRole === 'agency') {
@@ -100,13 +118,16 @@ export async function GET(request: Request) {
         .single();
 
       if (!agency) {
-        return NextResponse.redirect(`${origin}/dashboard/crear-agencia`);
+        response = NextResponse.redirect(`${origin}/dashboard/crear-agencia`);
+        return response;
       }
 
-      return NextResponse.redirect(`${origin}/dashboard`);
+      response = NextResponse.redirect(`${origin}/dashboard`);
+      return response;
     }
 
-    return NextResponse.redirect(`${origin}/dashboard`);
+    response = NextResponse.redirect(`${origin}/dashboard`);
+    return response;
     
   } catch (err) {
     console.error('Callback error:', err);

@@ -1,18 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+import { createClient } from '@/utils/supabase/client';
 
 const AGENCY_LOGOS_BUCKET = 'agency-logos';
 
 export async function uploadAgencyLogo(file: File, agencySlug: string): Promise<string> {
+  const supabase = createClient();
   const fileExt = file.name.split('.').pop();
   const fileName = `${agencySlug}-${Date.now()}.${fileExt}`;
   const filePath = `logos/${fileName}`;
 
-  const { data, error } = await supabaseClient.storage
+  const { data, error } = await supabase.storage
     .from(AGENCY_LOGOS_BUCKET)
     .upload(filePath, file, {
       cacheControl: '3600',
@@ -23,7 +19,7 @@ export async function uploadAgencyLogo(file: File, agencySlug: string): Promise<
     throw new Error(`Error al subir la imagen: ${error.message}`);
   }
 
-  const { data: { publicUrl } } = supabaseClient.storage
+  const { data: { publicUrl } } = supabase.storage
     .from(AGENCY_LOGOS_BUCKET)
     .getPublicUrl(filePath);
 
@@ -31,9 +27,10 @@ export async function uploadAgencyLogo(file: File, agencySlug: string): Promise<
 }
 
 export async function deleteAgencyLogo(logoUrl: string): Promise<void> {
+  const supabase = createClient();
   const path = logoUrl.split('/').slice(-2).join('/');
   
-  const { error } = await supabaseClient.storage
+  const { error } = await supabase.storage
     .from(AGENCY_LOGOS_BUCKET)
     .remove([path]);
 
