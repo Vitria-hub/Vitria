@@ -632,11 +632,14 @@ export default function CrearAgenciaPage() {
                       type="radio"
                       name="teamSize"
                       checked={formData.employeesMin === size.min && formData.employeesMax === size.max}
-                      onChange={() => setFormData({
-                        ...formData,
-                        employeesMin: size.min,
-                        employeesMax: size.max
-                      })}
+                      onChange={() => {
+                        setFormData({
+                          ...formData,
+                          employeesMin: size.min,
+                          employeesMax: size.max
+                        });
+                        setValidationError('');
+                      }}
                       className="w-4 h-4"
                     />
                     <span>{size.label}</span>
@@ -667,7 +670,10 @@ export default function CrearAgenciaPage() {
                       type="radio"
                       name="priceRange"
                       checked={formData.priceRange === price.value}
-                      onChange={() => setFormData({ ...formData, priceRange: price.value as any })}
+                      onChange={() => {
+                        setFormData({ ...formData, priceRange: price.value as any });
+                        setValidationError('');
+                      }}
                       className="sr-only"
                     />
                     <span className="text-2xl mb-1">{price.value}</span>
