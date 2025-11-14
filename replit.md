@@ -47,6 +47,14 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 14, 2025 - Admin Access Control UX Improvement
+- **User Experience**: Non-admin users who click "Revisar Agencia" in approval emails now see clear error message
+- **Centralized Pattern**: Created `app/admin/layout.tsx` with AdminGuard to eliminate duplicated auth logic
+- **Reusable Component**: `AdminAccessDenied` component displays helpful message: "Debes iniciar sesión como administrador"
+- **Middleware Update**: Changed middleware to allow logged-in non-admins through (shows error message) while redirecting unauthenticated users
+- **Code Cleanup**: Removed redundant `useAuth()`, `useRouter()`, and `useEffect()` checks from individual admin pages
+- **Impact**: Better UX for users clicking email links, cleaner codebase with less duplication
+
 ## November 14, 2025 - Client Profile Budget Range Constraint Fix
 - **Critical Database Fix**: Fixed budget_range constraint mismatch in production Supabase database
 - **Root Cause**: Production database had outdated constraint values ('low', 'medium', 'high') while application code uses ('$', '$$', '$$$')
