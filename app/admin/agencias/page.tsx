@@ -1,16 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
 export default function AdminAgenciesPage() {
-  const { userData, loading } = useAuth();
-  const router = useRouter();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
   const [premiumModal, setPremiumModal] = useState<{ agencyId: string; currentStatus: boolean } | null>(null);
@@ -19,10 +15,7 @@ export default function AdminAgenciesPage() {
   const [rejectModal, setRejectModal] = useState<{ agencyId: string; agencyName: string } | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
 
-  const { data, isLoading, refetch } = trpc.admin.listAgencies.useQuery(
-    { page, limit: 20, status: statusFilter },
-    { enabled: userData?.role === 'admin' }
-  );
+  const { data, isLoading, refetch } = trpc.admin.listAgencies.useQuery({ page, limit: 20, status: statusFilter });
 
   const approveMutation = trpc.admin.approveAgency.useMutation({
     onSuccess: () => {
@@ -49,16 +42,6 @@ export default function AdminAgenciesPage() {
       setPremiumModal(null);
     },
   });
-
-  useEffect(() => {
-    if (!loading && (!userData || userData.role !== 'admin')) {
-      router.push('/');
-    }
-  }, [userData, loading, router]);
-
-  if (loading || !userData || userData.role !== 'admin') {
-    return null;
-  }
 
   const handleApprove = (agencyId: string) => {
     if (confirm('¿Aprobar esta agencia? Se enviará un email de confirmación al dueño.')) {

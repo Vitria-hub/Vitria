@@ -1,16 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { 
   Users, 
   Building2, 
   Star, 
-  Clock,
-  CheckCircle,
-  XCircle,
   Search,
   MousePointerClick,
   TrendingUp,
@@ -19,23 +13,10 @@ import {
 import Link from 'next/link';
 
 export default function AdminDashboard() {
-  const { userData, loading } = useAuth();
-  const router = useRouter();
-  const { data: stats, isLoading: statsLoading } = trpc.admin.stats.useQuery(undefined, {
-    enabled: userData?.role === 'admin',
-  });
-  const { data: analyticsStats, isLoading: analyticsLoading } = trpc.analytics.getDashboardStats.useQuery(
-    { days: 30 },
-    { enabled: userData?.role === 'admin' }
-  );
+  const { data: stats, isLoading: statsLoading } = trpc.admin.stats.useQuery();
+  const { data: analyticsStats, isLoading: analyticsLoading } = trpc.analytics.getDashboardStats.useQuery({ days: 30 });
 
-  useEffect(() => {
-    if (!loading && (!userData || userData.role !== 'admin')) {
-      router.push('/');
-    }
-  }, [userData, loading, router]);
-
-  if (loading || statsLoading || analyticsLoading) {
+  if (statsLoading || analyticsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -44,10 +25,6 @@ export default function AdminDashboard() {
         </div>
       </div>
     );
-  }
-
-  if (!userData || userData.role !== 'admin') {
-    return null;
   }
 
   return (

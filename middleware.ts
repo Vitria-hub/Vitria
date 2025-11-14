@@ -32,16 +32,8 @@ export async function middleware(request: NextRequest) {
     if (!user) {
       return NextResponse.redirect(new URL('/', request.url));
     }
-
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('auth_id', user.id)
-      .single();
-
-    if (!userData || userData.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+    // Allow logged-in users to access /admin/* routes
+    // The AdminLayout will show appropriate access denied message for non-admins
   }
 
   if (request.nextUrl.pathname.startsWith('/mi-agencia')) {
