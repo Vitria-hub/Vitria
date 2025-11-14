@@ -44,8 +44,8 @@ function getAdminEmail(): string {
 
 export async function sendAgencyReviewEmail(agencyData: AgencyData) {
   const baseUrl = getBaseUrl();
-  const approveUrl = `${baseUrl}/admin/agencies/${agencyData.id}/approve`;
-  const rejectUrl = `${baseUrl}/admin/agencies/${agencyData.id}/reject`;
+  const approveUrl = `${baseUrl}/admin/agencias/${agencyData.id}/approve`;
+  const rejectUrl = `${baseUrl}/admin/agencias/${agencyData.id}/reject`;
 
   try {
     await brevoApi.sendTransacEmail({
