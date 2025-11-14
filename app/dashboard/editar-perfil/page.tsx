@@ -92,10 +92,12 @@ export default function EditarPerfilPage() {
     onSuccess: () => {
       utils.agency.myAgency.invalidate();
       setSuccessMessage('¡Perfil actualizado exitosamente!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => setSuccessMessage(''), 5000);
     },
     onError: (error) => {
       setErrorMessage(error.message);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
   });
 
@@ -152,37 +154,46 @@ export default function EditarPerfilPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
+    setSuccessMessage('');
 
     if (!formData.name || formData.name.length < 2) {
       setErrorMessage('El nombre debe tener al menos 2 caracteres');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.description || formData.description.length < 50) {
       setErrorMessage('La descripción debe tener al menos 50 caracteres');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.email || !formData.email.includes('@')) {
       setErrorMessage('Email de contacto público válido es requerido');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.phone || formData.phone.length < 8) {
       setErrorMessage('Teléfono válido es requerido');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.city || formData.city.length < 2) {
       setErrorMessage('Ciudad es requerida');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.region) {
       setErrorMessage('Región es requerida');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.categories || formData.categories.length === 0) {
       setErrorMessage('Selecciona al menos una categoría');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!formData.priceRange) {
       setErrorMessage('Selecciona un rango de precios');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -190,6 +201,11 @@ export default function EditarPerfilPage() {
       let logoUrl = formData.logo_url;
       if (logoFile) {
         logoUrl = await uploadLogo();
+        if (!logoUrl) {
+          setErrorMessage('Error al subir el logo. Intenta nuevamente.');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
       }
 
       const submitData: any = {
@@ -198,8 +214,10 @@ export default function EditarPerfilPage() {
       };
 
       updateMutation.mutate(submitData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating agency:', error);
+      setErrorMessage(error.message || 'Error al actualizar la agencia. Intenta nuevamente.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
