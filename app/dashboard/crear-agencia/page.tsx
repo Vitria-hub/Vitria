@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
@@ -35,6 +35,7 @@ export default function CrearAgenciaPage() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [logoError, setLogoError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formContainerRef = useRef<HTMLDivElement>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -125,13 +126,32 @@ export default function CrearAgenciaPage() {
     return true;
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const nextStep = () => {
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => Math.min(prev + 1, 3));
+      scrollToTop();
     }
   };
   
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const prevStep = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    scrollToTop();
+  };
+
+  const goToStep = (step: number) => {
+    if (step <= currentStep || step === currentStep + 1) {
+      setCurrentStep(step);
+      scrollToTop();
+    }
+  };
+
+  useEffect(() => {
+    scrollToTop();
+  }, [currentStep]);
 
   const toggleArrayItem = (array: string[], item: string) => {
     return array.includes(item)
@@ -211,13 +231,18 @@ export default function CrearAgenciaPage() {
                     step.num <= currentStep ? 'bg-accent' : 'bg-gray-200'
                   }`} />
                 )}
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold flex-shrink-0 ${
-                  step.num === currentStep ? 'bg-primary text-white' :
-                  step.num < currentStep ? 'bg-accent text-dark' :
-                  'bg-gray-200 text-gray-400'
-                }`}>
+                <button
+                  type="button"
+                  onClick={() => goToStep(step.num)}
+                  disabled={step.num > currentStep}
+                  className={`flex items-center justify-center w-10 h-10 rounded-full font-bold flex-shrink-0 transition-all ${
+                    step.num === currentStep ? 'bg-primary text-white' :
+                    step.num < currentStep ? 'bg-accent text-dark cursor-pointer hover:scale-110' :
+                    'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
                   {step.num < currentStep ? <Check className="w-5 h-5" /> : step.num}
-                </div>
+                </button>
                 {index < 2 && (
                   <div className={`flex-1 h-1 ${
                     step.num < currentStep ? 'bg-accent' : 'bg-gray-200'
