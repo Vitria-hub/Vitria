@@ -103,7 +103,7 @@ export default function CrearAgenciaPage() {
         return false;
       }
       if (!formData.email || !formData.email.includes('@')) {
-        setValidationError('Email de contacto válido es requerido');
+        setValidationError('Email de contacto público válido es requerido');
         return false;
       }
       if (!formData.phone || formData.phone.length < 8) {
@@ -387,7 +387,7 @@ export default function CrearAgenciaPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Email de Contacto *
+                  Email de Contacto Público *
                 </label>
                 <Input
                   type="email"
@@ -396,6 +396,9 @@ export default function CrearAgenciaPage() {
                   placeholder="contacto@miagencia.cl"
                   required
                 />
+                <p className="text-xs text-dark/60 mt-1">
+                  Este email será visible para clientes potenciales. Puede ser diferente a tu email personal.
+                </p>
               </div>
 
               <div>
