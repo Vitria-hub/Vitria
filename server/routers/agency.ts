@@ -1,6 +1,6 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { agencyListSchema, agencyBySlugSchema, createAgencySchema } from '@/lib/validators';
+import { agencyListSchema, agencyBySlugSchema, createAgencySchema, updateAgencySchema } from '@/lib/validators';
 import { db } from '../db';
 import { enforcePremiumFreshness, enforceSingleAgencyPremiumFreshness } from '../utils/premiumExpiration';
 import { sendAgencyReviewEmail, sendAgencyWaitlistEmail, sendAgencyApprovalEmail } from '@/lib/email';
@@ -265,7 +265,7 @@ export const agencyRouter = router({
     }),
 
   update: protectedProcedure
-    .input(createAgencySchema)
+    .input(updateAgencySchema)
     .mutation(async ({ input, ctx }) => {
       const { data: userData } = await db
         .from('users')
@@ -289,22 +289,25 @@ export const agencyRouter = router({
       }
 
       try {
-        const updateData: any = {
-          name: input.name,
-          logo_url: input.logo_url || null,
-          description: input.description || null,
-          website: input.website || null,
-          email: input.email || null,
-          phone: input.phone || null,
-          location_city: input.city || null,
-          location_region: input.region || null,
-          services: input.services || [],
-          categories: input.categories || [],
-          specialties: input.specialties || [],
-          employees_min: input.employeesMin || null,
-          employees_max: input.employeesMax || null,
-          price_range: input.priceRange || null,
-        };
+        const updateData: any = {};
+
+        if (typeof input.name !== 'undefined') updateData.name = input.name;
+        if (typeof input.logo_url !== 'undefined') updateData.logo_url = input.logo_url || null;
+        if (typeof input.description !== 'undefined') updateData.description = input.description;
+        if (typeof input.website !== 'undefined') updateData.website = input.website || null;
+        if (typeof input.email !== 'undefined') updateData.email = input.email;
+        if (typeof input.phone !== 'undefined') updateData.phone = input.phone;
+        if (typeof input.whatsappNumber !== 'undefined') updateData.whatsapp_number = input.whatsappNumber || null;
+        if (typeof input.city !== 'undefined') updateData.location_city = input.city;
+        if (typeof input.region !== 'undefined') updateData.location_region = input.region;
+        if (typeof input.services !== 'undefined') updateData.services = input.services;
+        if (typeof input.categories !== 'undefined') updateData.categories = input.categories;
+        if (typeof input.specialties !== 'undefined') updateData.specialties = input.specialties;
+        if (typeof input.employeesMin !== 'undefined') updateData.employees_min = input.employeesMin;
+        if (typeof input.employeesMax !== 'undefined') updateData.employees_max = input.employeesMax;
+        if (typeof input.priceRange !== 'undefined') updateData.price_range = input.priceRange;
+
+        updateData.updated_at = new Date().toISOString();
 
         const { data, error } = await db
           .from('agencies')

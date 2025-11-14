@@ -90,3 +90,22 @@ export const rejectAgencySchema = z.object({
   agencyId: z.string().uuid(),
   rejectionReason: z.string().min(10, 'La razón del rechazo debe tener al menos 10 caracteres'),
 });
+
+export const updateAgencySchema = z.object({
+  name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').optional(),
+  logo_url: z.string().url('URL de logo inválida').optional().or(z.literal('')),
+  description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres').optional(),
+  website: z.string().url('URL inválida').optional().or(z.literal('')),
+  email: z.string().email('Email inválido').optional(),
+  phone: z.string().min(8, 'Teléfono inválido').optional(),
+  whatsappNumber: z.string().min(8, 'Número de WhatsApp inválido').optional().or(z.literal('')),
+  city: z.string().min(2, 'Ciudad requerida').optional(),
+  region: z.string().min(1, 'Región requerida').optional(),
+  services: z.array(z.string()).optional(),
+  categories: z.array(z.string()).min(1, 'Selecciona al menos una categoría').optional(),
+  specialties: z.array(z.string()).optional(),
+  employeesMin: z.number().min(1).optional(),
+  employeesMax: z.number().min(1).optional(),
+  priceRange: z.enum(['$', '$$', '$$$']).optional(),
+  industries: z.array(z.string()).optional(),
+});
