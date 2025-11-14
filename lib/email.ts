@@ -19,18 +19,22 @@ interface AgencyData {
 }
 
 function getBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  
+  // In Replit dev environment, prioritize dev domain
   if (process.env.REPLIT_DEV_DOMAIN) {
     return `https://${process.env.REPLIT_DEV_DOMAIN}`;
   }
   
+  // Otherwise use the configured site URL
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  
+  // Fallback for production
   if (process.env.NODE_ENV === 'production') {
     return 'https://vitria.cl';
   }
   
+  // Local development fallback
   return 'http://localhost:3000';
 }
 
