@@ -756,8 +756,8 @@ export default function CrearAgenciaPage() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <Button type="submit" variant="primary" disabled={createMutation.isPending}>
-                {createMutation.isPending ? 'Creando...' : 'Crear Agencia'}
+              <Button type="submit" variant="primary" loading={createMutation.isPending}>
+                Crear Agencia
               </Button>
             )}
           </div>

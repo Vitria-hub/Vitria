@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Providers } from '@/lib/providers';
+import NextTopLoader from 'nextjs-toploader';
 
 const quicksand = Quicksand({ 
   subsets: ['latin'],
@@ -67,6 +68,13 @@ export default function RootLayout({
   return (
     <html lang="es" className={quicksand.variable}>
       <body className={quicksand.className}>
+        <NextTopLoader 
+          color="#1B5568"
+          height={3}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+        />
         <Providers>
           <Navbar />
           <main className="min-h-screen">{children}</main>

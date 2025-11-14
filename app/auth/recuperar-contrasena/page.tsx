@@ -77,9 +77,10 @@ export default function RecuperarContrasenaPage() {
               type="submit" 
               variant="primary" 
               className="w-full" 
-              disabled={loading || success}
+              loading={loading}
+              disabled={success}
             >
-              {loading ? 'Enviando...' : 'Enviar Enlace de Recuperación'}
+              Enviar Enlace de Recuperación
             </Button>
           </form>
 

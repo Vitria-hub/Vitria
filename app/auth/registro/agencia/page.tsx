@@ -254,9 +254,9 @@ export default function AgencyRegisterPage() {
               />
             </div>
 
-            <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-              {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
-              {!loading && <ArrowRight className="w-4 h-4 ml-2" />}
+            <Button type="submit" variant="primary" className="w-full" loading={loading}>
+              Crear Cuenta
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
 

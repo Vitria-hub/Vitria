@@ -125,9 +125,9 @@ export default function ActualizarContrasenaPage() {
                 type="submit" 
                 variant="primary" 
                 className="w-full" 
-                disabled={loading}
+                loading={loading}
               >
-                {loading ? 'Actualizando...' : 'Actualizar Contraseña'}
+                Actualizar Contraseña
               </Button>
             </form>
           ) : (

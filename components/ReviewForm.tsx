@@ -103,8 +103,8 @@ export default function ReviewForm({ agencyId }: { agencyId: string }) {
         rows={4}
       />
 
-      <Button type="submit" disabled={createReview.isPending || rating === 0}>
-        {createReview.isPending ? 'Enviando...' : 'Enviar Reseña'}
+      <Button type="submit" loading={createReview.isPending} disabled={rating === 0}>
+        Enviar Reseña
       </Button>
     </form>
   );

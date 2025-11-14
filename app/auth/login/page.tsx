@@ -190,8 +190,8 @@ export default function LoginPage() {
               />
             </div>
 
-            <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            <Button type="submit" variant="primary" className="w-full" loading={loading}>
+              Iniciar Sesión
             </Button>
           </form>
 

@@ -194,8 +194,8 @@ export default function ClientProfilePage() {
               />
             </div>
 
-            <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
-              {submitting ? 'Creando perfil...' : 'Completar Perfil'}
+            <Button type="submit" variant="primary" className="w-full" loading={submitting}>
+              Completar Perfil
             </Button>
           </form>
         </div>

@@ -256,8 +256,8 @@ export default function ClientRegisterPage() {
                   Volver
                 </Button>
               </Link>
-              <Button type="submit" variant="primary" className="flex-1" disabled={loading}>
-                {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
+              <Button type="submit" variant="primary" className="flex-1" loading={loading}>
+                Crear Cuenta
               </Button>
             </div>
           </form>

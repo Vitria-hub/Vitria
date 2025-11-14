@@ -248,9 +248,9 @@ export default function ContactAgencyModal({
               type="submit"
               variant="accent"
               className="flex-1"
-              disabled={createContactMutation.isPending}
+              loading={createContactMutation.isPending}
             >
-              {createContactMutation.isPending ? 'Enviando...' : 'Enviar Contacto'}
+              Enviar Contacto
             </Button>
           </div>
         </form>

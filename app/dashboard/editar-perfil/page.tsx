@@ -591,20 +591,11 @@ export default function EditarPerfilPage() {
                 <Button
                   type="submit"
                   variant="primary"
-                  disabled={updateMutation.isPending || uploadingLogo}
+                  loading={updateMutation.isPending || uploadingLogo}
                   className="flex-1"
                 >
-                  {updateMutation.isPending || uploadingLogo ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Guardando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
-                      Guardar Cambios
-                    </>
-                  )}
+                  <Save className="w-4 h-4 mr-2" />
+                  Guardar Cambios
                 </Button>
                 <Link href="/dashboard" className="flex-1">
                   <Button type="button" variant="outline" className="w-full">
