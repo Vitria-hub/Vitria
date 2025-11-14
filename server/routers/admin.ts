@@ -73,6 +73,25 @@ export const adminRouter = router({
       };
     }),
 
+  getAgency: adminProcedure
+    .input(z.object({ agencyId: z.string().uuid() }))
+    .query(async ({ input }) => {
+      const { data, error } = await db
+        .from('agencies')
+        .select('*, users!agencies_owner_id_fkey(full_name, email, role)')
+        .eq('id', input.agencyId)
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      return data;
+    }),
+
   verifyAgency: adminProcedure
     .input(z.object({ agencyId: z.string().uuid(), verified: z.boolean() }))
     .mutation(async ({ input }) => {

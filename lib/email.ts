@@ -44,8 +44,7 @@ function getAdminEmail(): string {
 
 export async function sendAgencyReviewEmail(agencyData: AgencyData) {
   const baseUrl = getBaseUrl();
-  const approveUrl = `${baseUrl}/admin/agencias/${agencyData.id}/approve`;
-  const rejectUrl = `${baseUrl}/admin/agencias/${agencyData.id}/reject`;
+  const reviewUrl = `${baseUrl}/admin/agencias/${agencyData.id}`;
 
   try {
     await brevoApi.sendTransacEmail({
@@ -126,12 +125,11 @@ export async function sendAgencyReviewEmail(agencyData: AgencyData) {
               </div>
               
               <div class="button-container">
-                <a href="${approveUrl}" class="button approve">✓ Aprobar Agencia</a>
-                <a href="${rejectUrl}" class="button reject">✗ Rechazar Agencia</a>
+                <a href="${reviewUrl}" class="button approve" style="background-color: #1B5568;">Revisar Agencia</a>
               </div>
               
               <p style="text-align: center; color: #666; font-size: 14px;">
-                También puedes revisar esta agencia en el panel de administración.
+                Haz clic en el botón para ver todos los detalles y decidir si aprobar o rechazar.
               </p>
             </div>
             <div class="footer">
