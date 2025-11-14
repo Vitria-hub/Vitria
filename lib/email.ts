@@ -18,9 +18,30 @@ interface AgencyData {
   owner_name: string;
 }
 
+function getBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  }
+  
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://vitria.cl';
+  }
+  
+  return 'http://localhost:3000';
+}
+
+function getAdminEmail(): string {
+  return process.env.ADMIN_EMAIL || 'contacto@scalelab.cl';
+}
+
 export async function sendAgencyReviewEmail(agencyData: AgencyData) {
-  const approveUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://vitria.cl'}/admin/agencies/${agencyData.id}/approve`;
-  const rejectUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://vitria.cl'}/admin/agencies/${agencyData.id}/reject`;
+  const baseUrl = getBaseUrl();
+  const approveUrl = `${baseUrl}/admin/agencies/${agencyData.id}/approve`;
+  const rejectUrl = `${baseUrl}/admin/agencies/${agencyData.id}/reject`;
 
   try {
     await brevoApi.sendTransacEmail({
@@ -29,7 +50,7 @@ export async function sendAgencyReviewEmail(agencyData: AgencyData) {
         email: "noreply@vitria.cl" 
       },
       to: [{ 
-        email: "contacto@scalelab.cl",
+        email: getAdminEmail(),
         name: "Equipo Vitria"
       }],
       subject: `Nueva agencia para revisar: ${agencyData.name}`,
@@ -193,7 +214,8 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
 }
 
 export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: string, ownerName: string, agencySlug: string) {
-  const agencyUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://vitria.cl'}/agencias/${agencySlug}`;
+  const baseUrl = getBaseUrl();
+  const agencyUrl = `${baseUrl}/agencias/${agencySlug}`;
   
   try {
     await brevoApi.sendTransacEmail({
