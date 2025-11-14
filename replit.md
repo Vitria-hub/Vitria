@@ -20,6 +20,15 @@ The backend uses tRPC for a type-safe RPC-style API, with Zod for input validati
 
 Supabase (PostgreSQL) is used for the database, with tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, `sponsored_slots`, `subscriptions`, `client_profiles`, and `agency_contacts`. It employs UUID primary keys, foreign key relationships, and optimized indexing for performance, particularly for carousels and analytics queries.
 
+### Database Architecture
+- **Custom Users Table**: Uses `public.users` table with `auth_id` FK to `auth.users` (recommended Supabase pattern for application data separation)
+- **Data Integrity**: Enforced via NOT NULL constraints, UNIQUE constraints (auth_id, slug, user_id), and prevention of duplicate reviews
+- **Cascade Behaviors**: CASCADE deletes for owned resources (agency→metrics/portfolio), SET NULL for analytics preservation
+- **Automated Triggers**: Auto-sync for review aggregates (avg_rating, reviews_count) via database triggers
+- **Performance Indexes**: 9 strategic indexes covering analytics queries, admin moderation, user history, and dashboard loading
+- **Materialized Views**: `agency_analytics_summary` for optimized dashboard performance
+- **Row Level Security**: RLS enabled on all tables with granular access policies (production-only, requires auth.uid())
+
 ## Authentication and Authorization
 
 Supabase Auth handles email/password and Google OAuth, supporting role-based authorization (`user`, `agency`, `admin`). A robust OAuth Role Preservation System uses a database-first approach to ensure consistent role assignment for existing users, with a cookie-based fallback and manual selection for new users when automated detection fails. An "OAuth Callback Session Cookie Fix" ensures proper session creation after OAuth. Email/password authentication allows immediate login post-registration without email confirmation. The system supports dual roles (client and agency) with optional profile creation managed via CTAs on the user dashboard, rather than forced onboarding. A full password recovery flow is implemented. New agencies undergo a manual approval process, including email notifications and admin-only approval/rejection via tRPC endpoints, before becoming publicly visible.
@@ -35,6 +44,23 @@ A comprehensive analytics system tracks agency profile views, contact clicks, an
 ## Premium Management
 
 Currently, premium status for agencies is manually managed by administrators through an admin panel, allowing activation, deactivation, and setting expiration dates. Premium agencies display a distinctive gold badge. A dual-layer strategy ensures premium expiration: real-time verification at query-time and scheduled cleanup via external cron jobs. Future plans include automated premium subscription management via Stripe.
+
+# Recent Changes
+
+## November 14, 2025 - Database Integrity & Performance Overhaul
+- **Data Integrity**: Added critical constraints (NOT NULL, UNIQUE) on users.auth_id, agencies.slug, client_profiles.user_id, and reviews(user_id, agency_id)
+- **Cascade Protection**: Implemented ON DELETE CASCADE/SET NULL across all foreign keys to prevent orphaned data
+- **Performance**: Added 9 strategic indexes for high-volume queries (metrics, reviews, analytics, contacts)
+- **Automation**: Created triggers for auto-sync of denormalized aggregates (avg_rating, reviews_count)
+- **Analytics**: Built materialized view `agency_analytics_summary` for fast dashboard loading
+- **Security**: Enabled RLS on all tables (policies require production Supabase setup)
+- **Documentation**: Created `database-migration-summary.md` with production setup guide
+
+## November 14, 2025 - UX Performance Improvements
+- **Navigation**: Added Next.js TopLoader for instant visual feedback on page transitions
+- **Loading States**: Enhanced Button component with loading prop and animated spinners
+- **User Feedback**: Implemented loading states across 12 critical user flows (auth, agency management, reviews, contacts)
+- **Perceived Performance**: Eliminated "waiting in silence" issue with immediate visual feedback on all button clicks
 
 # External Dependencies
 
