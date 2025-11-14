@@ -57,7 +57,13 @@ export default function CrearAgenciaPage() {
 
   const createMutation = trpc.agency.create.useMutation({
     onSuccess: (data) => {
-      router.push(`/agencias/${data.slug}`);
+      // Redirect to dashboard with success message
+      // Agency is pending approval, so public page won't be visible yet
+      router.push('/dashboard?agencia_creada=true');
+    },
+    onError: (error) => {
+      console.error('Error creating agency:', error);
+      scrollToTop();
     },
   });
 

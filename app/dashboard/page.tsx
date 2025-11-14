@@ -2,16 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
-import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase } from 'lucide-react';
+import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, userData, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [tab, setTab] = useState<'profile' | 'metrics'>('profile');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('agencia_creada') === 'true') {
+      setShowSuccessMessage(true);
+      // Clean up the URL
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -59,6 +69,29 @@ export default function DashboardPage() {
           Bienvenido, {userData?.full_name || 'Usuario'}
         </p>
       </div>
+
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-lg p-6 flex items-start gap-4">
+          <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="font-bold text-green-900 mb-1">¡Tu agencia ha sido creada exitosamente!</h3>
+            <p className="text-green-700 text-sm mb-3">
+              Tu agencia está ahora en nuestra lista de espera para revisión. Recibirás un correo cuando sea aprobada y publicada en el directorio. 
+              Este proceso normalmente toma entre 24-48 horas.
+            </p>
+            <p className="text-green-700 text-sm font-medium">
+              📧 Hemos enviado una confirmación a tu correo electrónico.
+            </p>
+          </div>
+          <button 
+            onClick={() => setShowSuccessMessage(false)}
+            className="text-green-600 hover:text-green-800 transition flex-shrink-0"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       <div className="space-y-6">
         {hasAgency && (
