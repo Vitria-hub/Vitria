@@ -62,6 +62,15 @@ Currently, premium status for agencies is manually managed by administrators thr
 - **User Feedback**: Implemented loading states across 12 critical user flows (auth, agency management, reviews, contacts)
 - **Perceived Performance**: Eliminated "waiting in silence" issue with immediate visual feedback on all button clicks
 
+## November 14, 2025 - Admin Panel Approval Workflow Consolidation
+- **Workflow Simplification**: Consolidated from dual "verify" (cosmetic badge) + "approve" (visibility control) to single "Approve/Reject" workflow
+- **Approval Status**: Admin list now filters by `approval_status` (pending/approved/rejected) instead of obsolete `is_verified` flag
+- **Email Notifications**: Approval workflow properly triggers email notifications to agency owners via Brevo
+- **Review UX**: Added agency detail modal allowing admins to review full agency information before approving/rejecting
+- **Rejection Workflow**: Implemented rejection reason requirement with modal input, stored in database for future reference
+- **Default Filter**: Admin panel defaults to "pending" agencies for faster review queue processing
+- **Action Visibility**: Approve/Reject buttons only visible for pending agencies, preventing accidental status changes
+
 # External Dependencies
 
 ## Core Infrastructure

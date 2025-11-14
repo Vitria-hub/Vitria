@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
@@ -12,17 +12,31 @@ export default function AdminAgenciesPage() {
   const { userData, loading } = useAuth();
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
   const [premiumModal, setPremiumModal] = useState<{ agencyId: string; currentStatus: boolean } | null>(null);
   const [durationDays, setDurationDays] = useState(30);
+  const [detailModal, setDetailModal] = useState<any>(null);
+  const [rejectModal, setRejectModal] = useState<{ agencyId: string; agencyName: string } | null>(null);
+  const [rejectionReason, setRejectionReason] = useState('');
 
   const { data, isLoading, refetch } = trpc.admin.listAgencies.useQuery(
     { page, limit: 20, status: statusFilter },
     { enabled: userData?.role === 'admin' }
   );
 
-  const verifyMutation = trpc.admin.verifyAgency.useMutation({
-    onSuccess: () => refetch(),
+  const approveMutation = trpc.admin.approveAgency.useMutation({
+    onSuccess: () => {
+      refetch();
+      setDetailModal(null);
+    },
+  });
+
+  const rejectMutation = trpc.admin.rejectAgency.useMutation({
+    onSuccess: () => {
+      refetch();
+      setRejectModal(null);
+      setRejectionReason('');
+    },
   });
 
   const deleteMutation = trpc.admin.deleteAgency.useMutation({
@@ -46,9 +60,18 @@ export default function AdminAgenciesPage() {
     return null;
   }
 
-  const handleVerify = (agencyId: string, verified: boolean) => {
-    if (confirm(`¿${verified ? 'Verificar' : 'Desverificar'} esta agencia?`)) {
-      verifyMutation.mutate({ agencyId, verified });
+  const handleApprove = (agencyId: string) => {
+    if (confirm('¿Aprobar esta agencia? Se enviará un email de confirmación al dueño.')) {
+      approveMutation.mutate({ agencyId });
+    }
+  };
+
+  const handleRejectConfirm = () => {
+    if (rejectModal && rejectionReason.trim().length >= 10) {
+      rejectMutation.mutate({
+        agencyId: rejectModal.agencyId,
+        rejectionReason: rejectionReason.trim(),
+      });
     }
   };
 
@@ -90,20 +113,21 @@ export default function AdminAgenciesPage() {
             Volver al panel
           </Link>
           <h1 className="text-4xl font-bold text-primary mb-2">Gestionar Agencias</h1>
-          <p className="text-dark/70">Aprobar, verificar o eliminar agencias del marketplace</p>
+          <p className="text-dark/70">Aprobar, rechazar o eliminar agencias del marketplace</p>
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6">
           <div className="flex items-center gap-4">
-            <label className="text-sm font-semibold text-dark">Filtrar por:</label>
+            <label className="text-sm font-semibold text-dark">Filtrar por estado:</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
               className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
             >
               <option value="all">Todas</option>
-              <option value="verified">Verificadas</option>
-              <option value="unverified">Sin verificar</option>
+              <option value="pending">Pendientes de aprobación</option>
+              <option value="approved">Aprobadas</option>
+              <option value="rejected">Rechazadas</option>
             </select>
           </div>
         </div>
@@ -148,14 +172,20 @@ export default function AdminAgenciesPage() {
                           {agency.location_city}, {agency.location_region}
                         </td>
                         <td className="px-6 py-4">
-                          {agency.is_verified ? (
+                          {agency.approval_status === 'approved' ? (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
                               <CheckCircle className="w-4 h-4" />
-                              Verificada
+                              Aprobada
+                            </span>
+                          ) : agency.approval_status === 'rejected' ? (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded-full">
+                              <Ban className="w-4 h-4" />
+                              Rechazada
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
-                              Sin verificar
+                              <Clock className="w-4 h-4" />
+                              Pendiente
                             </span>
                           )}
                         </td>
@@ -179,16 +209,31 @@ export default function AdminAgenciesPage() {
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleVerify(agency.id, !agency.is_verified)}
-                              className="p-2 hover:bg-gray-100 rounded-lg transition"
-                              title={agency.is_verified ? 'Desverificar' : 'Verificar'}
+                              onClick={() => setDetailModal(agency)}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition"
+                              title="Ver detalles"
                             >
-                              {agency.is_verified ? (
-                                <XCircle className="w-5 h-5 text-gray-600" />
-                              ) : (
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                              )}
+                              <Eye className="w-5 h-5 text-blue-600" />
                             </button>
+                            {agency.approval_status === 'pending' && (
+                              <>
+                                <button
+                                  onClick={() => handleApprove(agency.id)}
+                                  className="p-2 hover:bg-green-50 rounded-lg transition"
+                                  title="Aprobar"
+                                  disabled={approveMutation.isPending}
+                                >
+                                  <CheckCircle className="w-5 h-5 text-green-600" />
+                                </button>
+                                <button
+                                  onClick={() => setRejectModal({ agencyId: agency.id, agencyName: agency.name })}
+                                  className="p-2 hover:bg-red-50 rounded-lg transition"
+                                  title="Rechazar"
+                                >
+                                  <XCircle className="w-5 h-5 text-red-600" />
+                                </button>
+                              </>
+                            )}
                             <button
                               onClick={() => handlePremiumToggle(agency.id, agency.is_premium)}
                               className={`p-2 rounded-lg transition ${
@@ -245,8 +290,158 @@ export default function AdminAgenciesPage() {
           </div>
         )}
 
+        {detailModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-primary mb-1">{detailModal.name}</h2>
+                  <p className="text-sm text-dark/60">{detailModal.slug}</p>
+                </div>
+                <button
+                  onClick={() => setDetailModal(null)}
+                  className="text-dark/60 hover:text-dark"
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Dueño</label>
+                    <p className="text-dark">{detailModal.users?.full_name || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Email</label>
+                    <p className="text-dark">{detailModal.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Teléfono</label>
+                    <p className="text-dark">{detailModal.phone || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Ubicación</label>
+                    <p className="text-dark">{detailModal.location_city}, {detailModal.location_region}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Sitio web</label>
+                    <p className="text-dark">{detailModal.website || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Estado</label>
+                    <p className="text-dark capitalize">{detailModal.approval_status}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-semibold text-dark/70">Descripción</label>
+                  <p className="text-dark">{detailModal.description || 'Sin descripción'}</p>
+                </div>
+
+                {detailModal.services && detailModal.services.length > 0 && (
+                  <div>
+                    <label className="text-sm font-semibold text-dark/70">Servicios</label>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {detailModal.services.map((service: string, idx: number) => (
+                        <span key={idx} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {detailModal.rejection_reason && (
+                  <div className="p-4 bg-red-50 border-2 border-red-200 rounded-lg">
+                    <label className="text-sm font-semibold text-red-800">Razón de rechazo</label>
+                    <p className="text-red-900">{detailModal.rejection_reason}</p>
+                  </div>
+                )}
+              </div>
+
+              {detailModal.approval_status === 'pending' && (
+                <div className="flex gap-3">
+                  <Button
+                    variant="secondary"
+                    className="flex-1"
+                    onClick={() => setRejectModal({ agencyId: detailModal.id, agencyName: detailModal.name })}
+                  >
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Rechazar
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="flex-1"
+                    onClick={() => handleApprove(detailModal.id)}
+                    loading={approveMutation.isPending}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Aprobar
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {rejectModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-8 max-w-md w-full">
+              <div className="flex items-center gap-3 mb-6">
+                <XCircle className="w-8 h-8 text-red-600" />
+                <h2 className="text-2xl font-bold text-primary">Rechazar Agencia</h2>
+              </div>
+
+              <p className="text-dark/70 mb-4">
+                ¿Estás seguro de rechazar <strong>{rejectModal.agencyName}</strong>?
+              </p>
+
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Razón del rechazo <span className="text-red-600">*</span>
+                </label>
+                <textarea
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  placeholder="Explica por qué se rechaza esta agencia (mínimo 10 caracteres)..."
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary resize-none"
+                  rows={4}
+                />
+                {rejectionReason.length > 0 && rejectionReason.length < 10 && (
+                  <p className="text-sm text-red-600 mt-1">
+                    La razón debe tener al menos 10 caracteres ({rejectionReason.length}/10)
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => {
+                    setRejectModal(null);
+                    setRejectionReason('');
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant="primary"
+                  className="flex-1 bg-red-600 hover:bg-red-700"
+                  onClick={handleRejectConfirm}
+                  disabled={rejectionReason.trim().length < 10 || rejectMutation.isPending}
+                  loading={rejectMutation.isPending}
+                >
+                  Rechazar Agencia
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {premiumModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4">
               <div className="flex items-center gap-3 mb-6">
                 <Crown className="w-8 h-8 text-yellow-500" />

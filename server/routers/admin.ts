@@ -43,18 +43,38 @@ export const adminRouter = router({
     .input(z.object({
       page: z.number().default(1),
       limit: z.number().default(20),
-      status: z.enum(['all', 'verified', 'unverified']).default('all'),
+      status: z.enum(['all', 'pending', 'approved', 'rejected']).default('pending'),
     }))
     .query(async ({ input }) => {
       const { page, limit, status } = input;
       const offset = (page - 1) * limit;
 
-      let query = db.from('agencies').select('*, users!agencies_owner_id_fkey(full_name, role)', { count: 'exact' });
+      let query = db.from('agencies').select(`
+        id,
+        name,
+        slug,
+        description,
+        email,
+        phone,
+        website,
+        location_city,
+        location_region,
+        services,
+        is_premium,
+        premium_until,
+        approval_status,
+        approved_at,
+        rejection_reason,
+        created_at,
+        users!agencies_owner_id_fkey(full_name, role)
+      `, { count: 'exact' });
 
-      if (status === 'verified') {
-        query = query.eq('is_verified', true);
-      } else if (status === 'unverified') {
-        query = query.eq('is_verified', false);
+      if (status === 'pending') {
+        query = query.eq('approval_status', 'pending');
+      } else if (status === 'approved') {
+        query = query.eq('approval_status', 'approved');
+      } else if (status === 'rejected') {
+        query = query.eq('approval_status', 'rejected');
       }
 
       query = query
