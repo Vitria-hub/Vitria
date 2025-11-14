@@ -1,5 +1,30 @@
 import { z } from 'zod';
 
+// Validador flexible para URLs opcionales - acepta con o sin https://, con o sin www.
+const optionalUrlSchema = z.preprocess(
+  (val) => {
+    // Si es undefined, null, o string vacío, retornar undefined
+    if (!val || (typeof val === 'string' && val.trim() === '')) {
+      return undefined;
+    }
+    
+    // Si es un string, normalizarlo
+    if (typeof val === 'string') {
+      let normalized = val.trim();
+      
+      // Si no tiene protocolo, agregar https://
+      if (!normalized.match(/^https?:\/\//i)) {
+        normalized = 'https://' + normalized;
+      }
+      
+      return normalized;
+    }
+    
+    return val;
+  },
+  z.string().url({ message: 'URL inválida. Ejemplos válidos: vitria.cl, www.vitria.cl, https://vitria.cl' }).optional()
+);
+
 export const agencyListSchema = z.object({
   q: z.string().optional(),
   region: z.string().optional(),
@@ -45,15 +70,9 @@ export const contactFormSchema = z.object({
 export const createAgencySchema = z.object({
   // Paso 1: Información Básica
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-  logo_url: z.string().optional().refine(
-    (val) => !val || val === '' || z.string().url().safeParse(val).success,
-    { message: 'URL de logo inválida' }
-  ),
+  logo_url: optionalUrlSchema,
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres'),
-  website: z.string().optional().refine(
-    (val) => !val || val === '' || z.string().url().safeParse(val).success,
-    { message: 'URL inválida' }
-  ),
+  website: optionalUrlSchema,
   email: z.string().email('Email inválido'),
   phone: z.string().min(8, 'Teléfono inválido'),
   whatsappNumber: z.string().optional().refine(
@@ -102,15 +121,9 @@ export const rejectAgencySchema = z.object({
 
 export const updateAgencySchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').optional(),
-  logo_url: z.string().optional().refine(
-    (val) => !val || val === '' || z.string().url().safeParse(val).success,
-    { message: 'URL de logo inválida' }
-  ),
+  logo_url: optionalUrlSchema,
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres').optional(),
-  website: z.string().optional().refine(
-    (val) => !val || val === '' || z.string().url().safeParse(val).success,
-    { message: 'URL inválida' }
-  ),
+  website: optionalUrlSchema,
   email: z.string().email('Email inválido').optional(),
   phone: z.string().min(8, 'Teléfono inválido').optional(),
   whatsappNumber: z.string().optional().refine(

@@ -420,10 +420,10 @@ export default function CrearAgenciaPage() {
                 Sitio Web (opcional)
               </label>
               <Input
-                type="url"
+                type="text"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                placeholder="https://miagencia.cl"
+                placeholder="vitria.cl o www.vitria.cl (https:// es opcional)"
               />
             </div>
 

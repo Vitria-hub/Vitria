@@ -47,12 +47,14 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
-## November 14, 2025 - Agency Creation Validation Fix
-- **Critical Bug Fix**: Fixed validation error blocking agency creation when optional URL fields (website, logo_url) were left empty
-- **Root Cause**: Zod schema pattern `z.string().url().optional().or(z.literal(''))` incorrectly validated empty strings as invalid URLs
-- **Solution**: Implemented `.refine()` validation that properly handles undefined, empty strings, and valid URLs
-- **Impact**: Agency registration now works 100% - users can successfully create agencies with or without optional contact fields
-- **Fields Fixed**: website, logo_url, whatsappNumber (in both createAgencySchema and updateAgencySchema)
+## November 14, 2025 - Flexible URL Normalization Implementation
+- **Feature**: Implemented smart URL normalization that accepts website URLs with or without `https://` protocol
+- **User Experience**: Users can now enter URLs in natural formats: "vitria.cl", "www.vitria.cl", or "https://vitria.cl"
+- **Technical Solution**: Created `optionalUrlSchema` using `z.preprocess()` to normalize URLs before validation
+- **Normalization Logic**: Automatically adds `https://` prefix if no protocol is detected, while preserving existing protocols
+- **Impact**: Reduces user friction during agency registration - no more "URL inválido" errors from missing protocols
+- **UI Updates**: Changed input type from "url" to "text", updated placeholder to indicate protocol is optional
+- **Fields Affected**: website, logo_url (in both createAgencySchema and updateAgencySchema)
 
 ## November 14, 2025 - Database Integrity & Performance Overhaul
 - **Data Integrity**: Added critical constraints (NOT NULL, UNIQUE) on users.auth_id, agencies.slug, client_profiles.user_id, and reviews(user_id, agency_id)
