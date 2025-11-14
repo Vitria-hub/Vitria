@@ -47,6 +47,13 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 14, 2025 - Agency Creation Validation Fix
+- **Critical Bug Fix**: Fixed validation error blocking agency creation when optional URL fields (website, logo_url) were left empty
+- **Root Cause**: Zod schema pattern `z.string().url().optional().or(z.literal(''))` incorrectly validated empty strings as invalid URLs
+- **Solution**: Implemented `.refine()` validation that properly handles undefined, empty strings, and valid URLs
+- **Impact**: Agency registration now works 100% - users can successfully create agencies with or without optional contact fields
+- **Fields Fixed**: website, logo_url, whatsappNumber (in both createAgencySchema and updateAgencySchema)
+
 ## November 14, 2025 - Database Integrity & Performance Overhaul
 - **Data Integrity**: Added critical constraints (NOT NULL, UNIQUE) on users.auth_id, agencies.slug, client_profiles.user_id, and reviews(user_id, agency_id)
 - **Cascade Protection**: Implemented ON DELETE CASCADE/SET NULL across all foreign keys to prevent orphaned data

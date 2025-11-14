@@ -45,12 +45,21 @@ export const contactFormSchema = z.object({
 export const createAgencySchema = z.object({
   // Paso 1: Información Básica
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
-  logo_url: z.string().url('URL de logo inválida').optional().or(z.literal('')),
+  logo_url: z.string().optional().refine(
+    (val) => !val || val === '' || z.string().url().safeParse(val).success,
+    { message: 'URL de logo inválida' }
+  ),
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres'),
-  website: z.string().url('URL inválida').optional().or(z.literal('')),
+  website: z.string().optional().refine(
+    (val) => !val || val === '' || z.string().url().safeParse(val).success,
+    { message: 'URL inválida' }
+  ),
   email: z.string().email('Email inválido'),
   phone: z.string().min(8, 'Teléfono inválido'),
-  whatsappNumber: z.string().min(8, 'Número de WhatsApp inválido').optional().or(z.literal('')),
+  whatsappNumber: z.string().optional().refine(
+    (val) => !val || val === '' || val.length >= 8,
+    { message: 'Número de WhatsApp inválido' }
+  ),
   city: z.string().min(2, 'Ciudad requerida'),
   region: z.string().min(1, 'Región requerida'),
   
@@ -93,12 +102,21 @@ export const rejectAgencySchema = z.object({
 
 export const updateAgencySchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').optional(),
-  logo_url: z.string().url('URL de logo inválida').optional().or(z.literal('')),
+  logo_url: z.string().optional().refine(
+    (val) => !val || val === '' || z.string().url().safeParse(val).success,
+    { message: 'URL de logo inválida' }
+  ),
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres').optional(),
-  website: z.string().url('URL inválida').optional().or(z.literal('')),
+  website: z.string().optional().refine(
+    (val) => !val || val === '' || z.string().url().safeParse(val).success,
+    { message: 'URL inválida' }
+  ),
   email: z.string().email('Email inválido').optional(),
   phone: z.string().min(8, 'Teléfono inválido').optional(),
-  whatsappNumber: z.string().min(8, 'Número de WhatsApp inválido').optional().or(z.literal('')),
+  whatsappNumber: z.string().optional().refine(
+    (val) => !val || val === '' || val.length >= 8,
+    { message: 'Número de WhatsApp inválido' }
+  ),
   city: z.string().min(2, 'Ciudad requerida').optional(),
   region: z.string().min(1, 'Región requerida').optional(),
   services: z.array(z.string()).optional(),
