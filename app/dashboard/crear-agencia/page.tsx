@@ -65,6 +65,15 @@ export default function CrearAgenciaPage() {
     e.preventDefault();
     if (!user) return;
     
+    // Only submit if we're on step 3 and validation passes
+    if (currentStep !== 3) {
+      return;
+    }
+    
+    if (!validateStep(3)) {
+      return;
+    }
+    
     const submitData = {
       ...formData,
       priceRange: formData.priceRange as '$' | '$$' | '$$$',
@@ -259,7 +268,15 @@ export default function CrearAgenciaPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border-2 border-gray-200 rounded-xl p-8">
+      <form onSubmit={handleSubmit} onKeyDown={(e) => {
+        // Prevent Enter key from submitting the form except on the submit button
+        if (e.key === 'Enter' && e.target !== e.currentTarget) {
+          const target = e.target as HTMLElement;
+          if (target.tagName !== 'TEXTAREA' && target.getAttribute('type') !== 'submit') {
+            e.preventDefault();
+          }
+        }
+      }} className="bg-white border-2 border-gray-200 rounded-xl p-8">
         {/* PASO 1: Información Básica */}
         {currentStep === 1 && (
           <div className="space-y-6">
