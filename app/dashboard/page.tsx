@@ -77,8 +77,7 @@ export default function DashboardPage() {
           <div className="flex-1">
             <h3 className="font-bold text-green-900 mb-1">¡Tu agencia ha sido creada exitosamente!</h3>
             <p className="text-green-700 text-sm mb-3">
-              Tu agencia está ahora en nuestra lista de espera para revisión. Recibirás un correo cuando sea aprobada y publicada en el directorio. 
-              Este proceso normalmente toma entre 24-48 horas.
+              Tu agencia está ahora en nuestra lista de espera. Recibirás un correo cuando sea aprobada y publicada en el directorio.
             </p>
             <p className="text-green-700 text-sm font-medium">
               📧 Hemos enviado una confirmación a tu correo electrónico.
