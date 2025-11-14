@@ -96,11 +96,43 @@ export default function DashboardPage() {
         {hasAgency && (
           <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
             <div className="bg-accent/10 border-b border-gray-200 px-6 py-4">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-dark" />
-                <h2 className="text-xl font-bold text-dark">Mi Agencia</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-dark" />
+                  <h2 className="text-xl font-bold text-dark">Mi Agencia</h2>
+                </div>
+                {userAgency?.approval_status && (
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    userAgency.approval_status === 'approved' 
+                      ? 'bg-green-100 text-green-800'
+                      : userAgency.approval_status === 'pending'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {userAgency.approval_status === 'approved' && 'Aprobada'}
+                    {userAgency.approval_status === 'pending' && 'En lista de espera'}
+                    {userAgency.approval_status === 'rejected' && 'No aprobada'}
+                  </span>
+                )}
               </div>
             </div>
+            
+            {/* Status message for pending/rejected */}
+            {userAgency?.approval_status === 'pending' && (
+              <div className="bg-yellow-50 border-b-2 border-yellow-200 px-6 py-4">
+                <p className="text-yellow-800 text-sm">
+                  <strong>Tu agencia está en lista de espera.</strong> Recibirás un correo cuando sea aprobada y publicada en el directorio.
+                </p>
+              </div>
+            )}
+            
+            {userAgency?.approval_status === 'rejected' && (
+              <div className="bg-red-50 border-b-2 border-red-200 px-6 py-4">
+                <p className="text-red-800 text-sm">
+                  <strong>Tu agencia no fue aprobada.</strong> Por favor contacta a nuestro equipo para más información.
+                </p>
+              </div>
+            )}
             
             <div className="border-b border-gray-200">
               <nav className="flex">
@@ -114,16 +146,18 @@ export default function DashboardPage() {
                 >
                   Perfil
                 </button>
-                <button
-                  onClick={() => setTab('metrics')}
-                  className={`px-6 py-4 font-semibold transition ${
-                    tab === 'metrics'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-dark/60 hover:text-primary'
-                  }`}
-                >
-                  Métricas
-                </button>
+                {userAgency?.approval_status === 'approved' && (
+                  <button
+                    onClick={() => setTab('metrics')}
+                    className={`px-6 py-4 font-semibold transition ${
+                      tab === 'metrics'
+                        ? 'text-primary border-b-2 border-primary'
+                        : 'text-dark/60 hover:text-primary'
+                    }`}
+                  >
+                    Métricas
+                  </button>
+                )}
               </nav>
             </div>
 
@@ -132,17 +166,35 @@ export default function DashboardPage() {
                 <div>
                   <h3 className="text-lg font-bold text-dark mb-6">Gestionar Perfil de Agencia</h3>
                   <div className="space-y-4">
-                    <Link href={`/agencias/${agencySlug}`}>
-                      <Button variant="primary" className="w-full sm:w-auto">
-                        Ver Perfil Público
-                      </Button>
-                    </Link>
-                    <Link href="/dashboard/editar-perfil" className="block sm:inline-block sm:ml-4">
-                      <Button variant="outline" className="w-full sm:w-auto">
-                        <Settings className="w-4 h-4 mr-2" />
-                        Editar Información
-                      </Button>
-                    </Link>
+                    {userAgency?.approval_status === 'approved' ? (
+                      <>
+                        <Link href={`/agencias/${agencySlug}`}>
+                          <Button variant="primary" className="w-full sm:w-auto">
+                            Ver Perfil Público
+                          </Button>
+                        </Link>
+                        <Link href="/dashboard/editar-perfil" className="block sm:inline-block sm:ml-4">
+                          <Button variant="outline" className="w-full sm:w-auto">
+                            <Settings className="w-4 h-4 mr-2" />
+                            Editar Información
+                          </Button>
+                        </Link>
+                      </>
+                    ) : (
+                      <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-6">
+                        <p className="text-dark/70 text-sm mb-4">
+                          {userAgency?.approval_status === 'pending' 
+                            ? 'Tu perfil público estará disponible una vez que tu agencia sea aprobada.'
+                            : 'Tu agencia no está publicada en el directorio.'}
+                        </p>
+                        <Link href="/dashboard/editar-perfil">
+                          <Button variant="outline" className="w-full sm:w-auto">
+                            <Settings className="w-4 h-4 mr-2" />
+                            Editar Información
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                   <div className="mt-8 p-6 bg-gray-50 rounded-lg">
                     <h4 className="font-bold text-dark mb-2">
@@ -155,7 +207,7 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {tab === 'metrics' && (
+              {tab === 'metrics' && userAgency?.approval_status === 'approved' && (
                 <div>
                   <h3 className="text-lg font-bold text-dark mb-6">Métricas (Últimos 30 días)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
