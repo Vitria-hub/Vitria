@@ -3,6 +3,8 @@ import { TRPCError } from '@trpc/server';
 import { agencyListSchema, agencyBySlugSchema, createAgencySchema } from '@/lib/validators';
 import { db } from '../db';
 import { enforcePremiumFreshness, enforceSingleAgencyPremiumFreshness } from '../utils/premiumExpiration';
+import { sendAgencyReviewEmail, sendAgencyWaitlistEmail, sendAgencyApprovalEmail } from '@/lib/email';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const agencyRouter = router({
   list: publicProcedure
@@ -11,7 +13,7 @@ export const agencyRouter = router({
       const { q, region, city, service, category, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
       const offset = (page - 1) * limit;
 
-      let query = db.from('agencies').select('*', { count: 'exact' });
+      let query = db.from('agencies').select('*', { count: 'exact' }).eq('approval_status', 'approved');
 
       if (q) {
         query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
@@ -83,6 +85,7 @@ export const agencyRouter = router({
         .from('agencies')
         .select('*')
         .eq('slug', input.slug)
+        .eq('approval_status', 'approved')
         .maybeSingle();
 
       if (error) {
@@ -154,11 +157,14 @@ export const agencyRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { data: userData } = await db
         .from('users')
-        .select('id')
+        .select('id, full_name')
         .eq('auth_id', ctx.userId)
         .single();
 
       if (!userData) throw new Error('User not found');
+
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(ctx.userId);
+      if (!authUser?.user?.email) throw new Error('User email not found');
 
       const slug = input.name
         .toLowerCase()
@@ -197,6 +203,7 @@ export const agencyRouter = router({
             employees_max: input.employeesMax || null,
             price_range: input.priceRange || null,
             owner_id: userData.id,
+            approval_status: 'pending',
         };
 
         if (input.specialties && input.specialties.length > 0) {
@@ -217,6 +224,32 @@ export const agencyRouter = router({
             });
           }
           throw error;
+        }
+
+        try {
+          await Promise.all([
+            sendAgencyReviewEmail({
+              id: data.id,
+              name: data.name,
+              email: data.email || '',
+              phone: data.phone || '',
+              website: data.website || undefined,
+              location_city: data.location_city || '',
+              location_region: data.location_region || '',
+              description: data.description || '',
+              categories: data.categories,
+              services: data.services,
+              owner_email: authUser.user.email,
+              owner_name: userData.full_name || 'Usuario',
+            }),
+            sendAgencyWaitlistEmail(
+              data.name,
+              authUser.user.email,
+              userData.full_name || 'Usuario'
+            ),
+          ]);
+        } catch (emailError) {
+          console.error('Error sending emails after agency creation:', emailError);
         }
 
         return data;

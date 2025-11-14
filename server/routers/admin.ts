@@ -2,6 +2,9 @@ import { router, protectedProcedure } from '../trpc';
 import { db } from '../db';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { approveAgencySchema, rejectAgencySchema } from '@/lib/validators';
+import { sendAgencyApprovalEmail } from '@/lib/email';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const { data: userData } = await db
@@ -23,7 +26,7 @@ export const adminRouter = router({
       db.from('agencies').select('id', { count: 'exact', head: true }),
       db.from('users').select('id', { count: 'exact', head: true }),
       db.from('reviews').select('id', { count: 'exact', head: true }),
-      db.from('agencies').select('id', { count: 'exact', head: true }).eq('is_verified', false),
+      db.from('agencies').select('id', { count: 'exact', head: true }).eq('approval_status', 'pending'),
       db.from('reviews').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     ]);
 
@@ -277,5 +280,113 @@ export const adminRouter = router({
       if (error) throw error;
 
       return { success: true };
+    }),
+
+  approveAgency: adminProcedure
+    .input(approveAgencySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { data: agency, error: fetchError } = await db
+        .from('agencies')
+        .select('*, users!agencies_owner_id_fkey(full_name, auth_id)')
+        .eq('id', input.agencyId)
+        .single();
+
+      if (fetchError || !agency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      if (agency.approval_status === 'approved') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Esta agencia ya está aprobada',
+        });
+      }
+
+      const { data: adminUser } = await db
+        .from('users')
+        .select('id')
+        .eq('auth_id', ctx.userId)
+        .single();
+
+      const { data, error } = await db
+        .from('agencies')
+        .update({
+          approval_status: 'approved',
+          approved_at: new Date().toISOString(),
+          reviewed_by: adminUser?.id || null,
+          rejection_reason: null,
+        })
+        .eq('id', input.agencyId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const ownerAuthId = (agency as any).users?.auth_id;
+      if (ownerAuthId) {
+        const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(ownerAuthId);
+        if (authUser?.user?.email) {
+          try {
+            await sendAgencyApprovalEmail(
+              agency.name,
+              authUser.user.email,
+              (agency as any).users?.full_name || 'Usuario',
+              agency.slug
+            );
+          } catch (emailError) {
+            console.error('Error sending approval email:', emailError);
+          }
+        }
+      }
+
+      return data;
+    }),
+
+  rejectAgency: adminProcedure
+    .input(rejectAgencySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { data: agency, error: fetchError } = await db
+        .from('agencies')
+        .select('id, name, approval_status')
+        .eq('id', input.agencyId)
+        .single();
+
+      if (fetchError || !agency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      if (agency.approval_status === 'rejected') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Esta agencia ya está rechazada',
+        });
+      }
+
+      const { data: adminUser } = await db
+        .from('users')
+        .select('id')
+        .eq('auth_id', ctx.userId)
+        .single();
+
+      const { data, error } = await db
+        .from('agencies')
+        .update({
+          approval_status: 'rejected',
+          rejection_reason: input.rejectionReason,
+          reviewed_by: adminUser?.id || null,
+        })
+        .eq('id', input.agencyId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
     }),
 });

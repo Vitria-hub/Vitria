@@ -81,3 +81,12 @@ export const trackAgencyContactSchema = z.object({
   contactMethod: z.enum(['email', 'phone', 'website', 'form']),
   message: z.string().optional(),
 });
+
+export const approveAgencySchema = z.object({
+  agencyId: z.string().uuid(),
+});
+
+export const rejectAgencySchema = z.object({
+  agencyId: z.string().uuid(),
+  rejectionReason: z.string().min(10, 'La razón del rechazo debe tener al menos 10 caracteres'),
+});
