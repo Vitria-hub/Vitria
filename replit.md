@@ -47,6 +47,14 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 14, 2025 - Client Profile Budget Range Constraint Fix
+- **Critical Database Fix**: Fixed budget_range constraint mismatch in production Supabase database
+- **Root Cause**: Production database had outdated constraint values ('low', 'medium', 'high') while application code uses ('$', '$$', '$$$')
+- **Impact**: Client profile creation was completely blocked with constraint violation error
+- **Solution**: Executed SQL migration in production to update constraint and migrate existing data
+- **Dual Role System**: Platform correctly supports users having both agency profile (with price_range for what they charge) and client profile (with budget_range for what they want to spend)
+- **SQL Fix**: `production-fix-budget-range-constraint.sql` script created for future reference
+
 ## November 14, 2025 - Flexible URL Normalization Implementation
 - **Feature**: Implemented smart URL normalization that accepts website URLs with or without `https://` protocol
 - **User Experience**: Users can now enter URLs in natural formats: "vitria.cl", "www.vitria.cl", or "https://vitria.cl"
