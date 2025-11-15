@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Star, Plus, X, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminReviewsPage() {
@@ -12,10 +12,21 @@ export default function AdminReviewsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAgency, setSelectedAgency] = useState<any>(null);
+  const [authorName, setAuthorName] = useState('');
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
 
   const { data, isLoading, refetch } = trpc.admin.listReviews.useQuery(
     { page, limit: 20, status: statusFilter },
     { enabled: userData?.role === 'admin' }
+  );
+
+  const { data: agenciesData } = trpc.admin.listAgencies.useQuery(
+    { page: 1, limit: 100, status: 'approved' },
+    { enabled: showCreateModal }
   );
 
   const updateStatusMutation = trpc.admin.updateReviewStatus.useMutation({
@@ -24,6 +35,14 @@ export default function AdminReviewsPage() {
 
   const deleteMutation = trpc.admin.deleteReview.useMutation({
     onSuccess: () => refetch(),
+  });
+
+  const createReviewMutation = trpc.admin.createReview.useMutation({
+    onSuccess: () => {
+      refetch();
+      setShowCreateModal(false);
+      resetForm();
+    },
   });
 
   useEffect(() => {
@@ -49,6 +68,32 @@ export default function AdminReviewsPage() {
       deleteMutation.mutate({ reviewId });
     }
   };
+
+  const resetForm = () => {
+    setSelectedAgency(null);
+    setAuthorName('');
+    setRating(5);
+    setComment('');
+    setSearchQuery('');
+  };
+
+  const handleCreateReview = () => {
+    if (!selectedAgency || !authorName.trim() || !comment.trim()) {
+      alert('Por favor completa todos los campos');
+      return;
+    }
+
+    createReviewMutation.mutate({
+      agencyId: selectedAgency.id,
+      rating,
+      comment,
+      authorName,
+    });
+  };
+
+  const filteredAgencies = agenciesData?.agencies.filter((agency: any) =>
+    agency.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -91,18 +136,27 @@ export default function AdminReviewsPage() {
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-semibold text-dark">Filtrar por:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-semibold text-dark">Filtrar por:</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as any)}
+                className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+              >
+                <option value="all">Todas</option>
+                <option value="pending">Pendientes</option>
+                <option value="approved">Aprobadas</option>
+                <option value="rejected">Rechazadas</option>
+              </select>
+            </div>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold"
             >
-              <option value="all">Todas</option>
-              <option value="pending">Pendientes</option>
-              <option value="approved">Aprobadas</option>
-              <option value="rejected">Rechazadas</option>
-            </select>
+              <Plus className="w-4 h-4" />
+              Crear Reseña
+            </button>
           </div>
         </div>
 
@@ -216,6 +270,163 @@ export default function AdminReviewsPage() {
           </div>
         )}
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b-2 border-gray-200 p-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-primary">Crear Nueva Reseña</h2>
+              <button
+                onClick={() => {
+                  setShowCreateModal(false);
+                  resetForm();
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Agencia *
+                </label>
+                {!selectedAgency ? (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Buscar agencia..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      />
+                    </div>
+                    <div className="max-h-48 overflow-y-auto border-2 border-gray-200 rounded-lg">
+                      {filteredAgencies.length > 0 ? (
+                        filteredAgencies.map((agency: any) => (
+                          <button
+                            key={agency.id}
+                            onClick={() => setSelectedAgency(agency)}
+                            className="w-full text-left px-4 py-3 hover:bg-mint/20 transition border-b border-gray-100 last:border-0"
+                          >
+                            <p className="font-semibold text-dark">{agency.name}</p>
+                            <p className="text-sm text-dark/60">
+                              {agency.location_city}, {agency.location_region}
+                            </p>
+                          </button>
+                        ))
+                      ) : (
+                        <p className="text-center py-8 text-dark/60">
+                          {searchQuery ? 'No se encontraron agencias' : 'Cargando agencias...'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-4 bg-mint/20 border-2 border-mint rounded-lg">
+                    <div>
+                      <p className="font-semibold text-dark">{selectedAgency.name}</p>
+                      <p className="text-sm text-dark/60">
+                        {selectedAgency.location_city}, {selectedAgency.location_region}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSelectedAgency(null)}
+                      className="px-3 py-1 text-sm bg-white border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                    >
+                      Cambiar
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Nombre del Autor *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej: María González"
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Calificación *
+                </label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setRating(star)}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <Star
+                        className={`w-8 h-8 ${
+                          star <= rating
+                            ? 'fill-accent text-accent'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                  <span className="ml-2 text-lg font-semibold text-dark">{rating}/5</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Comentario *
+                </label>
+                <textarea
+                  placeholder="Escribe un comentario detallado sobre la agencia..."
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  rows={5}
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary resize-none"
+                />
+                <p className="text-sm text-dark/60 mt-1">
+                  Mínimo 10 caracteres ({comment.length}/10)
+                </p>
+              </div>
+
+              {createReviewMutation.error && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+                  <p className="text-red-800 text-sm font-semibold">
+                    Error: {createReviewMutation.error.message}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-4 border-t-2 border-gray-200">
+                <button
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    resetForm();
+                  }}
+                  className="flex-1 px-6 py-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition font-semibold"
+                  disabled={createReviewMutation.isPending}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleCreateReview}
+                  disabled={createReviewMutation.isPending}
+                  className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold disabled:opacity-50"
+                >
+                  {createReviewMutation.isPending ? 'Creando...' : 'Crear Reseña'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
