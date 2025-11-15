@@ -1,22 +1,27 @@
 import { router, publicProcedure } from '../trpc';
-import { db } from '../db';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { enforcePremiumFreshness } from '../utils/premiumExpiration';
 
 export const sponsorRouter = router({
   listHome: publicProcedure.query(async () => {
-    const now = new Date().toISOString();
+    const now = new Date();
 
-    const { data, error } = await db
+    const { data, error } = await supabaseAdmin
       .from('sponsored_slots')
       .select('*, agency:agencies(*)')
-      .lte('starts_at', now)
-      .gte('ends_at', now)
-      .order('position', { ascending: true })
-      .limit(5);
+      .order('position', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
-    const sponsoredSlots = data || [];
+    const activeSlots = (data || []).filter((slot: any) => {
+      const startsAt = new Date(slot.starts_at);
+      const endsAt = new Date(slot.ends_at);
+      return startsAt <= now && endsAt >= now;
+    }).slice(0, 5);
+
+    const sponsoredSlots = activeSlots;
     
     const freshSlots = await Promise.all(
       sponsoredSlots.map(async (slot) => {

@@ -7,6 +7,7 @@ import { adminRouter } from './admin';
 import { analyticsRouter } from './analytics';
 import { clientRouter } from './client';
 import { contactRouter } from './contact';
+import { inferRouterOutputs } from '@trpc/server';
 
 export const appRouter = router({
   agency: agencyRouter,
@@ -20,3 +21,4 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+export type RouterOutputs = inferRouterOutputs<AppRouter>;
