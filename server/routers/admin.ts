@@ -610,7 +610,7 @@ export const adminRouter = router({
         .select()
         .single();
 
-      if (error) throw error;
+      if (error || !data) throw error || new Error('Failed to create review');
 
       return {
         ...data,
