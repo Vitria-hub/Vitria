@@ -428,4 +428,84 @@ export const adminRouter = router({
 
       return data;
     }),
+
+  listSponsoredSlots: adminProcedure.query(async () => {
+    const { data, error } = await supabaseAdmin
+      .from('sponsored_slots')
+      .select('*, agency:agencies(id, name, slug, logo_url, is_premium)')
+      .order('position', { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  }),
+
+  addSponsoredSlot: adminProcedure
+    .input(z.object({
+      agencyId: z.string().uuid(),
+      position: z.number().min(1).max(10),
+      durationDays: z.number().min(1).max(365),
+    }))
+    .mutation(async ({ input }) => {
+      const startsAt = new Date();
+      const endsAt = new Date();
+      endsAt.setDate(endsAt.getDate() + input.durationDays);
+
+      const { data, error } = await supabaseAdmin
+        .from('sponsored_slots')
+        .insert({
+          agency_id: input.agencyId,
+          position: input.position,
+          starts_at: startsAt.toISOString(),
+          ends_at: endsAt.toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }),
+
+  updateSponsoredSlot: adminProcedure
+    .input(z.object({
+      slotId: z.string().uuid(),
+      position: z.number().min(1).max(10).optional(),
+      endsAt: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const updateData: any = {};
+      
+      if (input.position !== undefined) {
+        updateData.position = input.position;
+      }
+      
+      if (input.endsAt) {
+        updateData.ends_at = input.endsAt;
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from('sponsored_slots')
+        .update(updateData)
+        .eq('id', input.slotId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }),
+
+  removeSponsoredSlot: adminProcedure
+    .input(z.object({ slotId: z.string().uuid() }))
+    .mutation(async ({ input }) => {
+      const { error } = await supabaseAdmin
+        .from('sponsored_slots')
+        .delete()
+        .eq('id', input.slotId);
+
+      if (error) throw error;
+
+      return { success: true };
+    }),
 });
