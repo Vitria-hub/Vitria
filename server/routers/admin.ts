@@ -447,9 +447,47 @@ export const adminRouter = router({
       durationDays: z.number().min(1).max(365),
     }))
     .mutation(async ({ input }) => {
+      const { data: agency, error: agencyError } = await supabaseAdmin
+        .from('agencies')
+        .select('approval_status')
+        .eq('id', input.agencyId)
+        .single();
+
+      if (agencyError || !agency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      if (agency.approval_status !== 'approved') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Solo las agencias aprobadas pueden ser destacadas',
+        });
+      }
+
+      const { data: existingSlots } = await supabaseAdmin
+        .from('sponsored_slots')
+        .select('id, starts_at, ends_at')
+        .eq('position', input.position);
+
       const startsAt = new Date();
       const endsAt = new Date();
       endsAt.setDate(endsAt.getDate() + input.durationDays);
+
+      const hasOverlap = existingSlots?.some((slot: any) => {
+        const slotStart = new Date(slot.starts_at);
+        const slotEnd = new Date(slot.ends_at);
+        return (startsAt <= slotEnd && endsAt >= slotStart);
+      });
+
+      if (hasOverlap) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `La posición ${input.position} ya está ocupada en el período seleccionado`,
+        });
+      }
 
       const { data, error } = await supabaseAdmin
         .from('sponsored_slots')
@@ -474,9 +512,44 @@ export const adminRouter = router({
       endsAt: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      const { data: currentSlot, error: fetchError } = await supabaseAdmin
+        .from('sponsored_slots')
+        .select('position, starts_at, ends_at')
+        .eq('id', input.slotId)
+        .single();
+
+      if (fetchError || !currentSlot) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Slot no encontrado',
+        });
+      }
+
       const updateData: any = {};
       
       if (input.position !== undefined) {
+        const { data: existingSlots } = await supabaseAdmin
+          .from('sponsored_slots')
+          .select('id, starts_at, ends_at')
+          .eq('position', input.position)
+          .neq('id', input.slotId);
+
+        const startsAt = new Date(currentSlot.starts_at);
+        const endsAt = input.endsAt ? new Date(input.endsAt) : new Date(currentSlot.ends_at);
+
+        const hasOverlap = existingSlots?.some((slot: any) => {
+          const slotStart = new Date(slot.starts_at);
+          const slotEnd = new Date(slot.ends_at);
+          return (startsAt <= slotEnd && endsAt >= slotStart);
+        });
+
+        if (hasOverlap) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: `La posición ${input.position} ya está ocupada en el período seleccionado`,
+          });
+        }
+
         updateData.position = input.position;
       }
       

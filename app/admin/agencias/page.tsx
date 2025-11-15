@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban, Star } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
@@ -14,6 +14,9 @@ export default function AdminAgenciesPage() {
   const [detailModal, setDetailModal] = useState<any>(null);
   const [rejectModal, setRejectModal] = useState<{ agencyId: string; agencyName: string } | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [sponsorModal, setSponsorModal] = useState<{ agencyId: string; agencyName: string } | null>(null);
+  const [sponsorDays, setSponsorDays] = useState(30);
+  const [sponsorPosition, setSponsorPosition] = useState(1);
 
   const { data, isLoading, refetch } = trpc.admin.listAgencies.useQuery({ page, limit: 20, status: statusFilter });
 
@@ -40,6 +43,17 @@ export default function AdminAgenciesPage() {
     onSuccess: () => {
       refetch();
       setPremiumModal(null);
+    },
+  });
+
+  const addSponsorMutation = trpc.admin.addSponsoredSlot.useMutation({
+    onSuccess: () => {
+      alert('¡Agencia destacada exitosamente!');
+      setSponsorModal(null);
+      refetch();
+    },
+    onError: (error) => {
+      alert(`Error: ${error.message}`);
     },
   });
 
@@ -80,6 +94,16 @@ export default function AdminAgenciesPage() {
         agencyId: premiumModal.agencyId,
         isPremium: true,
         durationDays,
+      });
+    }
+  };
+
+  const handleSponsorConfirm = () => {
+    if (sponsorModal) {
+      addSponsorMutation.mutate({
+        agencyId: sponsorModal.agencyId,
+        position: sponsorPosition,
+        durationDays: sponsorDays,
       });
     }
   };
@@ -132,7 +156,7 @@ export default function AdminAgenciesPage() {
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Ubicación</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Estado</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Premium</th>
-                      <th className="px-6 py-4 text-left text-sm font-bold text-dark">Acciones</th>
+                      <th className="px-6 py-4 text-right text-sm font-bold text-dark">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -190,7 +214,7 @@ export default function AdminAgenciesPage() {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => setDetailModal(agency)}
                               className="p-2 hover:bg-blue-50 rounded-lg transition"
@@ -216,6 +240,15 @@ export default function AdminAgenciesPage() {
                                   <XCircle className="w-5 h-5 text-red-600" />
                                 </button>
                               </>
+                            )}
+                            {agency.approval_status === 'approved' && (
+                              <button
+                                onClick={() => setSponsorModal({ agencyId: agency.id, agencyName: agency.name })}
+                                className="p-2 hover:bg-purple-50 rounded-lg transition"
+                                title="Destacar agencia en homepage"
+                              >
+                                <Star className="w-5 h-5 text-purple-600" />
+                              </button>
                             )}
                             <button
                               onClick={() => handlePremiumToggle(agency.id, agency.is_premium)}
@@ -417,6 +450,105 @@ export default function AdminAgenciesPage() {
                   loading={rejectMutation.isPending}
                 >
                   Rechazar Agencia
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {sponsorModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+              <div className="flex items-center gap-3 mb-6">
+                <Star className="w-8 h-8 text-purple-500" />
+                <h2 className="text-2xl font-bold text-primary">Destacar Agencia</h2>
+              </div>
+              
+              <p className="text-dark/70 mb-6">
+                La agencia <strong>{sponsorModal.agencyName}</strong> aparecerá en el carrusel de agencias destacadas en la homepage.
+              </p>
+
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Posición en el carrusel:
+                  </label>
+                  <select
+                    value={sponsorPosition}
+                    onChange={(e) => setSponsorPosition(parseInt(e.target.value))}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                  >
+                    {[1, 2, 3, 4, 5].map((pos) => (
+                      <option key={pos} value={pos}>
+                        Posición {pos}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Duración (días):
+                  </label>
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    <button
+                      onClick={() => setSponsorDays(7)}
+                      className={`px-3 py-2 rounded-lg border-2 text-sm font-semibold transition ${
+                        sponsorDays === 7 
+                          ? 'border-primary bg-primary text-white' 
+                          : 'border-gray-200 hover:border-primary/50'
+                      }`}
+                    >
+                      7 días
+                    </button>
+                    <button
+                      onClick={() => setSponsorDays(15)}
+                      className={`px-3 py-2 rounded-lg border-2 text-sm font-semibold transition ${
+                        sponsorDays === 15 
+                          ? 'border-primary bg-primary text-white' 
+                          : 'border-gray-200 hover:border-primary/50'
+                      }`}
+                    >
+                      15 días
+                    </button>
+                    <button
+                      onClick={() => setSponsorDays(30)}
+                      className={`px-3 py-2 rounded-lg border-2 text-sm font-semibold transition ${
+                        sponsorDays === 30 
+                          ? 'border-primary bg-primary text-white' 
+                          : 'border-gray-200 hover:border-primary/50'
+                      }`}
+                    >
+                      30 días
+                    </button>
+                  </div>
+                  <input
+                    type="number"
+                    min="1"
+                    max="365"
+                    value={sponsorDays}
+                    onChange={(e) => setSponsorDays(parseInt(e.target.value) || 7)}
+                    className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                    placeholder="O ingresa días personalizados..."
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setSponsorModal(null)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant="primary"
+                  className="flex-1"
+                  onClick={handleSponsorConfirm}
+                  disabled={addSponsorMutation.isPending}
+                >
+                  {addSponsorMutation.isPending ? 'Destacando...' : 'Destacar Agencia'}
                 </Button>
               </div>
             </div>

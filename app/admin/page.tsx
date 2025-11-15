@@ -107,6 +107,12 @@ export default function AdminDashboard() {
               badge={stats?.pendingAgencies}
             />
             <AdminCard
+              title="Agencias Destacadas"
+              description="Control del carrusel de homepage"
+              href="/admin/destacados"
+              icon={<Star className="w-6 h-6 text-purple-600" />}
+            />
+            <AdminCard
               title="Gestionar Reseñas"
               description="Moderar reseñas pendientes"
               href="/admin/resenas"
