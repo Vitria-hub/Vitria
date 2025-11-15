@@ -57,9 +57,10 @@ export default function DashboardPage() {
   const hasAgency = !!userAgency;
   const hasClientProfile = !!clientProfile;
   const agencySlug = userAgency?.slug;
+  const isAdmin = userData?.role === 'admin';
 
-  const showAgencyCTA = agencyStatus === 'success' && !hasAgency;
-  const showClientCTA = clientProfileStatus === 'success' && !hasClientProfile;
+  const showAgencyCTA = agencyStatus === 'success' && !hasAgency && !isAdmin;
+  const showClientCTA = clientProfileStatus === 'success' && !hasClientProfile && !isAdmin;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -93,6 +94,27 @@ export default function DashboardPage() {
       )}
 
       <div className="space-y-6">
+        {isAdmin && (
+          <div className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl p-8 shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <Settings className="w-12 h-12 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-2">Panel de Administrador</h3>
+                <p className="text-white/90 mb-4">
+                  Tienes acceso completo al panel de administración de Vitria.
+                </p>
+                <Link href="/admin">
+                  <Button variant="outline" className="bg-white text-primary hover:bg-white/90">
+                    Ir al Panel de Admin
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {hasAgency && (
           <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
             <div className="bg-accent/10 border-b border-gray-200 px-6 py-4">
@@ -234,7 +256,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {agencyError && (
+        {agencyError && !isAdmin && (
           <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
             <p className="text-yellow-800 font-semibold mb-2">Error al cargar información de agencia</p>
             <p className="text-yellow-700 text-sm">
@@ -313,7 +335,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {clientProfileError && (
+        {clientProfileError && !isAdmin && (
           <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
             <p className="text-yellow-800 font-semibold mb-2">Error al cargar perfil de cliente</p>
             <p className="text-yellow-700 text-sm">

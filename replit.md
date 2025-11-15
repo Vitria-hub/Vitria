@@ -47,6 +47,13 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 15, 2025 - Admin Dashboard Improvements
+- **Admin Experience**: Admins now see a clean dashboard with direct access to admin panel instead of profile errors
+- **Error Suppression**: Removed misleading "Error al cargar" messages for admins who don't need agency/client profiles
+- **Admin CTA**: Added prominent admin panel access card with link to `/admin` on dashboard
+- **Role Detection**: Dashboard now checks user role and hides irrelevant CTAs for admins
+- **Impact**: Cleaner UX for administrators, no more confusing error messages about missing profiles
+
 ## November 14, 2025 - Admin Access Control UX Improvement
 - **User Experience**: Non-admin users who click "Revisar Agencia" in approval emails now see clear error message
 - **Centralized Pattern**: Created `app/admin/layout.tsx` with AdminGuard to eliminate duplicated auth logic
