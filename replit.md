@@ -47,6 +47,13 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 15, 2025 - Next.js Deployment Fix (useSearchParams Suspense Boundary)
+- **Issue**: Production deployment failed with prerender error - useSearchParams() not wrapped in Suspense boundary at /dashboard/page.tsx
+- **Solution**: Refactored dashboard page into DashboardContent (uses useSearchParams) and DashboardPage (wraps with Suspense boundary)
+- **Loading State**: Added consistent loading fallback matching existing UI patterns
+- **Next.js 14 Compliance**: Now follows App Router best practices for client-side search params
+- **Impact**: Deployment build now completes successfully without CSR bailout errors
+
 ## November 15, 2025 - Complete Admin Control for Sponsored Agencies & Premium Management
 - **Sponsored Slots API**: Created 4 new admin endpoints (addSponsoredSlot, updateSponsoredSlot, removeSponsoredSlot, listSponsoredSlots) in adminRouter
 - **Agency Management Page Enhancement**: Added "Destacar" button (purple star icon) to approved agencies in /admin/agencias, opens modal to configure position (1-5) and duration (7/15/30 days or custom)
