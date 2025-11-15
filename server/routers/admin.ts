@@ -2,7 +2,7 @@ import { router, protectedProcedure } from '../trpc';
 import { db } from '../db';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { approveAgencySchema, rejectAgencySchema } from '@/lib/validators';
+import { approveAgencySchema, rejectAgencySchema, adminCreateReviewSchema } from '@/lib/validators';
 import { sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
@@ -580,5 +580,44 @@ export const adminRouter = router({
       if (error) throw error;
 
       return { success: true };
+    }),
+
+  createReview: adminProcedure
+    .input(adminCreateReviewSchema)
+    .mutation(async ({ input }) => {
+      const { data: agency, error: agencyError } = await db
+        .from('agencies')
+        .select('id, name')
+        .eq('id', input.agencyId)
+        .single();
+
+      if (agencyError || !agency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      const { data, error } = await db
+        .from('reviews')
+        .insert({
+          agency_id: input.agencyId,
+          user_id: null,
+          rating: input.rating,
+          comment: input.comment,
+          status: 'approved',
+        } as any)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return {
+        ...data,
+        author: {
+          id: null,
+          full_name: input.authorName,
+        },
+      };
     }),
 });

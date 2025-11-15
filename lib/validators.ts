@@ -140,3 +140,10 @@ export const updateAgencySchema = z.object({
   priceRange: z.enum(['$', '$$', '$$$']).optional(),
   industries: z.array(z.string()).optional(),
 });
+
+export const adminCreateReviewSchema = z.object({
+  agencyId: z.string().uuid(),
+  rating: z.number().min(1).max(5),
+  comment: z.string().min(10, 'El comentario debe tener al menos 10 caracteres'),
+  authorName: z.string().min(2, 'El nombre del autor debe tener al menos 2 caracteres'),
+});
