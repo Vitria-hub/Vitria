@@ -47,6 +47,16 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 15, 2025 - Complete Admin Control for Sponsored Agencies & Premium Management
+- **Sponsored Slots API**: Created 4 new admin endpoints (addSponsoredSlot, updateSponsoredSlot, removeSponsoredSlot, listSponsoredSlots) in adminRouter
+- **Agency Management Page Enhancement**: Added "Destacar" button (purple star icon) to approved agencies in /admin/agencias, opens modal to configure position (1-5) and duration (7/15/30 days or custom)
+- **Dedicated Sponsored Page**: New /admin/destacados page shows all sponsored slots with status badges (Active/Expired/Programado), allows extending duration or removing slots
+- **Admin Navigation**: Added "Agencias Destacadas" card to main admin dashboard with direct access to sponsored slot management
+- **Backend Validations**: Prevents highlighting non-approved agencies, detects position conflicts for overlapping time periods, provides clear error messages
+- **User Feedback**: Added success/error alerts for all sponsored slot operations (add, update, remove)
+- **Visual Status Indicators**: Slots display active status, premium badges, days remaining, and clear start/end dates
+- **Impact**: Admins now have complete control over homepage carousel without needing database access or scripts
+
 ## November 15, 2025 - Admin Dashboard Improvements
 - **Admin Experience**: Admins now see a clean dashboard with direct access to admin panel instead of profile errors
 - **Error Suppression**: Removed misleading "Error al cargar" messages for admins who don't need agency/client profiles
