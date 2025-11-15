@@ -29,8 +29,14 @@ export default function DashboardPage() {
     }
   }, [user, loading, router]);
 
-  const { data: userAgency, isLoading: agencyLoading, error: agencyError, status: agencyStatus } = trpc.agency.myAgency.useQuery();
-  const { data: clientProfile, isLoading: clientProfileLoading, error: clientProfileError, status: clientProfileStatus } = trpc.clientProfile.getMyProfile.useQuery();
+  const isAdmin = userData?.role === 'admin';
+
+  const { data: userAgency, isLoading: agencyLoading, error: agencyError, status: agencyStatus } = trpc.agency.myAgency.useQuery(undefined, {
+    enabled: !loading && !!user && !isAdmin,
+  });
+  const { data: clientProfile, isLoading: clientProfileLoading, error: clientProfileError, status: clientProfileStatus } = trpc.clientProfile.getMyProfile.useQuery(undefined, {
+    enabled: !loading && !!user && !isAdmin,
+  });
 
   const mockMetrics = [
     { label: 'Vistas', value: 1234, icon: Eye, change: '+12%' },
@@ -57,7 +63,6 @@ export default function DashboardPage() {
   const hasAgency = !!userAgency;
   const hasClientProfile = !!clientProfile;
   const agencySlug = userAgency?.slug;
-  const isAdmin = userData?.role === 'admin';
 
   const showAgencyCTA = agencyStatus === 'success' && !hasAgency && !isAdmin;
   const showClientCTA = clientProfileStatus === 'success' && !hasClientProfile && !isAdmin;
