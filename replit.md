@@ -47,6 +47,13 @@ Currently, premium status for agencies is manually managed by administrators thr
 
 # Recent Changes
 
+## November 15, 2025 - UX Fix: Sponsored Carousel Rating Display
+- **Issue**: Sponsored agencies carousel showed inconsistent data: "4.5 ⭐ (0 reseñas)" - confusing for users
+- **Root Cause**: Fallback value of 4.5 stars when no reviews existed, but correctly showed 0 reviews count
+- **Solution**: Changed logic to only show stars when reviews exist (reviewCount > 0), otherwise display "Sin reseñas aún"
+- **User Experience**: More honest and clear - new agencies without reviews no longer show fake ratings
+- **Impact**: Prevents user confusion and maintains platform credibility
+
 ## November 15, 2025 - Next.js Deployment Fix (useSearchParams Suspense Boundary)
 - **Issue**: Production deployment failed with prerender error - useSearchParams() not wrapped in Suspense boundary at /dashboard/page.tsx
 - **Solution**: Refactored dashboard page into DashboardContent (uses useSearchParams) and DashboardPage (wraps with Suspense boundary)

@@ -57,8 +57,8 @@ export default function CarouselSponsored() {
 
   if (!agency) return null;
 
-  const averageRating = agency.average_rating || 4.5;
   const reviewCount = agency.review_count || 0;
+  const averageRating = reviewCount > 0 ? (agency.average_rating || 0) : 0;
   const services = agency.services?.slice(0, 3) || [];
   const employeeRange = agency.employees_min && agency.employees_max 
     ? `${agency.employees_min}-${agency.employees_max} empleados`
@@ -116,20 +116,26 @@ export default function CarouselSponsored() {
                 </div>
                 
                 <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm flex-wrap">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                          i < Math.floor(averageRating)
-                            ? 'fill-accent text-accent'
-                            : 'text-accent/30'
-                        }`}
-                      />
-                    ))}
-                    <span className="ml-1 sm:ml-2 font-bold text-accent">{averageRating.toFixed(1)}</span>
-                  </div>
-                  <span className="opacity-90">({reviewCount} reseñas)</span>
+                  {reviewCount > 0 ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                              i < Math.floor(averageRating)
+                                ? 'fill-accent text-accent'
+                                : 'text-accent/30'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-1 sm:ml-2 font-bold text-accent">{averageRating.toFixed(1)}</span>
+                      </div>
+                      <span className="opacity-90">({reviewCount} reseñas)</span>
+                    </>
+                  ) : (
+                    <span className="opacity-90 italic">Sin reseñas aún</span>
+                  )}
                 </div>
               </div>
             </div>
