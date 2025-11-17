@@ -103,9 +103,7 @@ export default function ClientRegisterPage() {
         signInData = await signIn(email, password);
       } catch (signInError: any) {
         console.error('Sign in error:', signInError);
-        if (signInError.message?.includes('Email not confirmed')) {
-          setError('Debes confirmar tu email antes de poder iniciar sesión. Revisa tu correo.');
-        } else if (signInError.message?.includes('Invalid')) {
+        if (signInError.message?.includes('Invalid')) {
           setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
         } else {
           setError(signInError.message || 'Error al iniciar sesión. Intenta nuevamente.');

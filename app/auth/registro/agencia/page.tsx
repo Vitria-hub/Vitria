@@ -98,20 +98,12 @@ export default function AgencyRegisterPage() {
       
       const signUpResult = await signUp(email, password, fullName, 'agency');
       
-      if (signUpResult.user && !signUpResult.user.confirmed_at) {
-        setError('Revisa tu correo para confirmar tu cuenta antes de continuar');
-        setLoading(false);
-        return;
-      }
-      
       let signInData;
       try {
         signInData = await signIn(email, password);
       } catch (signInError: any) {
         console.error('Sign in error:', signInError);
-        if (signInError.message?.includes('Email not confirmed')) {
-          setError('Debes confirmar tu email antes de poder iniciar sesión. Revisa tu correo.');
-        } else if (signInError.message?.includes('Invalid')) {
+        if (signInError.message?.includes('Invalid')) {
           setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
         } else {
           setError(signInError.message || 'Error al iniciar sesión. Intenta nuevamente.');
@@ -137,11 +129,7 @@ export default function AgencyRegisterPage() {
       throw new Error('La sesión tardó demasiado en establecerse. Por favor, intenta iniciar sesión desde la página de login.');
     } catch (err: any) {
       console.error('Registration error:', err);
-      if (err.message?.includes('Email not confirmed')) {
-        setError('Debes confirmar tu email antes de poder iniciar sesión. Revisa tu correo.');
-      } else {
-        setError(err.message || 'Error al crear la cuenta');
-      }
+      setError(err.message || 'Error al crear la cuenta');
       setLoading(false);
     }
   };
