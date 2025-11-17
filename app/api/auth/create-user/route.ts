@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -68,6 +69,21 @@ export async function POST(request: Request) {
         { message: error.message },
         { status: 500 }
       );
+    }
+
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(auth_id);
+    
+    if (authUser?.user?.email) {
+      try {
+        await sendWelcomeEmail(
+          authUser.user.email,
+          full_name,
+          role as 'user' | 'agency'
+        );
+        console.log('Welcome email sent successfully to:', authUser.user.email);
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+      }
     }
 
     return NextResponse.json({ user: newUser }, { status: 201 });
