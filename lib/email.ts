@@ -295,6 +295,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
   const dashboardUrl = `${baseUrl}/dashboard`;
   
   const isAgency = userRole === 'agency';
+  const displayName = userName && userName.trim() ? userName : 'Amigo';
   
   try {
     await brevoApi.sendTransacEmail({
@@ -304,7 +305,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
       },
       to: [{ 
         email: userEmail,
-        name: userName
+        name: displayName
       }],
       subject: isAgency ? '¡Bienvenido a Vitria! Conecta con clientes en Chile' : '¡Bienvenido a Vitria! Encuentra tu agencia ideal',
       htmlContent: `
@@ -511,7 +512,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
             </div>
             
             <div class="content">
-              <div class="greeting">Hola ${userName} 👋</div>
+              <div class="greeting">Hola ${displayName} 👋</div>
               
               <p class="intro-text">
                 ${isAgency 
