@@ -38,6 +38,19 @@ Premium agency status is manually managed by administrators via an admin panel, 
 
 # Recent Changes
 
+## November 17, 2025 - Branded Welcome Email System
+- **Feature**: Automated welcome email sent to all new users upon registration
+- **Design**: Fully branded email template with Vitria's color palette (#1B5568 primary, #F5D35E accent) and SVG isotipo
+- **Personalization**: Content adapts based on user role (client vs agency) with specific benefits and CTAs
+- **Content**: Explains Vitria's mission, platform benefits, and provides direct links to dashboard and agency directory
+- **Implementation**:
+  - Created `sendWelcomeEmail()` function in `lib/email.ts` using Brevo API
+  - Integrated into user creation flow (`app/api/auth/create-user/route.ts`)
+  - Email sending is non-blocking - registration completes even if email fails
+  - Modern, responsive HTML design optimized for all email clients
+- **Email Provider**: Brevo (formerly Sendinblue) for reliable transactional email delivery
+- **Impact**: Improves user onboarding experience and reinforces Vitria's brand from the first interaction
+
 ## November 17, 2025 - Email Verification Made Optional
 - **Issue**: Users in production reported not receiving registration emails, blocking their ability to use the platform
 - **Solution**: Removed all email verification requirements to prioritize user onboarding and platform accessibility
