@@ -38,6 +38,25 @@ Premium agency status is manually managed by administrators via an admin panel, 
 
 # Recent Changes
 
+## November 17, 2025 - Email System Improvements
+- **Welcome Email Visual Update**: Updated welcome email to match homepage design exactly
+  - Changed typography to Quicksand font (imported from Google Fonts)
+  - Replaced generic logo with authentic Vitria isotipo (4 rounded squares in brand colors)
+  - Isotipo colors: #1B5568 (primary), #6F9CEB (secondary), #64D5C3 (mint), #F5D35E (accent)
+  - Maintains consistent visual identity across all user touchpoints
+
+- **Full Name Storage Fix**: Fixed bug where full_name wasn't saved in auth.users for email/password registrations
+  - Updated `signUp()` function in `lib/auth.ts` to save full_name in Supabase Auth metadata
+  - Now both Google OAuth and email/password registrations store name in `auth.users.raw_user_meta_data`
+  - Ensures "Display name" appears correctly in Supabase Dashboard for all registration methods
+
+- **Production URL Fix**: Fixed critical bug where admin notification emails linked to development instead of production
+  - Updated `getBaseUrl()` function in `lib/email.ts` to detect environment correctly
+  - Uses `REPLIT_DEPLOYMENT=1` to identify production environment
+  - Admin notification emails now correctly link to `https://vitria.cl` in production
+  - Development emails continue to use `REPLIT_DEV_DOMAIN` for local testing
+  - Impact: Admins reviewing new agencies in production are now directed to production admin panel
+
 ## November 17, 2025 - Professional Flyer-Style Welcome Email
 - **Feature**: Automated welcome email sent to all new users upon registration
 - **Design**: Professional flyer-style email template with premium visual design:

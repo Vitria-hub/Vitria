@@ -19,12 +19,17 @@ interface AgencyData {
 }
 
 function getBaseUrl(): string {
-  // In Replit dev environment, prioritize dev domain
+  // If running in production (REPLIT_DEPLOYMENT=1), use production URL
+  if (process.env.REPLIT_DEPLOYMENT === '1') {
+    return process.env.NEXT_PUBLIC_SITE_URL || 'https://vitria.cl';
+  }
+  
+  // In development, use dev domain
   if (process.env.REPLIT_DEV_DOMAIN) {
     return `https://${process.env.REPLIT_DEV_DOMAIN}`;
   }
   
-  // Otherwise use the configured site URL
+  // Fallback to configured site URL
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
   }
