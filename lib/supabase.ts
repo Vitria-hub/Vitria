@@ -69,6 +69,7 @@ export type Database = {
           id: string;
           agency_id: string;
           user_id: string | null;
+          author_name: string | null;
           rating: number;
           comment: string | null;
           status: 'pending' | 'approved' | 'rejected';

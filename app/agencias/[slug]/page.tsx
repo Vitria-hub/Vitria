@@ -230,12 +230,12 @@ export default function AgencyDetailPage() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                           <span className="text-primary font-bold text-sm">
-                            {review.author?.full_name?.charAt(0)?.toUpperCase() || '?'}
+                            {(review.author?.full_name || review.author_name || 'U')?.charAt(0)?.toUpperCase()}
                           </span>
                         </div>
                         <div>
                           <p className="font-semibold text-dark">
-                            {review.author?.full_name || 'Usuario Anónimo'}
+                            {review.author?.full_name || review.author_name || 'Usuario Anónimo'}
                           </p>
                           <RatingStars rating={review.rating} size="sm" />
                         </div>

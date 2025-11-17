@@ -44,7 +44,7 @@ export const reviewRouter = router({
         .from('reviews')
         .select(`
           *,
-          author:users!user_id (
+          author:users!reviews_user_id_fkey (
             id,
             full_name
           )

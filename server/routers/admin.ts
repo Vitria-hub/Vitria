@@ -603,6 +603,7 @@ export const adminRouter = router({
         .insert({
           agency_id: input.agencyId,
           user_id: null,
+          author_name: input.authorName,
           rating: input.rating,
           comment: input.comment,
           status: 'approved',
@@ -612,12 +613,6 @@ export const adminRouter = router({
 
       if (error || !data) throw error || new Error('Failed to create review');
 
-      return {
-        ...data,
-        author: {
-          id: null,
-          full_name: input.authorName,
-        },
-      };
+      return data;
     }),
 });
