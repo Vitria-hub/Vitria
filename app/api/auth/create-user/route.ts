@@ -29,6 +29,28 @@ export async function POST(request: Request) {
 
     if (existingUser) {
       console.log('User already exists - preserving existing role:', existingUser.role);
+      
+      const userCreatedAt = new Date(existingUser.created_at);
+      const hoursSinceCreation = (Date.now() - userCreatedAt.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursSinceCreation < 24) {
+        console.log('User created recently - attempting to send welcome email');
+        const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(auth_id);
+        
+        if (authUser?.user?.email) {
+          try {
+            await sendWelcomeEmail(
+              authUser.user.email,
+              existingUser.full_name,
+              existingUser.role as 'user' | 'agency'
+            );
+            console.log('Welcome email sent successfully to existing user:', authUser.user.email);
+          } catch (emailError) {
+            console.error('Error sending welcome email to existing user:', emailError);
+          }
+        }
+      }
+      
       return NextResponse.json(
         { message: 'User already exists', user: existingUser },
         { status: 200 }
