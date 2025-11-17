@@ -33,16 +33,34 @@ export async function POST(request: Request) {
       const userCreatedAt = new Date(existingUser.created_at);
       const hoursSinceCreation = (Date.now() - userCreatedAt.getTime()) / (1000 * 60 * 60);
       
+      let updatedUser = existingUser;
+      
       if (hoursSinceCreation < 24) {
-        console.log('User created recently - attempting to send welcome email');
+        console.log('User created recently - updating full_name if provided');
+        
+        if (full_name && full_name.trim() && full_name !== 'Usuario') {
+          const { data: updated, error: updateError } = await supabaseAdmin
+            .from('users')
+            .update({ full_name })
+            .eq('auth_id', auth_id)
+            .select()
+            .single();
+          
+          if (!updateError && updated) {
+            updatedUser = updated;
+            console.log('Updated full_name for existing user:', full_name);
+          }
+        }
+        
+        console.log('Attempting to send welcome email');
         const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(auth_id);
         
         if (authUser?.user?.email) {
           try {
             await sendWelcomeEmail(
               authUser.user.email,
-              existingUser.full_name,
-              existingUser.role as 'user' | 'agency'
+              updatedUser.full_name,
+              updatedUser.role as 'user' | 'agency'
             );
             console.log('Welcome email sent successfully to existing user:', authUser.user.email);
           } catch (emailError) {
@@ -52,7 +70,7 @@ export async function POST(request: Request) {
       }
       
       return NextResponse.json(
-        { message: 'User already exists', user: existingUser },
+        { message: 'User already exists', user: updatedUser },
         { status: 200 }
       );
     }
