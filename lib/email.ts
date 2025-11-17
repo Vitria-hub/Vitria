@@ -314,10 +314,11 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+              font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
               line-height: 1.6; 
               color: #1a1a1a;
               background: #f0f4f8;
@@ -574,12 +575,11 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
           <div class="email-wrapper">
             <div class="hero-banner">
               <div class="logo-badge">
-                <svg width="55" height="55" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="50" cy="50" r="45" fill="#1B5568"/>
-                  <circle cx="50" cy="35" r="12" fill="#F5D35E"/>
-                  <circle cx="35" cy="60" r="10" fill="#F5D35E"/>
-                  <circle cx="65" cy="60" r="10" fill="#F5D35E"/>
-                  <rect x="32" y="55" width="36" height="4" rx="2" fill="#F5D35E"/>
+                <svg width="60" height="60" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#1B5568"/>
+                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
+                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
+                  <rect x="65" y="65" width="45" height="45" rx="12" fill="#F5D35E"/>
                 </svg>
               </div>
               <h1 class="hero-title">¡Bienvenido a Vitria!</h1>
