@@ -38,18 +38,26 @@ Premium agency status is manually managed by administrators via an admin panel, 
 
 # Recent Changes
 
-## November 17, 2025 - Branded Welcome Email System
+## November 17, 2025 - Professional Flyer-Style Welcome Email
 - **Feature**: Automated welcome email sent to all new users upon registration
-- **Design**: Fully branded email template with Vitria's color palette (#1B5568 primary, #F5D35E accent) and SVG isotipo
+- **Design**: Professional flyer-style email template with premium visual design:
+  - Hero banner with gradient background (#1B5568 → #134551) and decorative radial elements
+  - Modern logo badge with rounded corners (20px border-radius)
+  - Accent bar in Vitria yellow (#F5D35E) for visual separation
+  - High-contrast buttons: primary (white text on dark gradient), secondary (dark text on white with 3px border)
+  - Highlight box with double-border effect (white border + yellow outline)
+  - Feature cards with subtle gradients, yellow left borders, and enhanced shadows
+  - Professional dark footer (#1B5568) with yellow accents (#F5D35E)
 - **Personalization**: Content adapts based on user role (client vs agency) with specific benefits and CTAs
 - **Content**: Explains Vitria's mission, platform benefits, and provides direct links to dashboard and agency directory
 - **Implementation**:
   - Created `sendWelcomeEmail()` function in `lib/email.ts` using Brevo API
   - Integrated into user creation flow (`app/api/auth/create-user/route.ts`)
   - Email sending is non-blocking - registration completes even if email fails
-  - Modern, responsive HTML design optimized for all email clients
+  - Fully responsive design with mobile optimizations
+  - Fallback name "Amigo" if user's name is empty
 - **Email Provider**: Brevo (formerly Sendinblue) for reliable transactional email delivery
-- **Impact**: Improves user onboarding experience and reinforces Vitria's brand from the first interaction
+- **Impact**: Creates strong first impression with professional, branded design that reinforces Vitria's premium positioning
 
 ## November 17, 2025 - Email Verification Made Optional
 - **Issue**: Users in production reported not receiving registration emails, blocking their ability to use the platform
