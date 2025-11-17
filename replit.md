@@ -22,7 +22,7 @@ Supabase (PostgreSQL) stores data in tables such as `users`, `agencies`, `review
 
 ## Authentication and Authorization
 
-Supabase Auth handles email/password and Google OAuth, supporting role-based authorization (`user`, `agency`, `admin`). It includes an OAuth Role Preservation System, a "OAuth Callback Session Cookie Fix," and a full password recovery flow. New agencies undergo a manual approval process via an admin panel before becoming public. The system supports dual roles (client and agency) with optional profile creation.
+Supabase Auth handles email/password and Google OAuth, supporting role-based authorization (`user`, `agency`, `admin`). **Email verification is disabled** to ensure users can register and access the platform immediately without waiting for confirmation emails. The system includes an OAuth Role Preservation System, a "OAuth Callback Session Cookie Fix," and a full password recovery flow. New agencies undergo a manual approval process via an admin panel before becoming public. The system supports dual roles (client and agency) with optional profile creation.
 
 ## SEO
 
