@@ -615,4 +615,67 @@ export const adminRouter = router({
 
       return data;
     }),
+
+  updateAgency: adminProcedure
+    .input(z.object({
+      agencyId: z.string().uuid(),
+      name: z.string().min(1),
+      slug: z.string().min(1),
+      description: z.string().min(1),
+      email: z.string().email(),
+      phone: z.string().min(1),
+      website: z.string().url().optional().or(z.literal('')),
+      location_city: z.string().min(1),
+      location_region: z.string().min(1),
+      categories: z.array(z.string()).min(1),
+      services: z.array(z.string()),
+      logo_url: z.string().url().optional().or(z.literal('')),
+    }))
+    .mutation(async ({ input }) => {
+      const { agencyId, ...updateData } = input;
+
+      const { data: existingAgency, error: fetchError } = await db
+        .from('agencies')
+        .select('id, name')
+        .eq('id', agencyId)
+        .single();
+
+      if (fetchError || !existingAgency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      const cleanedData: Record<string, any> = {
+        name: updateData.name,
+        slug: updateData.slug,
+        description: updateData.description,
+        email: updateData.email,
+        phone: updateData.phone,
+        website: updateData.website || null,
+        location_city: updateData.location_city,
+        location_region: updateData.location_region,
+        categories: updateData.categories,
+        services: updateData.services,
+        logo_url: updateData.logo_url || null,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { data, error } = await db
+        .from('agencies')
+        .update(cleanedData as any)
+        .eq('id', agencyId)
+        .select()
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message || 'Error al actualizar la agencia',
+        });
+      }
+
+      return data;
+    }),
 });

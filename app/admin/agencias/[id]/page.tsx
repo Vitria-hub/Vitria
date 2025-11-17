@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, ChevronLeft, Building2, MapPin, Mail, Phone, Globe, AlertCircle } from 'lucide-react';
+import { CheckCircle, XCircle, ChevronLeft, Building2, MapPin, Mail, Phone, Globe, AlertCircle, Edit } from 'lucide-react';
 import Button from '@/components/Button';
+import Link from 'next/link';
 
 export default function ReviewAgencyPage() {
   const { userData, loading: authLoading } = useAuth();
@@ -229,28 +230,37 @@ export default function ReviewAgencyPage() {
           )}
         </div>
 
-        {isPending && (
-          <div className="flex gap-4">
-            <Button
-              variant="secondary"
-              className="flex-1 bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-              onClick={() => setShowRejectModal(true)}
-              disabled={approveMutation.isPending || rejectMutation.isPending}
-            >
-              <XCircle className="w-5 h-5 mr-2" />
-              Rechazar Agencia
+        <div className="space-y-4">
+          <Link href={`/admin/agencias/${agencyId}/editar`}>
+            <Button variant="secondary" className="w-full">
+              <Edit className="w-5 h-5 mr-2" />
+              Editar Agencia
             </Button>
-            <Button
-              variant="primary"
-              className="flex-1 bg-green-600 hover:bg-green-700"
-              onClick={handleApprove}
-              disabled={approveMutation.isPending || rejectMutation.isPending}
-            >
-              <CheckCircle className="w-5 h-5 mr-2" />
-              {approveMutation.isPending ? 'Aprobando...' : 'Aprobar Agencia'}
-            </Button>
-          </div>
-        )}
+          </Link>
+
+          {isPending && (
+            <div className="flex gap-4">
+              <Button
+                variant="secondary"
+                className="flex-1 bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+                onClick={() => setShowRejectModal(true)}
+                disabled={approveMutation.isPending || rejectMutation.isPending}
+              >
+                <XCircle className="w-5 h-5 mr-2" />
+                Rechazar Agencia
+              </Button>
+              <Button
+                variant="primary"
+                className="flex-1 bg-green-600 hover:bg-green-700"
+                onClick={handleApprove}
+                disabled={approveMutation.isPending || rejectMutation.isPending}
+              >
+                <CheckCircle className="w-5 h-5 mr-2" />
+                {approveMutation.isPending ? 'Aprobando...' : 'Aprobar Agencia'}
+              </Button>
+            </div>
+          )}
+        </div>
 
         {showRejectModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
