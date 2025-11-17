@@ -36,6 +36,20 @@ A comprehensive analytics system tracks agency profile views, contact clicks, an
 
 Premium agency status is manually managed by administrators via an admin panel, allowing activation, deactivation, and setting expiration dates, indicated by a gold badge. A dual-layer strategy ensures premium expiration through real-time verification and scheduled cleanup.
 
+# Recent Changes
+
+## November 17, 2025 - Email Verification Made Optional
+- **Issue**: Users in production reported not receiving registration emails, blocking their ability to use the platform
+- **Solution**: Removed all email verification requirements to prioritize user onboarding and platform accessibility
+- **Code Changes**: 
+  - Updated `lib/auth.ts` signUp to set `emailRedirectTo: undefined`
+  - Removed "Email not confirmed" checks from login page (`app/auth/login/page.tsx`)
+  - Removed email confirmation checks from agency registration flow (`app/auth/registro/agencia/page.tsx`)
+  - Removed email confirmation checks from client registration flow (`app/auth/registro/cliente/page.tsx`)
+- **Configuration**: Email verification is disabled in Supabase Dashboard (Authentication → Providers → Email → "Confirm email" toggle OFF)
+- **Impact**: Users can now register and immediately access the platform without waiting for confirmation emails, significantly improving conversion rates
+- **User Experience**: Registration flows (both client and agency) now proceed directly to dashboard after account creation
+
 # External Dependencies
 
 ## Core Infrastructure
