@@ -307,7 +307,7 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
         email: userEmail,
         name: displayName
       }],
-      subject: isAgency ? '¡Bienvenido a Vitria! Conecta con clientes en Chile' : '¡Bienvenido a Vitria! Encuentra tu agencia ideal',
+      subject: isAgency ? '🚀 ¡Bienvenido a Vitria! Conecta con clientes en Chile' : '✨ ¡Bienvenido a Vitria! Encuentra tu agencia ideal',
       htmlContent: `
         <!DOCTYPE html>
         <html>
@@ -320,186 +320,261 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
               line-height: 1.6; 
               color: #1a1a1a;
-              background: linear-gradient(135deg, #1B5568 0%, #2980b9 100%);
-              padding: 20px;
+              background: #f0f4f8;
+              padding: 20px 0;
             }
             .email-wrapper { 
-              max-width: 600px; 
+              max-width: 650px; 
               margin: 0 auto; 
               background: white;
-              border-radius: 16px;
               overflow: hidden;
-              box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+              box-shadow: 0 20px 60px rgba(0,0,0,0.12);
             }
-            .header { 
-              background: linear-gradient(135deg, #1B5568 0%, #2980b9 100%);
-              padding: 40px 30px;
+            .hero-banner {
+              background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
+              padding: 50px 40px;
               text-align: center;
               position: relative;
+              overflow: hidden;
             }
-            .logo-container {
-              background: white;
-              width: 80px;
-              height: 80px;
+            .hero-banner::before {
+              content: '';
+              position: absolute;
+              top: -50%;
+              right: -10%;
+              width: 300px;
+              height: 300px;
+              background: radial-gradient(circle, rgba(245,211,94,0.15) 0%, transparent 70%);
               border-radius: 50%;
-              margin: 0 auto 20px;
+            }
+            .hero-banner::after {
+              content: '';
+              position: absolute;
+              bottom: -30%;
+              left: -10%;
+              width: 250px;
+              height: 250px;
+              background: radial-gradient(circle, rgba(245,211,94,0.1) 0%, transparent 70%);
+              border-radius: 50%;
+            }
+            .logo-badge {
+              background: white;
+              width: 90px;
+              height: 90px;
+              border-radius: 20px;
+              margin: 0 auto 25px;
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+              position: relative;
+              z-index: 1;
             }
-            .header h1 { 
+            .hero-title { 
               color: white; 
-              font-size: 28px;
-              font-weight: 700;
-              margin-bottom: 8px;
+              font-size: 42px;
+              font-weight: 800;
+              margin-bottom: 12px;
+              letter-spacing: -0.5px;
+              position: relative;
+              z-index: 1;
+            }
+            .hero-subtitle {
+              color: #F5D35E;
+              font-size: 19px;
+              font-weight: 600;
+              position: relative;
+              z-index: 1;
               text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
-            .header p {
-              color: rgba(255,255,255,0.9);
-              font-size: 16px;
+            .accent-bar {
+              height: 8px;
+              background: linear-gradient(90deg, #F5D35E 0%, #fde047 100%);
             }
             .content { 
-              padding: 40px 30px;
+              padding: 45px 40px;
               background: white;
             }
+            .welcome-message {
+              text-align: center;
+              margin-bottom: 40px;
+            }
             .greeting {
-              font-size: 20px;
+              font-size: 28px;
               color: #1B5568;
-              font-weight: 600;
-              margin-bottom: 20px;
+              font-weight: 700;
+              margin-bottom: 15px;
             }
             .intro-text {
-              font-size: 16px;
+              font-size: 17px;
               color: #4a5568;
-              line-height: 1.8;
-              margin-bottom: 30px;
-            }
-            .mission-box {
-              background: linear-gradient(135deg, #F5D35E 0%, #fde68a 100%);
-              padding: 30px;
-              border-radius: 12px;
-              margin: 30px 0;
-              border-left: 5px solid #1B5568;
-            }
-            .mission-box h2 {
-              color: #1B5568;
-              font-size: 22px;
-              margin-bottom: 15px;
-              font-weight: 700;
-            }
-            .mission-box p {
-              color: #2d3748;
-              font-size: 15px;
               line-height: 1.7;
+              max-width: 500px;
+              margin: 0 auto;
             }
-            .features {
-              margin: 30px 0;
+            .highlight-box {
+              background: linear-gradient(135deg, #F5D35E 0%, #fbbf24 100%);
+              padding: 35px;
+              border-radius: 16px;
+              margin: 40px 0;
+              box-shadow: 0 4px 20px rgba(245,211,94,0.3);
+              border: 3px solid #fff;
+              outline: 2px solid #F5D35E;
             }
-            .feature-item {
+            .highlight-box h2 {
+              color: #1B5568;
+              font-size: 24px;
+              margin-bottom: 18px;
+              font-weight: 800;
+              text-align: center;
+            }
+            .highlight-box p {
+              color: #1f2937;
+              font-size: 16px;
+              line-height: 1.8;
+              text-align: center;
+            }
+            .features-grid {
+              margin: 45px 0;
+            }
+            .section-title {
+              color: #1B5568;
+              font-size: 26px;
+              margin-bottom: 30px;
+              font-weight: 800;
+              text-align: center;
+            }
+            .feature-card {
+              background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+              border-left: 5px solid #F5D35E;
+              padding: 25px;
+              margin-bottom: 20px;
+              border-radius: 12px;
+              box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+              transition: all 0.3s ease;
+            }
+            .feature-card-inner {
               display: flex;
               align-items: start;
-              margin-bottom: 20px;
-              padding: 15px;
-              background: #f7fafc;
-              border-radius: 8px;
-              transition: transform 0.2s;
             }
             .feature-icon {
-              background: #1B5568;
-              color: white;
-              width: 40px;
-              height: 40px;
-              border-radius: 8px;
+              background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
+              color: #F5D35E;
+              width: 50px;
+              height: 50px;
+              border-radius: 12px;
               display: flex;
               align-items: center;
               justify-content: center;
-              margin-right: 15px;
+              margin-right: 20px;
               flex-shrink: 0;
-              font-weight: bold;
-              font-size: 18px;
+              font-size: 24px;
+              box-shadow: 0 4px 12px rgba(27,85,104,0.25);
             }
-            .feature-text h3 {
+            .feature-content h3 {
               color: #1B5568;
-              font-size: 16px;
-              margin-bottom: 5px;
-              font-weight: 600;
+              font-size: 18px;
+              margin-bottom: 8px;
+              font-weight: 700;
             }
-            .feature-text p {
+            .feature-content p {
               color: #4a5568;
-              font-size: 14px;
-              line-height: 1.5;
+              font-size: 15px;
+              line-height: 1.6;
             }
             .cta-section {
               text-align: center;
-              margin: 40px 0 30px;
+              margin: 50px 0 40px;
+              padding: 40px 30px;
+              background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+              border-radius: 16px;
             }
-            .button {
+            .cta-text {
+              color: #1B5568;
+              font-size: 20px;
+              font-weight: 700;
+              margin-bottom: 25px;
+            }
+            .button-primary {
+              display: inline-block;
+              padding: 18px 45px;
+              background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
+              color: #ffffff !important;
+              text-decoration: none;
+              border-radius: 12px;
+              font-weight: 700;
+              font-size: 17px;
+              box-shadow: 0 6px 20px rgba(27,85,104,0.35);
+              margin: 8px;
+              transition: all 0.3s ease;
+            }
+            .button-secondary {
               display: inline-block;
               padding: 16px 40px;
-              background: linear-gradient(135deg, #1B5568 0%, #2980b9 100%);
-              color: white;
-              text-decoration: none;
-              border-radius: 8px;
-              font-weight: 600;
-              font-size: 16px;
-              box-shadow: 0 4px 15px rgba(27,85,104,0.3);
-              transition: transform 0.2s;
-            }
-            .secondary-button {
-              display: inline-block;
-              padding: 14px 30px;
               background: white;
-              color: #1B5568;
+              color: #1B5568 !important;
               text-decoration: none;
-              border-radius: 8px;
-              font-weight: 600;
-              font-size: 14px;
-              border: 2px solid #1B5568;
-              margin: 10px;
-            }
-            .divider {
-              height: 1px;
-              background: linear-gradient(to right, transparent, #e2e8f0, transparent);
-              margin: 30px 0;
+              border-radius: 12px;
+              font-weight: 700;
+              font-size: 16px;
+              border: 3px solid #1B5568;
+              margin: 8px;
+              transition: all 0.3s ease;
             }
             .footer {
-              background: #f7fafc;
-              padding: 30px;
+              background: #1B5568;
+              padding: 35px 40px;
               text-align: center;
-              border-top: 1px solid #e2e8f0;
             }
-            .footer-text {
-              color: #718096;
-              font-size: 13px;
+            .footer-title {
+              color: #F5D35E;
+              font-size: 18px;
+              font-weight: 700;
               margin-bottom: 15px;
             }
-            .social-links {
-              margin: 15px 0;
+            .footer-text {
+              color: rgba(255,255,255,0.8);
+              font-size: 14px;
+              margin-bottom: 20px;
+              line-height: 1.6;
             }
-            .social-link {
+            .footer-links {
+              margin: 20px 0;
+            }
+            .footer-link {
               display: inline-block;
-              margin: 0 8px;
-              color: #1B5568;
+              margin: 0 12px;
+              color: #F5D35E !important;
               text-decoration: none;
-              font-size: 13px;
-              font-weight: 500;
+              font-size: 14px;
+              font-weight: 600;
+            }
+            .copyright {
+              color: rgba(255,255,255,0.6);
+              font-size: 12px;
+              margin-top: 20px;
+              padding-top: 20px;
+              border-top: 1px solid rgba(255,255,255,0.1);
             }
             @media only screen and (max-width: 600px) {
-              body { padding: 10px; }
-              .header { padding: 30px 20px; }
-              .header h1 { font-size: 24px; }
-              .content { padding: 30px 20px; }
-              .mission-box { padding: 20px; }
-              .button { padding: 14px 30px; font-size: 15px; }
+              body { padding: 0; }
+              .hero-banner { padding: 40px 25px; }
+              .hero-title { font-size: 32px; }
+              .hero-subtitle { font-size: 16px; }
+              .content { padding: 35px 25px; }
+              .greeting { font-size: 24px; }
+              .intro-text { font-size: 16px; }
+              .highlight-box { padding: 25px; }
+              .button-primary { padding: 16px 35px; font-size: 16px; }
+              .button-secondary { padding: 14px 30px; font-size: 15px; }
             }
           </style>
         </head>
         <body>
           <div class="email-wrapper">
-            <div class="header">
-              <div class="logo-container">
-                <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <div class="hero-banner">
+              <div class="logo-badge">
+                <svg width="55" height="55" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="50" cy="50" r="45" fill="#1B5568"/>
                   <circle cx="50" cy="35" r="12" fill="#F5D35E"/>
                   <circle cx="35" cy="60" r="10" fill="#F5D35E"/>
@@ -507,143 +582,157 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
                   <rect x="32" y="55" width="36" height="4" rx="2" fill="#F5D35E"/>
                 </svg>
               </div>
-              <h1>¡Bienvenido a Vitria!</h1>
-              <p>${isAgency ? 'Tu plataforma para conectar con clientes' : 'Encuentra la agencia perfecta para tu proyecto'}</p>
+              <h1 class="hero-title">¡Bienvenido a Vitria!</h1>
+              <p class="hero-subtitle">${isAgency ? 'Tu plataforma para conectar con clientes en Chile' : 'Encuentra la agencia perfecta para tu proyecto'}</p>
             </div>
             
+            <div class="accent-bar"></div>
+            
             <div class="content">
-              <div class="greeting">Hola ${displayName} 👋</div>
+              <div class="welcome-message">
+                <div class="greeting">Hola ${displayName} 👋</div>
               
               <p class="intro-text">
                 ${isAgency 
-                  ? 'Estamos emocionados de tenerte en Vitria. Acabas de unirte al directorio de agencias más completo de Chile, donde podrás conectar con clientes que buscan exactamente lo que tu agencia ofrece.'
-                  : 'Nos alegra que te hayas unido a Vitria. Ahora tienes acceso al directorio más completo de agencias de marketing, branding y publicidad en Chile.'
+                  ? 'Estamos emocionados de tenerte en Vitria. Acabas de unirte al directorio de agencias más completo de Chile.'
+                  : 'Ahora tienes acceso al directorio más completo de agencias de marketing, branding y publicidad en Chile.'
                 }
               </p>
+              </div>
               
-              <div class="mission-box">
-                <h2>Nuestra Misión</h2>
+              <div class="highlight-box">
+                <h2>💡 Nuestra Misión</h2>
                 <p>
                   Vitria nace con un propósito claro: <strong>fortalecer el ecosistema de marketing y publicidad en Chile</strong>. 
-                  Creemos que las mejores agencias merecen visibilidad, y los mejores proyectos merecen encontrar al partner ideal. 
-                  Somos el puente que conecta talento creativo con oportunidades reales.
+                  Conectamos talento creativo con oportunidades reales.
                 </p>
               </div>
               
-              <div class="features">
-                <h2 style="color: #1B5568; font-size: 20px; margin-bottom: 20px; font-weight: 700;">
-                  ${isAgency ? '¿Qué puedes hacer en Vitria?' : '¿Por qué elegir Vitria?'}
+              <div class="features-grid">
+                <h2 class="section-title">
+                  ${isAgency ? '🎯 ¿Qué puedes hacer en Vitria?' : '✨ ¿Por qué elegir Vitria?'}
                 </h2>
                 
                 ${isAgency ? `
-                <div class="feature-item">
-                  <div class="feature-icon">🎯</div>
-                  <div class="feature-text">
-                    <h3>Visibilidad Instantánea</h3>
-                    <p>Tu agencia será visible para cientos de clientes potenciales que buscan servicios especializados cada día.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                      <h3>Visibilidad Instantánea</h3>
+                      <p>Tu agencia será visible para cientos de clientes potenciales cada día.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">📊</div>
-                  <div class="feature-text">
-                    <h3>Analytics Detallado</h3>
-                    <p>Accede a métricas en tiempo real sobre las visitas a tu perfil y el interés de clientes potenciales.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                      <h3>Analytics Detallado</h3>
+                      <p>Métricas en tiempo real sobre visitas y el interés de clientes.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">⭐</div>
-                  <div class="feature-text">
-                    <h3>Reputación Verificada</h3>
-                    <p>Construye tu reputación con reseñas de clientes reales y destaca en tu categoría.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">⭐</div>
+                    <div class="feature-content">
+                      <h3>Reputación Verificada</h3>
+                      <p>Construye tu reputación con reseñas de clientes reales.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">🚀</div>
-                  <div class="feature-text">
-                    <h3>Crecimiento Sostenible</h3>
-                    <p>Recibe contactos calificados de clientes que realmente necesitan tus servicios.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-content">
+                      <h3>Crecimiento Sostenible</h3>
+                      <p>Recibe contactos calificados que realmente necesitan tus servicios.</p>
+                    </div>
                   </div>
                 </div>
                 ` : `
-                <div class="feature-item">
-                  <div class="feature-icon">🔍</div>
-                  <div class="feature-text">
-                    <h3>Búsqueda Especializada</h3>
-                    <p>Filtra por categoría, ubicación y servicios para encontrar la agencia perfecta para tu proyecto.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-content">
+                      <h3>Búsqueda Especializada</h3>
+                      <p>Filtra por categoría, ubicación y servicios para encontrar la agencia ideal.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">✨</div>
-                  <div class="feature-text">
-                    <h3>Agencias Verificadas</h3>
-                    <p>Todas las agencias están cuidadosamente verificadas para garantizar calidad y profesionalismo.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-content">
+                      <h3>Agencias Verificadas</h3>
+                      <p>Todas las agencias están cuidadosamente verificadas para garantizar calidad.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">💬</div>
-                  <div class="feature-text">
-                    <h3>Reseñas Reales</h3>
-                    <p>Lee experiencias de otros clientes para tomar decisiones informadas y seguras.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-content">
+                      <h3>Reseñas Reales</h3>
+                      <p>Lee experiencias de otros clientes para tomar decisiones informadas.</p>
+                    </div>
                   </div>
                 </div>
                 
-                <div class="feature-item">
-                  <div class="feature-icon">🎨</div>
-                  <div class="feature-text">
-                    <h3>Portafolios Completos</h3>
-                    <p>Explora trabajos anteriores y conoce el estilo de cada agencia antes de contactar.</p>
+                <div class="feature-card">
+                  <div class="feature-card-inner">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-content">
+                      <h3>Portafolios Completos</h3>
+                      <p>Explora trabajos anteriores y conoce el estilo de cada agencia.</p>
+                    </div>
                   </div>
                 </div>
                 `}
               </div>
               
-              <div class="divider"></div>
-              
               <div class="cta-section">
-                <p style="color: #4a5568; margin-bottom: 20px; font-size: 15px;">
+                <p class="cta-text">
                   ${isAgency 
-                    ? '¿Listo para empezar? Completa tu perfil y comienza a recibir contactos.'
-                    : '¿Listo para encontrar tu agencia ideal?'
+                    ? '🚀 ¿Listo para comenzar?'
+                    : '🎯 ¿Listo para encontrar tu agencia ideal?'
                   }
                 </p>
-                <a href="${dashboardUrl}" class="button">
-                  ${isAgency ? 'Ir a Mi Panel' : 'Explorar Mi Dashboard'}
+                <a href="${dashboardUrl}" class="button-primary">
+                  ${isAgency ? 'Ir a Mi Panel' : 'Ver Mi Dashboard'}
                 </a>
                 <br>
-                <a href="${exploreUrl}" class="secondary-button">
-                  ${isAgency ? 'Ver Otras Agencias' : 'Explorar Agencias'}
+                <a href="${exploreUrl}" class="button-secondary">
+                  Explorar Agencias
                 </a>
               </div>
               
-              <div class="divider"></div>
-              
-              <p style="color: #4a5568; font-size: 14px; line-height: 1.7; margin-top: 30px;">
-                Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos. 
-                Estamos aquí para hacer que tu experiencia en Vitria sea excepcional.
+              <p style="color: #4a5568; font-size: 15px; line-height: 1.7; margin: 35px 0 25px 0; text-align: center;">
+                Si tienes alguna pregunta, estamos aquí para ayudarte. 💙
               </p>
               
-              <p style="color: #1B5568; font-weight: 600; margin-top: 25px; font-size: 15px;">
-                ¡Bienvenido a la comunidad!<br>
-                <span style="color: #4a5568; font-weight: 400;">El equipo de Vitria</span>
+              <p style="color: #1B5568; font-weight: 700; text-align: center; font-size: 16px;">
+                ¡Bienvenido a la comunidad Vitria!<br>
+                <span style="color: #4a5568; font-weight: 400; font-size: 14px;">— El equipo de Vitria</span>
               </p>
             </div>
             
             <div class="footer">
+              <p class="footer-title">Vitria</p>
               <p class="footer-text">
-                Este correo fue enviado por Vitria<br>
                 El directorio de agencias líder en Chile
               </p>
-              <div class="social-links">
-                <a href="${baseUrl}" class="social-link">Visitar Vitria</a>
+              <div class="footer-links">
+                <a href="${baseUrl}" class="footer-link">Visitar Vitria</a>
                 <span style="color: #cbd5e0;">•</span>
-                <a href="${baseUrl}/blog" class="social-link">Blog</a>
+                <a href="${baseUrl}/blog" class="footer-link">Blog</a>
                 <span style="color: #cbd5e0;">•</span>
-                <a href="${baseUrl}/agencias" class="social-link">Agencias</a>
+                <a href="${baseUrl}/agencias" class="footer-link">Agencias</a>
               </div>
               <p style="color: #a0aec0; font-size: 12px; margin-top: 15px;">
                 © ${new Date().getFullYear()} Vitria. Todos los derechos reservados.
