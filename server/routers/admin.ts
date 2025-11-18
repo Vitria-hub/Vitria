@@ -80,7 +80,7 @@ export const adminRouter = router({
 
       // Fetch user data separately to avoid join issues
       const agenciesWithUsers = await Promise.all(
-        (agencies || []).map(async (agency) => {
+        (agencies || []).map(async (agency: any) => {
           const { data: user } = await db
             .from('users')
             .select('full_name, role')
@@ -130,13 +130,13 @@ export const adminRouter = router({
       const { data: user } = await db
         .from('users')
         .select('full_name, email, role')
-        .eq('id', agency.owner_id)
+        .eq('id', agency.owner_id as string)
         .single();
 
       return {
         ...agency,
         users: user || null,
-      };
+      } as any;
     }),
 
   verifyAgency: adminProcedure
