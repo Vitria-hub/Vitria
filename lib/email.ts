@@ -753,3 +753,220 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
     throw error;
   }
 }
+
+interface QuoteNotificationData {
+  agencyName: string;
+  agencyEmail: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  projectName: string;
+  projectDescription: string;
+  budgetRange: string;
+  serviceCategory: string;
+  quoteId: string;
+}
+
+export async function sendQuoteNotificationToAgency(data: QuoteNotificationData) {
+  const baseUrl = getBaseUrl();
+  const dashboardUrl = `${baseUrl}/dashboard`;
+
+  try {
+    await brevoApi.sendTransacEmail({
+      sender: {
+        name: "Vitria",
+        email: "noreply@vitria.cl"
+      },
+      to: [{
+        email: data.agencyEmail,
+        name: data.agencyName
+      }],
+      subject: `🎉 Nueva solicitud de cotización - ${data.projectName}`,
+      htmlContent: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #1B5568; color: white; padding: 30px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 30px; }
+            .highlight { background-color: #F5D35E; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .info-box { background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .info-row { margin: 12px 0; }
+            .label { font-weight: bold; color: #1B5568; }
+            .button { display: inline-block; padding: 15px 30px; background-color: #1B5568; color: white !important; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 ¡Nueva Solicitud de Cotización!</h1>
+            </div>
+            <div class="content">
+              <p>Hola equipo de <strong>${data.agencyName}</strong>,</p>
+              
+              <div class="highlight">
+                <h2 style="margin-top: 0; color: #1B5568;">Un cliente está interesado en tus servicios</h2>
+                <p style="margin-bottom: 0;">Has recibido una nueva solicitud de cotización a través de Vitria.</p>
+              </div>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">Información del Proyecto</h3>
+                
+                <div class="info-row">
+                  <span class="label">Proyecto:</span> ${data.projectName}
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Descripción:</span>
+                  <p style="margin: 8px 0; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">${data.projectDescription}</p>
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Presupuesto estimado:</span> ${data.budgetRange}
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Categoría de servicio:</span> ${data.serviceCategory}
+                </div>
+              </div>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">Información del Cliente</h3>
+                
+                <div class="info-row">
+                  <span class="label">Nombre:</span> ${data.clientName}
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Email:</span> <a href="mailto:${data.clientEmail}">${data.clientEmail}</a>
+                </div>
+                
+                ${data.clientPhone ? `
+                <div class="info-row">
+                  <span class="label">Teléfono:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
+                </div>
+                ` : ''}
+              </div>
+              
+              <div style="background-color: #E8F4F8; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <p style="margin: 0; font-size: 14px; color: #1B5568;"><strong>💡 Consejo:</strong> Los clientes que reciben respuesta en las primeras 24 horas tienen una tasa de conversión 3 veces mayor. ¡Responde rápido para aumentar tus posibilidades!</p>
+              </div>
+              
+              <div style="text-align: center;">
+                <a href="mailto:${data.clientEmail}" class="button">Contactar Cliente</a>
+              </div>
+              
+              <div style="text-align: center; margin-top: 15px;">
+                <a href="${dashboardUrl}" style="color: #1B5568; text-decoration: none; font-weight: bold;">Ver todas mis solicitudes en Dashboard →</a>
+              </div>
+              
+              <p style="margin-top: 30px;">¡Mucho éxito con este proyecto!</p>
+              
+              <p>Saludos,<br>
+              <strong>El equipo de Vitria</strong></p>
+            </div>
+            <div class="footer">
+              <p>Este es un correo automático de Vitria Platform</p>
+              <p>Solicitud ID: ${data.quoteId}</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error('Error sending quote notification to agency:', error);
+    throw error;
+  }
+}
+
+interface QuoteConfirmationData {
+  clientName: string;
+  clientEmail: string;
+  agencyName: string;
+  projectName: string;
+}
+
+export async function sendQuoteConfirmationToClient(data: QuoteConfirmationData) {
+  const baseUrl = getBaseUrl();
+  const agenciesUrl = `${baseUrl}/agencias`;
+
+  try {
+    await brevoApi.sendTransacEmail({
+      sender: {
+        name: "Vitria",
+        email: "noreply@vitria.cl"
+      },
+      to: [{
+        email: data.clientEmail,
+        name: data.clientName
+      }],
+      subject: `✅ Solicitud enviada a ${data.agencyName}`,
+      htmlContent: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #10B981; color: white; padding: 30px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 30px; }
+            .success-box { background-color: #D1FAE5; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0; }
+            .info-box { background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .button { display: inline-block; padding: 15px 30px; background-color: #1B5568; color: white !important; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 10px 5px; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>✅ ¡Solicitud Enviada!</h1>
+            </div>
+            <div class="content">
+              <p>Hola ${data.clientName},</p>
+              
+              <div class="success-box">
+                <h2 style="margin-top: 0; color: #10B981;">Tu solicitud fue enviada exitosamente</h2>
+                <p style="margin-bottom: 0;">Hemos notificado a <strong>${data.agencyName}</strong> sobre tu proyecto <strong>"${data.projectName}"</strong>.</p>
+              </div>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">¿Qué sigue?</h3>
+                <ul style="line-height: 1.8;">
+                  <li>La agencia recibirá tu información de contacto y los detalles de tu proyecto</li>
+                  <li>Se pondrán en contacto contigo directamente en las próximas 24-48 horas</li>
+                  <li>Podrás discutir los detalles del proyecto y recibir una cotización personalizada</li>
+                </ul>
+              </div>
+              
+              <div style="background-color: #FEF3C7; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #F59E0B;">
+                <p style="margin: 0; font-size: 14px;"><strong>💡 Consejo:</strong> Mientras esperas, puedes explorar otras agencias en Vitria. Comparar opciones te ayudará a tomar la mejor decisión para tu proyecto.</p>
+              </div>
+              
+              <div style="text-align: center;">
+                <a href="${agenciesUrl}" class="button">Explorar Más Agencias</a>
+              </div>
+              
+              <p style="margin-top: 30px;">Si tienes alguna pregunta, estamos aquí para ayudarte.</p>
+              
+              <p>Saludos,<br>
+              <strong>El equipo de Vitria</strong></p>
+            </div>
+            <div class="footer">
+              <p>Este es un correo automático de Vitria Platform</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error('Error sending quote confirmation to client:', error);
+    throw error;
+  }
+}

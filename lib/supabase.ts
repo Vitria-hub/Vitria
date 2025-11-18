@@ -124,6 +124,24 @@ export type Database = {
           created_at: string;
         };
       };
+      quote_requests: {
+        Row: {
+          id: string;
+          agency_id: string;
+          client_user_id: string | null;
+          client_name: string;
+          client_email: string;
+          client_phone: string | null;
+          project_name: string;
+          project_description: string;
+          budget_range: string | null;
+          service_category: string | null;
+          status: 'pending' | 'contacted' | 'won' | 'lost';
+          admin_notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+      };
     };
   };
 };

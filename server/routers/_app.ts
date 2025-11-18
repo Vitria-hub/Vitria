@@ -7,6 +7,7 @@ import { adminRouter } from './admin';
 import { analyticsRouter } from './analytics';
 import { clientRouter } from './client';
 import { contactRouter } from './contact';
+import { quotesRouter } from './quotes';
 import { inferRouterOutputs } from '@trpc/server';
 
 export const appRouter = router({
@@ -18,6 +19,7 @@ export const appRouter = router({
   analytics: analyticsRouter,
   clientProfile: clientRouter,
   contact: contactRouter,
+  quotes: quotesRouter,
 });
 
 export type AppRouter = typeof appRouter;
