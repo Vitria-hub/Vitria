@@ -9,7 +9,7 @@ import { calculateProfileHealth, getHealthEmoji } from '@/lib/profileHealth';
 
 export default function AdminAgenciesPage() {
   const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [premiumModal, setPremiumModal] = useState<{ agencyId: string; currentStatus: boolean } | null>(null);
   const [durationDays, setDurationDays] = useState(30);
   const [detailModal, setDetailModal] = useState<any>(null);
