@@ -5,6 +5,8 @@ import { db } from '../db';
 import { enforcePremiumFreshness, enforceSingleAgencyPremiumFreshness } from '../utils/premiumExpiration';
 import { sendAgencyReviewEmail, sendAgencyWaitlistEmail, sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { calculateProfileHealth } from '@/lib/profileHealth';
+import { z } from 'zod';
 
 export const agencyRouter = router({
   list: publicProcedure
@@ -328,5 +330,54 @@ export const agencyRouter = router({
           message: `Error al actualizar la agencia: ${error.message}`,
         });
       }
+    }),
+
+  getProfileHealth: protectedProcedure
+    .input(z.object({
+      agencyId: z.string().optional(),
+    }))
+    .query(async ({ input, ctx }) => {
+      let agencyId = input.agencyId;
+
+      if (!agencyId) {
+        const { data: agency } = await supabaseAdmin
+          .from('agencies')
+          .select('id')
+          .eq('owner_id', ctx.user?.id)
+          .single();
+
+        if (!agency) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'No se encontró la agencia',
+          });
+        }
+        agencyId = agency.id;
+      }
+
+      const { data: agency, error } = await supabaseAdmin
+        .from('agencies')
+        .select('*')
+        .eq('id', agencyId)
+        .single();
+
+      if (error || !agency) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      const { count: portfolioCount } = await supabaseAdmin
+        .from('portfolio_items')
+        .select('*', { count: 'exact', head: true })
+        .eq('agency_id', agencyId);
+
+      const agencyWithPortfolio = {
+        ...agency,
+        portfolio_count: portfolioCount || 0,
+      };
+
+      return calculateProfileHealth(agencyWithPortfolio);
     }),
 });

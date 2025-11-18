@@ -5,6 +5,7 @@ import { trpc } from '@/lib/trpc';
 import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban, Star, Pencil } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
+import { calculateProfileHealth, getHealthEmoji } from '@/lib/profileHealth';
 
 export default function AdminAgenciesPage() {
   const [page, setPage] = useState(1);
@@ -154,6 +155,7 @@ export default function AdminAgenciesPage() {
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Agencia</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Dueño</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Ubicación</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-dark">Salud</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Estado</th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-dark">Premium</th>
                       <th className="px-6 py-4 text-right text-sm font-bold text-dark">Acciones</th>
@@ -177,6 +179,25 @@ export default function AdminAgenciesPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-dark">
                           {agency.location_city}, {agency.location_region}
+                        </td>
+                        <td className="px-6 py-4">
+                          {(() => {
+                            const health = calculateProfileHealth({ ...agency, portfolio_count: 0 });
+                            const emoji = getHealthEmoji(health.score);
+                            const colorClass = health.score >= 80 ? 'text-green-600' : health.score >= 50 ? 'text-yellow-600' : 'text-red-600';
+                            return (
+                              <div className="flex items-center gap-2">
+                                <span className={`text-xl font-bold ${colorClass}`}>
+                                  {emoji} {health.score}%
+                                </span>
+                                {health.missingCount > 0 && (
+                                  <span className="text-xs text-dark/60">
+                                    Falta {health.missingCount}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="px-6 py-4">
                           {agency.approval_status === 'approved' ? (

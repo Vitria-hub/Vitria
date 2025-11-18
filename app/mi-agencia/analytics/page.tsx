@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Eye, Phone, Mail, Globe, MessageSquare, TrendingUp, Search, BarChart3 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import ProfileHealthWidget from '@/components/ProfileHealthWidget';
 
 export default function AgencyAnalyticsPage() {
   const [period, setPeriod] = useState(30);
@@ -115,6 +116,11 @@ export default function AgencyAnalyticsPage() {
             90 días
           </button>
         </div>
+      </div>
+
+      {/* Profile Health Widget */}
+      <div className="mb-8">
+        <ProfileHealthWidget />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
