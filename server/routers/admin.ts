@@ -113,25 +113,48 @@ export const adminRouter = router({
   getAgency: adminProcedure
     .input(z.object({ agencyId: z.string().uuid() }))
     .query(async ({ input }) => {
+      console.log('[Admin getAgency] Fetching agency:', input.agencyId);
+      
       const { data: agency, error } = await db
         .from('agencies')
         .select('*')
         .eq('id', input.agencyId)
         .single();
 
-      if (error || !agency) {
+      if (error) {
+        console.error('[Admin getAgency] Error fetching agency:', error);
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Agencia no encontrada',
         });
       }
 
-      // Fetch user data separately
-      const { data: user } = await db
-        .from('users')
-        .select('full_name, email, role')
-        .eq('id', agency.owner_id as string)
-        .single();
+      if (!agency) {
+        console.error('[Admin getAgency] Agency not found:', input.agencyId);
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Agencia no encontrada',
+        });
+      }
+
+      console.log('[Admin getAgency] Agency found:', agency.name, 'owner_id:', agency.owner_id);
+
+      // Fetch user data separately only if owner_id exists
+      let user = null;
+      if (agency.owner_id) {
+        const { data: userData, error: userError } = await db
+          .from('users')
+          .select('full_name, email, role')
+          .eq('id', agency.owner_id as string)
+          .single();
+        
+        if (userError) {
+          console.warn('[Admin getAgency] Error fetching user data:', userError);
+        }
+        user = userData;
+      } else {
+        console.warn('[Admin getAgency] Agency has no owner_id');
+      }
 
       return {
         ...agency,
