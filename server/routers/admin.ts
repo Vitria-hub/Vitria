@@ -37,7 +37,7 @@ export const adminRouter = router({
     .input(z.object({
       page: z.number().default(1),
       limit: z.number().default(20),
-      status: z.enum(['all', 'pending', 'approved', 'rejected']).default('all'),
+      status: z.enum(['all', 'pending', 'approved', 'rejected']).default('pending'),
     }))
     .query(async ({ input }) => {
       const { page, limit, status } = input;

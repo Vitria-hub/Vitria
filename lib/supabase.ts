@@ -46,28 +46,6 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
-        Insert: {
-          id?: string;
-          user_id: string;
-          business_name: string;
-          business_instagram?: string | null;
-          budget_range: '$' | '$$' | '$$$';
-          desired_categories: string[];
-          about_business?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          business_name?: string;
-          business_instagram?: string | null;
-          budget_range?: '$' | '$$' | '$$$';
-          desired_categories?: string[];
-          about_business?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
       };
       agencies: {
         Row: {
@@ -274,70 +252,6 @@ export type Database = {
           admin_notes: string | null;
           created_at: string;
           updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          agency_id: string;
-          client_user_id?: string | null;
-          client_name: string;
-          client_email: string;
-          client_phone?: string | null;
-          project_name: string;
-          project_description: string;
-          budget_range?: string | null;
-          service_category?: string | null;
-          status?: 'pending' | 'contacted' | 'won' | 'lost';
-          admin_notes?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          agency_id?: string;
-          client_user_id?: string | null;
-          client_name?: string;
-          client_email?: string;
-          client_phone?: string | null;
-          project_name?: string;
-          project_description?: string;
-          budget_range?: string | null;
-          service_category?: string | null;
-          status?: 'pending' | 'contacted' | 'won' | 'lost';
-          admin_notes?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
-      portfolio_items: {
-        Row: {
-          id: string;
-          agency_id: string;
-          title: string;
-          description: string | null;
-          image_url: string;
-          project_url: string | null;
-          category: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          agency_id: string;
-          title: string;
-          description?: string | null;
-          image_url: string;
-          project_url?: string | null;
-          category?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          agency_id?: string;
-          title?: string;
-          description?: string | null;
-          image_url?: string;
-          project_url?: string | null;
-          category?: string | null;
-          created_at?: string;
         };
       };
     };
