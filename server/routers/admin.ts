@@ -630,6 +630,17 @@ export const adminRouter = router({
       categories: z.array(z.string()).min(1),
       services: z.array(z.string()),
       logo_url: z.string().url().optional().or(z.literal('')),
+      cover_url: z.string().url().optional().or(z.literal('')),
+      employees_min: z.number().int().min(0).nullable(),
+      employees_max: z.number().int().min(0).nullable(),
+      price_range: z.enum(['$', '$$', '$$$']).nullable().or(z.literal('')),
+      specialties: z.array(z.string()).optional(),
+      facebook_url: z.string().url().optional().or(z.literal('')),
+      instagram_url: z.string().url().optional().or(z.literal('')),
+      linkedin_url: z.string().url().optional().or(z.literal('')),
+      twitter_url: z.string().url().optional().or(z.literal('')),
+      youtube_url: z.string().url().optional().or(z.literal('')),
+      tiktok_url: z.string().url().optional().or(z.literal('')),
     }))
     .mutation(async ({ input }) => {
       const { agencyId, ...updateData } = input;
@@ -659,6 +670,17 @@ export const adminRouter = router({
         categories: updateData.categories,
         services: updateData.services,
         logo_url: updateData.logo_url || null,
+        cover_url: updateData.cover_url || null,
+        employees_min: updateData.employees_min ?? null,
+        employees_max: updateData.employees_max ?? null,
+        price_range: updateData.price_range || null,
+        specialties: updateData.specialties ?? [],
+        facebook_url: updateData.facebook_url || null,
+        instagram_url: updateData.instagram_url || null,
+        linkedin_url: updateData.linkedin_url || null,
+        twitter_url: updateData.twitter_url || null,
+        youtube_url: updateData.youtube_url || null,
+        tiktok_url: updateData.tiktok_url || null,
         updated_at: new Date().toISOString(),
       };
 

@@ -51,6 +51,12 @@ export type Database = {
           services: string[];
           categories: string[];
           specialties: string[];
+          facebook_url: string | null;
+          instagram_url: string | null;
+          linkedin_url: string | null;
+          twitter_url: string | null;
+          youtube_url: string | null;
+          tiktok_url: string | null;
           is_verified: boolean;
           is_premium: boolean;
           premium_until: string | null;

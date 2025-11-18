@@ -26,6 +26,18 @@ export default function EditAgencyPage() {
     location_region: '',
     categories: [] as string[],
     services: [] as string[],
+    logo_url: '',
+    cover_url: '',
+    employees_min: null as number | null,
+    employees_max: null as number | null,
+    price_range: '',
+    specialties: [] as string[],
+    facebook_url: '',
+    instagram_url: '',
+    linkedin_url: '',
+    twitter_url: '',
+    youtube_url: '',
+    tiktok_url: '',
   });
 
   const [error, setError] = useState('');
@@ -59,6 +71,18 @@ export default function EditAgencyPage() {
         location_region: agency.location_region || '',
         categories: agency.categories || [],
         services: agency.services || [],
+        logo_url: agency.logo_url || '',
+        cover_url: agency.cover_url || '',
+        employees_min: agency.employees_min ?? null,
+        employees_max: agency.employees_max ?? null,
+        price_range: agency.price_range || '',
+        specialties: agency.specialties || [],
+        facebook_url: agency.facebook_url || '',
+        instagram_url: agency.instagram_url || '',
+        linkedin_url: agency.linkedin_url || '',
+        twitter_url: agency.twitter_url || '',
+        youtube_url: agency.youtube_url || '',
+        tiktok_url: agency.tiktok_url || '',
       });
     }
   }, [agency]);
@@ -362,6 +386,201 @@ export default function EditAgencyPage() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Imágenes</h2>
+
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  URL del Logo
+                </label>
+                <Input
+                  type="url"
+                  value={formData.logo_url}
+                  onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
+                  placeholder="https://ejemplo.com/logo.png"
+                />
+                <p className="text-sm text-dark/60 mt-1">
+                  Recomendado: 200x200px, formato PNG con fondo transparente
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  URL de Imagen de Portada
+                </label>
+                <Input
+                  type="url"
+                  value={formData.cover_url}
+                  onChange={(e) => setFormData({ ...formData, cover_url: e.target.value })}
+                  placeholder="https://ejemplo.com/portada.jpg"
+                />
+                <p className="text-sm text-dark/60 mt-1">
+                  Recomendado: 1200x400px, formato JPG o PNG
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Tamaño del Equipo</h2>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Número Mínimo de Empleados
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.employees_min ?? ''}
+                  onChange={(e) => setFormData({ ...formData, employees_min: e.target.value ? parseInt(e.target.value) : null })}
+                  placeholder="5"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Número Máximo de Empleados
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={formData.employees_max ?? ''}
+                  onChange={(e) => setFormData({ ...formData, employees_max: e.target.value ? parseInt(e.target.value) : null })}
+                  placeholder="50"
+                />
+              </div>
+            </div>
+            <p className="text-sm text-dark/60 mt-2">
+              Ejemplo: 5-50 empleados, 50-100 empleados, etc.
+            </p>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Rango de Precios</h2>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Nivel de Precios
+              </label>
+              <select
+                value={formData.price_range}
+                onChange={(e) => setFormData({ ...formData, price_range: e.target.value })}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary appearance-none"
+              >
+                <option value="">Sin especificar</option>
+                <option value="$">$ - Económico</option>
+                <option value="$$">$$ - Medio</option>
+                <option value="$$$">$$$ - Premium</option>
+              </select>
+              <p className="text-sm text-dark/60 mt-1">
+                Indica el rango de precios aproximado de los servicios
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Especialidades Técnicas</h2>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-2">
+                Especialidades (una por línea)
+              </label>
+              <textarea
+                value={formData.specialties.join('\n')}
+                onChange={(e) => setFormData({ 
+                  ...formData, 
+                  specialties: e.target.value.split('\n').filter(s => s.trim()) 
+                })}
+                placeholder="React&#10;Node.js&#10;Python&#10;Google Ads&#10;SEO"
+                rows={6}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary resize-none font-mono text-sm"
+              />
+              <p className="text-sm text-dark/60 mt-1">
+                Tecnologías, plataformas o habilidades específicas (por ejemplo: React, Shopify, Google Analytics, Adobe Creative Suite)
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Redes Sociales</h2>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Facebook
+                </label>
+                <Input
+                  type="url"
+                  value={formData.facebook_url}
+                  onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
+                  placeholder="https://facebook.com/agencia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Instagram
+                </label>
+                <Input
+                  type="url"
+                  value={formData.instagram_url}
+                  onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
+                  placeholder="https://instagram.com/agencia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  LinkedIn
+                </label>
+                <Input
+                  type="url"
+                  value={formData.linkedin_url}
+                  onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                  placeholder="https://linkedin.com/company/agencia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  Twitter / X
+                </label>
+                <Input
+                  type="url"
+                  value={formData.twitter_url}
+                  onChange={(e) => setFormData({ ...formData, twitter_url: e.target.value })}
+                  placeholder="https://twitter.com/agencia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  YouTube
+                </label>
+                <Input
+                  type="url"
+                  value={formData.youtube_url}
+                  onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
+                  placeholder="https://youtube.com/@agencia"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  TikTok
+                </label>
+                <Input
+                  type="url"
+                  value={formData.tiktok_url}
+                  onChange={(e) => setFormData({ ...formData, tiktok_url: e.target.value })}
+                  placeholder="https://tiktok.com/@agencia"
+                />
+              </div>
             </div>
           </div>
 

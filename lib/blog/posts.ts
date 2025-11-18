@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2025-01-15",
     category: "Guías",
     tags: ["marketing digital", "agencias", "chile", "guía"],
-    image: "/stock_images/professional_creativ_5da7894f.jpg",
+    image: "/stock_images/choosing-marketing-agency-guide.png",
     readTime: "8 min",
     content: `
 # Cómo Elegir una Agencia de Marketing en Chile: Guía Completa 2025
@@ -851,7 +851,7 @@ Estas 10 preguntas te protegerán de:
     publishedAt: "2025-01-18",
     category: "Precios",
     tags: ["precios", "inversión", "presupuesto", "agencias chile"],
-    image: "/stock_images/professional_creativ_5da7894f.jpg",
+    image: "/stock_images/marketing-agency-pricing-costs.png",
     readTime: "10 min",
     content: `
 # ¿Cuánto Cuesta Contratar una Agencia de Marketing en Chile? Precios 2025
@@ -1068,7 +1068,7 @@ Una agencia competente debería poder justificar su inversión con métricas cla
     publishedAt: "2025-01-20",
     category: "Guías",
     tags: ["errores", "consejos", "contratación", "mejores prácticas"],
-    image: "/stock_images/professional_creativ_5da7894f.jpg",
+    image: "/stock_images/avoiding-marketing-mistakes.png",
     readTime: "9 min",
     content: `
 # 7 Errores Fatales al Contratar una Agencia de Marketing (Y Cómo Evitarlos)
@@ -1370,7 +1370,7 @@ Contratar la agencia correcta puede **transformar tu negocio**. Pero contratar l
     publishedAt: "2025-01-22",
     category: "Estrategia",
     tags: ["comparación", "equipos", "decisiones", "estrategia"],
-    image: "/stock_images/professional_creativ_5da7894f.jpg",
+    image: "/stock_images/agency-vs-inhouse-comparison.png",
     readTime: "12 min",
     content: `
 # Agencia vs In-House vs Freelancer: ¿Qué Conviene Más para tu Negocio?

@@ -57,8 +57,8 @@ export default function CarouselSponsored() {
 
   if (!agency) return null;
 
-  const reviewCount = agency.review_count || 0;
-  const averageRating = reviewCount > 0 ? (agency.average_rating || 0) : 0;
+  const reviewCount = agency.reviews_count || 0;
+  const averageRating = reviewCount > 0 ? (agency.avg_rating || 0) : 0;
   const services = agency.services?.slice(0, 3) || [];
   const employeeRange = agency.employees_min && agency.employees_max 
     ? `${agency.employees_min}-${agency.employees_max} empleados`
