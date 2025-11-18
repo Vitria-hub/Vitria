@@ -38,6 +38,43 @@ Premium agency status is manually managed by administrators via an admin panel, 
 
 # Recent Changes
 
+## November 18, 2025 - Complete Admin Control System
+- **Admin Panel Full Autonomy**: Implemented comprehensive agency editing system giving administrators complete control over all platform content
+  - **Expanded Edit Form** (`/admin/agencias/[id]/editar`): Now includes ALL agency fields:
+    - Basic info: name, slug, description, email, phone, website
+    - Location: city, region
+    - Categories and services (multiple selection)
+    - Images: logo_url, cover_url with URL validation
+    - Team size: employees_min, employees_max (nullable fields)
+    - Pricing: price_range ($, $$, $$$, or null)
+    - Technical specialties: array of technologies/skills
+    - **Social media links**: facebook_url, instagram_url, linkedin_url, twitter_url, youtube_url, tiktok_url
+  - **Database Schema Updates**: Added 6 new columns to `agencies` table for social media URLs via ALTER TABLE
+  - **TypeScript Types Updated**: Enhanced `lib/supabase.ts` to include all new social media fields
+  - **Backend Validation**: Enhanced `admin.updateAgency` tRPC endpoint with:
+    - Proper nullable handling for employees_min/max
+    - Enum validation for price_range with null support
+    - Optional specialties array
+    - URL validation for all social media fields
+    - Smart null conversion for empty strings
+  - Impact: Administrators now have "control absoluto" over every aspect of agency profiles
+
+- **Bug Fixes**:
+  - **Review Count Display**: Fixed CarouselSponsored showing 0 reviews for agencies with existing reviews
+    - Changed `agency.review_count` → `agency.reviews_count` (correct plural field name)
+    - Changed `agency.average_rating` → `agency.avg_rating` (correct database field name)
+    - Impact: Featured agencies now display accurate review counts and ratings
+  
+- **Blog Visual Improvements**: Generated unique cover images for all blog posts
+  - Created 4 professional AI-generated images to replace duplicated stock photos
+  - Images generated and saved to `/public/stock_images/`:
+    - `choosing-marketing-agency-guide.png` - Professional business meeting scene
+    - `marketing-agency-pricing-costs.png` - Financial planning and budgets
+    - `avoiding-marketing-mistakes.png` - Warning symbols and best practices
+    - `agency-vs-inhouse-comparison.png` - Side-by-side workspace comparison
+  - Updated `lib/blog/posts.ts` to use unique images for each post
+  - Impact: Every blog post now has a distinct, contextually relevant cover image
+
 ## November 17, 2025 - Email System Improvements
 - **Welcome Email Visual Update**: Updated welcome email to match homepage design exactly
   - Changed typography to Quicksand font (imported from Google Fonts)
