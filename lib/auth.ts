@@ -58,7 +58,7 @@ export async function signInWithGoogle(options?: {
   if (typeof window !== 'undefined') {
     const isSecure = window.location.protocol === 'https:';
     const secureFlag = isSecure ? '; Secure' : '';
-    document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Strict${secureFlag}`;
+    document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Lax${secureFlag}`;
   }
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_SITE_URL;
