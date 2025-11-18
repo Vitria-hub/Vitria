@@ -38,6 +38,52 @@ Premium agency status is manually managed by administrators via an admin panel, 
 
 # Recent Changes
 
+## November 18, 2025 - Quote Request System (MVP Feature)
+- **Complete Quote/Lead System**: Implemented comprehensive quote request system to reduce friction between clients and agencies
+  - **Database**: Created `quote_requests` table with fields:
+    - Client info: client_name, client_email, client_phone, client_user_id (nullable)
+    - Project details: project_name, project_description, budget_range, service_category
+    - Tracking: status enum (pending/contacted/won/lost), created_at, updated_at
+    - Foreign keys: agency_id → agencies, client_user_id → users (nullable)
+    - Optimized indexes on agency_id, client_user_id, status, created_at
+  - **Backend tRPC Router** (`server/routers/quotes.ts`):
+    - `submitQuote`: Public endpoint for submitting quotes with email fallback logic
+      - If agency.email is null, falls back to owner's email from auth.users
+      - Throws clear error if neither email exists to prevent silent failures
+    - `getAgencyQuotes`: Protected endpoint for agency owners to view their received quotes
+    - `getAllQuotes`: Admin-only endpoint with filtering and pagination
+    - `updateQuoteStatus`: Admin endpoint for tracking quote conversion (pending → contacted → won/lost)
+  - **QuoteRequestModal Component**: Replaced simple ContactAgencyModal with structured quote form
+    - Fields: client name, email, phone (optional), project name, description, budget range, service category
+    - HTML5 validation with required fields, min/max lengths
+    - Clear error messaging with fallback text
+    - Success state with branded confirmation message
+  - **Email Notifications** (via Brevo):
+    - `sendQuoteNotificationToAgency`: Sends lead notification to agency with all project details
+    - `sendQuoteConfirmationToClient`: Sends confirmation to client with next steps
+    - Both emails use Vitria branding (Quicksand font, isotipo, color scheme)
+  - **Admin Dashboard** (`/admin/cotizaciones`):
+    - KPIs: Total quotes, contacted quotes, won quotes, conversion rates
+    - Filterable table by status with search
+    - Top agencies by quote volume
+    - Status update functionality
+    - "Gestionar Cotizaciones" card added to admin panel home
+  - **Agency Owner Dashboard** (`/dashboard` tab):
+    - New "Cotizaciones" tab showing all received quotes
+    - Quote count badge in tab label
+    - Full quote details with client contact info
+    - "Contactar Cliente" button (mailto link)
+    - Empty state when no quotes received
+  - **Frontend Integration**: QuoteRequestModal replaces ContactAgencyModal in agency profile pages
+  - **Analytics Tracking**: Quote submissions logged to `interaction_logs` as 'form_submit' type
+  - Impact: This is the **core MVP feature** for launch, enabling measurement of value delivered to agencies and clients
+
+- **Analytics Dashboard Fix**: Created missing SQL functions
+  - Created `get_agency_view_stats()` function to aggregate view data from interaction_logs
+  - Created `get_agency_contact_stats()` function to aggregate contact/click data
+  - Fixed admin analytics dashboard that was failing due to missing database functions
+  - Impact: Analytics will display correctly once frontend tracking is verified and data flows
+
 ## November 18, 2025 - Complete Admin Control System
 - **Admin Panel Full Autonomy**: Implemented comprehensive agency editing system giving administrators complete control over all platform content
   - **Expanded Edit Form** (`/admin/agencias/[id]/editar`): Now includes ALL agency fields:
