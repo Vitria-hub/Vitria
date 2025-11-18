@@ -8,7 +8,8 @@ import {
   Search,
   MousePointerClick,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  FileText
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -130,6 +131,12 @@ export default function AdminDashboard() {
               description="Gráficos, rankings y métricas detalladas"
               href="/admin/analytics"
               icon={<BarChart3 className="w-6 h-6" />}
+            />
+            <AdminCard
+              title="Gestionar Cotizaciones"
+              description="Ver y trackear solicitudes de cotización"
+              href="/admin/cotizaciones"
+              icon={<FileText className="w-6 h-6" />}
             />
           </div>
         </div>

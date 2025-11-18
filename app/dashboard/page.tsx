@@ -6,13 +6,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
-import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X } from 'lucide-react';
+import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X, FileText, Mail, Phone } from 'lucide-react';
 
 function DashboardContent() {
   const { user, userData, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [tab, setTab] = useState<'profile' | 'metrics'>('profile');
+  const [tab, setTab] = useState<'profile' | 'metrics' | 'quotes'>('profile');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
@@ -37,6 +37,11 @@ function DashboardContent() {
   const { data: clientProfile, isLoading: clientProfileLoading, error: clientProfileError, status: clientProfileStatus } = trpc.clientProfile.getMyProfile.useQuery(undefined, {
     enabled: !loading && !!user && !isAdmin,
   });
+
+  const { data: agencyQuotes } = trpc.quotes.getAgencyQuotes.useQuery(
+    { status: 'all', limit: 50 },
+    { enabled: !loading && !!user && !!userAgency }
+  );
 
   const mockMetrics = [
     { label: 'Vistas', value: 1234, icon: Eye, change: '+12%' },
@@ -174,16 +179,28 @@ function DashboardContent() {
                   Perfil
                 </button>
                 {userAgency?.approval_status === 'approved' && (
-                  <button
-                    onClick={() => setTab('metrics')}
-                    className={`px-6 py-4 font-semibold transition ${
-                      tab === 'metrics'
-                        ? 'text-primary border-b-2 border-primary'
-                        : 'text-dark/60 hover:text-primary'
-                    }`}
-                  >
-                    Métricas
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setTab('metrics')}
+                      className={`px-6 py-4 font-semibold transition ${
+                        tab === 'metrics'
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'text-dark/60 hover:text-primary'
+                      }`}
+                    >
+                      Métricas
+                    </button>
+                    <button
+                      onClick={() => setTab('quotes')}
+                      className={`px-6 py-4 font-semibold transition ${
+                        tab === 'quotes'
+                          ? 'text-primary border-b-2 border-primary'
+                          : 'text-dark/60 hover:text-primary'
+                      }`}
+                    >
+                      Cotizaciones {agencyQuotes && agencyQuotes.length > 0 && `(${agencyQuotes.length})`}
+                    </button>
+                  </>
                 )}
               </nav>
             </div>
@@ -255,6 +272,103 @@ function DashboardContent() {
                       );
                     })}
                   </div>
+                </div>
+              )}
+
+              {tab === 'quotes' && userAgency?.approval_status === 'approved' && (
+                <div>
+                  <h3 className="text-lg font-bold text-dark mb-6">Solicitudes de Cotización</h3>
+                  
+                  {agencyQuotes && agencyQuotes.length > 0 ? (
+                    <div className="space-y-4">
+                      {agencyQuotes.map((quote: any) => (
+                        <div
+                          key={quote.id}
+                          className="border-2 border-gray-200 rounded-lg p-6 hover:border-primary/30 transition-colors"
+                        >
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h4 className="text-lg font-bold text-dark mb-2">{quote.project_name}</h4>
+                              <div className="flex items-center gap-2 text-sm text-dark/60 mb-3">
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                  quote.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                  quote.status === 'contacted' ? 'bg-blue-100 text-blue-700' :
+                                  quote.status === 'won' ? 'bg-green-100 text-green-700' :
+                                  'bg-red-100 text-red-700'
+                                }`}>
+                                  {quote.status === 'pending' ? 'Pendiente' :
+                                   quote.status === 'contacted' ? 'Contactado' :
+                                   quote.status === 'won' ? 'Ganado' : 'Perdido'}
+                                </span>
+                                <span>•</span>
+                                <span>{new Date(quote.created_at).toLocaleDateString('es-CL')}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p className="text-sm text-dark/70">{quote.project_description}</p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-xs font-semibold text-dark/60 mb-2">Información del Cliente</div>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <UserCircle className="w-4 h-4 text-dark/60" />
+                                  <span>{quote.client_name}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Mail className="w-4 h-4 text-dark/60" />
+                                  <a href={`mailto:${quote.client_email}`} className="hover:text-primary">
+                                    {quote.client_email}
+                                  </a>
+                                </div>
+                                {quote.client_phone && (
+                                  <div className="flex items-center gap-2 text-sm">
+                                    <Phone className="w-4 h-4 text-dark/60" />
+                                    <a href={`tel:${quote.client_phone}`} className="hover:text-primary">
+                                      {quote.client_phone}
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-xs font-semibold text-dark/60 mb-2">Detalles del Proyecto</div>
+                              <div className="space-y-1 text-sm text-dark/70">
+                                {quote.budget_range && (
+                                  <div><strong>Presupuesto:</strong> {quote.budget_range}</div>
+                                )}
+                                {quote.service_category && (
+                                  <div><strong>Categoría:</strong> {quote.service_category}</div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 pt-4 border-t border-gray-200">
+                            <a 
+                              href={`mailto:${quote.client_email}?subject=Re: ${quote.project_name}`}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                            >
+                              <Mail className="w-4 h-4" />
+                              Contactar Cliente
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 bg-gray-50 rounded-lg">
+                      <FileText className="w-16 h-16 text-dark/20 mx-auto mb-4" />
+                      <p className="text-dark/60 mb-2">No has recibido cotizaciones aún</p>
+                      <p className="text-sm text-dark/50">
+                        Las solicitudes de cotización aparecerán aquí cuando los clientes te contacten
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
