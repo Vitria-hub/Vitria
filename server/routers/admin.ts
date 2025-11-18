@@ -49,39 +49,9 @@ export const adminRouter = router({
       const { page, limit, status } = input;
       const offset = (page - 1) * limit;
 
-      let query = db.from('agencies').select(`
-        id,
-        name,
-        slug,
-        description,
-        email,
-        phone,
-        website,
-        location_city,
-        location_region,
-        services,
-        categories,
-        specialties,
-        logo_url,
-        cover_url,
-        employees_min,
-        employees_max,
-        price_range,
-        facebook_url,
-        instagram_url,
-        linkedin_url,
-        twitter_url,
-        youtube_url,
-        tiktok_url,
-        is_premium,
-        premium_until,
-        approval_status,
-        approved_at,
-        rejection_reason,
-        created_at,
-        users!agencies_owner_id_fkey(full_name, role),
-        portfolio_items(count)
-      `, { count: 'exact' });
+      console.log('[Admin listAgencies] Fetching with params:', { page, limit, status, offset });
+
+      let query = db.from('agencies').select(`*`, { count: 'exact' });
 
       if (status === 'pending') {
         query = query.eq('approval_status', 'pending');
@@ -95,12 +65,45 @@ export const adminRouter = router({
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
-      const { data, error, count } = await query;
+      const { data: agencies, error, count } = await query;
 
-      if (error) throw error;
+      console.log('[Admin listAgencies] Query result:', { 
+        dataCount: agencies?.length, 
+        totalCount: count, 
+        error: error?.message 
+      });
+
+      if (error) {
+        console.error('[Admin listAgencies] Error:', error);
+        throw error;
+      }
+
+      // Fetch user data separately to avoid join issues
+      const agenciesWithUsers = await Promise.all(
+        (agencies || []).map(async (agency) => {
+          const { data: user } = await db
+            .from('users')
+            .select('full_name, role')
+            .eq('id', agency.owner_id)
+            .single();
+          
+          const { count: portfolioCount } = await db
+            .from('portfolio_items')
+            .select('*', { count: 'exact', head: true })
+            .eq('agency_id', agency.id);
+
+          return {
+            ...agency,
+            users: user || null,
+            portfolio_items: [{ count: portfolioCount || 0 }],
+          };
+        })
+      );
+
+      console.log('[Admin listAgencies] Final result with users:', agenciesWithUsers.length);
 
       return {
-        agencies: data || [],
+        agencies: agenciesWithUsers,
         total: count || 0,
         page,
         totalPages: Math.ceil((count || 0) / limit),
