@@ -242,6 +242,18 @@ export default function AgencyRegisterPage() {
               />
             </div>
 
+            <div className="bg-lilac/10 p-4 rounded-lg text-xs text-dark/70 text-center">
+              Al crear tu cuenta, aceptas nuestros{' '}
+              <Link href="/terminos" target="_blank" className="text-primary font-semibold hover:underline">
+                Términos de Uso
+              </Link>
+              {' '}y{' '}
+              <Link href="/privacidad" target="_blank" className="text-primary font-semibold hover:underline">
+                Política de Privacidad
+              </Link>
+              {', y consientes expresamente el tratamiento de tus datos personales según lo descrito, incluyendo el almacenamiento, procesamiento y transferencia internacional de datos conforme a la Ley 21.719.'}
+            </div>
+
             <Button type="submit" variant="primary" className="w-full" loading={loading}>
               Crear Cuenta
               <ArrowRight className="w-4 h-4 ml-2" />

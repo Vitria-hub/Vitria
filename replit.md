@@ -44,6 +44,41 @@ A comprehensive admin panel allows administrators to fully manage all aspects of
 
 An automated profile optimization system helps agencies improve their listing quality through a 0-100% health score. The score is calculated based on 9 weighted completion factors: logo (15%), cover image (10%), description length (15%), social media links (5%), specialties (10%), portfolio items with 3+ threshold (15%), team size (10%), price range (10%), and combined categories/services (10%). The system provides two interfaces: (1) a `ProfileHealthWidget` on the agency analytics dashboard (`/mi-agencia/analytics`) showing a progress bar, completion checklist, and optimization suggestions, and (2) a "Salud" column in the admin panel (`/admin/agencias`) displaying emoji indicators (🟢 ≥80%, 🟡 60-79%, 🟠 40-59%, 🔴 <40%), percentage scores, and missing item counts to help administrators identify agencies needing profile assistance.
 
+## Legal Compliance
+
+The platform includes comprehensive legal documentation aligned with Chilean legislation:
+
+### Privacy Policy (`/privacidad`)
+A detailed 17-section privacy policy compliant with Chile's Law N° 21.719 (Data Protection Law, effective December 2026). Key sections include:
+- ARCO-P rights (Access, Rectification, Cancellation, Opposition, Portability) with detailed procedures
+- Specific data retention schedules (account data, quotes, reviews, payments, logs)
+- Data breach notification procedures (APDP notification, user notification criteria)
+- International data transfer safeguards (Supabase, Brevo)
+- Cookie and tracking technology disclosures
+- Automated decision-making and profiling clarifications
+- Complaint procedures and APDP contact information
+- Last updated: November 18, 2025
+
+### Terms of Service (`/terminos`)
+Comprehensive 17-section terms covering platform usage, rights, and obligations:
+- Premium billing, renewal, and cancellation policies
+- Consumer rights per Law 19.496 (10-day retraction right for paid services)
+- Liability limitations adapted to Chilean consumer protection law
+- Termination and suspension procedures
+- Dispute resolution process (negotiation → mediation → tribunals)
+- Force majeure clauses
+- Applicable law (Chilean legislation) and jurisdiction (Chilean courts)
+- Last updated: November 18, 2025
+
+### FAQ Page (`/faq`)
+User-friendly FAQ covering clients, agencies, reviews, privacy, and technical issues. Organized by category with clear, non-technical language aligned with user preferences.
+
+### Registration Consent
+Both client and agency registration forms include explicit consent notices (no checkbox) stating: "Al crear tu cuenta, aceptas nuestros Términos de Uso y Política de Privacidad, y consientes expresamente el tratamiento de tus datos personales según lo descrito, incluyendo el almacenamiento, procesamiento y transferencia internacional de datos conforme a la Ley 21.719." Links open terms and privacy policy in new tabs.
+
+### WhatsApp Integration
+Premium agency phone numbers display with a green WhatsApp badge containing the official WhatsApp icon and "WhatsApp" label, opening direct wa.me chats with sanitized Chilean phone numbers.
+
 # External Dependencies
 
 ## Core Infrastructure
