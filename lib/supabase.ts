@@ -17,6 +17,22 @@ export type Database = {
           role: 'user' | 'agency' | 'admin';
           created_at: string;
         };
+        Insert: {
+          id?: string;
+          auth_id: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          role?: 'user' | 'agency' | 'admin';
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          auth_id?: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          role?: 'user' | 'agency' | 'admin';
+          created_at?: string;
+        };
       };
       client_profiles: {
         Row: {
@@ -69,6 +85,80 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
+        Insert: {
+          id?: string;
+          owner_id?: string | null;
+          name: string;
+          slug: string;
+          logo_url?: string | null;
+          cover_url?: string | null;
+          description?: string | null;
+          website?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          location_city?: string | null;
+          location_region?: string | null;
+          employees_min?: number | null;
+          employees_max?: number | null;
+          price_range?: string | null;
+          services?: string[];
+          categories?: string[];
+          specialties?: string[];
+          facebook_url?: string | null;
+          instagram_url?: string | null;
+          linkedin_url?: string | null;
+          twitter_url?: string | null;
+          youtube_url?: string | null;
+          tiktok_url?: string | null;
+          is_verified?: boolean;
+          is_premium?: boolean;
+          premium_until?: string | null;
+          avg_rating?: number;
+          reviews_count?: number;
+          approval_status?: 'pending' | 'approved' | 'rejected';
+          rejection_reason?: string | null;
+          approved_at?: string | null;
+          reviewed_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          owner_id?: string | null;
+          name?: string;
+          slug?: string;
+          logo_url?: string | null;
+          cover_url?: string | null;
+          description?: string | null;
+          website?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          location_city?: string | null;
+          location_region?: string | null;
+          employees_min?: number | null;
+          employees_max?: number | null;
+          price_range?: string | null;
+          services?: string[];
+          categories?: string[];
+          specialties?: string[];
+          facebook_url?: string | null;
+          instagram_url?: string | null;
+          linkedin_url?: string | null;
+          twitter_url?: string | null;
+          youtube_url?: string | null;
+          tiktok_url?: string | null;
+          is_verified?: boolean;
+          is_premium?: boolean;
+          premium_until?: string | null;
+          avg_rating?: number;
+          reviews_count?: number;
+          approval_status?: 'pending' | 'approved' | 'rejected';
+          rejection_reason?: string | null;
+          approved_at?: string | null;
+          reviewed_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
       };
       reviews: {
         Row: {
@@ -81,6 +171,28 @@ export type Database = {
           status: 'pending' | 'approved' | 'rejected';
           reported: boolean;
           created_at: string;
+        };
+        Insert: {
+          id?: string;
+          agency_id: string;
+          user_id?: string | null;
+          author_name?: string | null;
+          rating: number;
+          comment?: string | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          reported?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          agency_id?: string;
+          user_id?: string | null;
+          author_name?: string | null;
+          rating?: number;
+          comment?: string | null;
+          status?: 'pending' | 'approved' | 'rejected';
+          reported?: boolean;
+          created_at?: string;
         };
       };
       interaction_logs: {

@@ -7,13 +7,7 @@ import { sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const { data: userData } = await db
-    .from('users')
-    .select('role')
-    .eq('auth_id', ctx.userId)
-    .single();
-
-  if (!userData || userData.role !== 'admin') {
+  if (ctx.user?.role !== 'admin') {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Acceso denegado - requiere rol de administrador' });
   }
 

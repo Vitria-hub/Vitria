@@ -10,6 +10,18 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
 
 type Context = Awaited<ReturnType<typeof createContext>>;
 
+type UserData = {
+  id: string;
+  role: 'user' | 'agency' | 'admin';
+  full_name: string;
+  avatar_url: string | null;
+};
+
+type AuthContext = Context & {
+  userId: string;
+  user: UserData;
+};
+
 const t = initTRPC.context<Context>().create();
 
 export const router = t.router;
@@ -45,7 +57,7 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
     ctx: {
       ...opts.ctx,
       userId: user.id,
-      user: userData,
-    },
+      user: userData as UserData,
+    } satisfies AuthContext,
   });
 });

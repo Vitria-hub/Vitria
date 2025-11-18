@@ -56,7 +56,9 @@ export async function signInWithGoogle(options?: {
   const safeRole = allowedRoles.includes(role) ? role : 'user';
 
   if (typeof window !== 'undefined') {
-    document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Lax`;
+    const isSecure = window.location.protocol === 'https:';
+    const secureFlag = isSecure ? '; Secure' : '';
+    document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Strict${secureFlag}`;
   }
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_SITE_URL;

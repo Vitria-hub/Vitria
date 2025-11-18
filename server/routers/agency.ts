@@ -104,11 +104,9 @@ export const agencyRouter = router({
         });
       }
 
-      const agency: any = data;
-
-      if (agency.is_premium && agency.premium_until) {
+      if (data.is_premium && data.premium_until) {
         const now = new Date();
-        const premiumUntil = new Date(agency.premium_until);
+        const premiumUntil = new Date(data.premium_until);
         
         if (premiumUntil < now) {
           await db
@@ -116,17 +114,17 @@ export const agencyRouter = router({
             .update({
               is_premium: false,
               updated_at: now.toISOString(),
-            } as any)
-            .eq('id', agency.id);
+            })
+            .eq('id', data.id);
 
           return {
-            ...agency,
+            ...data,
             is_premium: false,
           };
         }
       }
 
-      return agency;
+      return data;
     }),
 
   myAgency: protectedProcedure
@@ -189,7 +187,7 @@ export const agencyRouter = router({
       }
 
       try {
-        const insertData: any = {
+        const insertData = {
             name: input.name,
             slug,
             logo_url: input.logo_url || null,
@@ -201,16 +199,13 @@ export const agencyRouter = router({
             location_region: input.region || null,
             services: input.services || [],
             categories: input.categories || [],
+            specialties: input.specialties || [],
             employees_min: input.employeesMin || null,
             employees_max: input.employeesMax || null,
             price_range: input.priceRange || null,
             owner_id: userData.id,
-            approval_status: 'pending',
+            approval_status: 'pending' as const,
         };
-
-        if (input.specialties && input.specialties.length > 0) {
-          insertData.specialties = input.specialties;
-        }
 
         const { data, error } = await db
           .from('agencies')
@@ -291,7 +286,7 @@ export const agencyRouter = router({
       }
 
       try {
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
 
         if (typeof input.name !== 'undefined') updateData.name = input.name;
         if (typeof input.logo_url !== 'undefined') updateData.logo_url = input.logo_url || null;
