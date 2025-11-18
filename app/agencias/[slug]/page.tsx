@@ -135,7 +135,7 @@ export default function AgencyDetailPage() {
                 )}
               </div>
 
-              {(agency.email || agency.phone || agency.website) && (
+              {agency.is_premium && (agency.email || agency.phone || agency.website) && (
                 <div className="mt-4">
                   <button
                     onClick={() => setShowDirectContact(!showDirectContact)}
