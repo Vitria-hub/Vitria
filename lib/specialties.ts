@@ -105,3 +105,20 @@ export const SPECIALTY_CATEGORIES: SpecialtyCategory[] = [
 ];
 
 export const ALL_SPECIALTIES = SPECIALTY_CATEGORIES.flatMap(cat => cat.specialties);
+
+export function normalizeSpecialties(specialties: string[]): string[] {
+  if (!specialties || specialties.length === 0) return [];
+
+  const categoryLabels = new Set<string>();
+
+  for (const specialty of specialties) {
+    const category = SPECIALTY_CATEGORIES.find(cat =>
+      cat.specialties.includes(specialty)
+    );
+    if (category) {
+      categoryLabels.add(category.label);
+    }
+  }
+
+  return Array.from(categoryLabels);
+}
