@@ -6,7 +6,7 @@ import RatingStars from '@/components/RatingStars';
 import PortfolioGrid from '@/components/PortfolioGrid';
 import ReviewForm from '@/components/ReviewForm';
 import Button from '@/components/Button';
-import ContactAgencyModal from '@/components/ContactAgencyModal';
+import QuoteRequestModal from '@/components/QuoteRequestModal';
 import AgencyLogo from '@/components/AgencyLogo';
 import { MapPin, Globe, Mail, Phone, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -164,14 +164,13 @@ export default function AgencyDetailPage() {
 
               <div className="mt-6">
                 <Button onClick={handleContactClick} variant="accent" size="lg">
-                  Contactar Agencia
+                  Solicitar Cotización
                 </Button>
               </div>
 
-              <ContactAgencyModal
+              <QuoteRequestModal
                 agencyId={agency.id}
                 agencyName={agency.name}
-                agencyEmail={agency.email}
                 isOpen={showContactForm}
                 onClose={() => setShowContactForm(false)}
               />
