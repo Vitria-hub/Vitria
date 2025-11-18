@@ -41,6 +41,9 @@ export default function QuoteRequestModal({
         resetForm();
       }, 4000);
     },
+    onError: (error) => {
+      console.error('Error submitting quote:', error);
+    },
   });
 
   const resetForm = () => {
@@ -241,9 +244,14 @@ export default function QuoteRequestModal({
           {submitQuoteMutation.error && (
             <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-4">
               <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800">
-                {submitQuoteMutation.error.message}
-              </p>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-red-800 mb-1">
+                  Error al enviar solicitud
+                </p>
+                <p className="text-sm text-red-700">
+                  {submitQuoteMutation.error.message || 'No se pudo enviar tu solicitud de cotización. Por favor verifica los datos e intenta nuevamente.'}
+                </p>
+              </div>
             </div>
           )}
 

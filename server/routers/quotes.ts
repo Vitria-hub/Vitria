@@ -39,6 +39,17 @@ export const quotesRouter = router({
         throw new Error('Agency not found');
       }
 
+      let agencyEmail = agency.email;
+      
+      if (!agencyEmail) {
+        const { data: owner } = await supabaseAdmin.auth.admin.getUserById(agency.owner_id);
+        agencyEmail = owner?.email || null;
+        
+        if (!agencyEmail) {
+          throw new Error('Cannot send quote: agency has no email and owner has no email');
+        }
+      }
+
       const { data: quote, error: quoteError } = await supabaseAdmin
         .from('quote_requests')
         .insert({
@@ -64,7 +75,7 @@ export const quotesRouter = router({
       try {
         await sendQuoteNotificationToAgency({
           agencyName: agency.name,
-          agencyEmail: agency.email || '',
+          agencyEmail: agencyEmail,
           clientName,
           clientEmail,
           clientPhone: clientPhone || '',
