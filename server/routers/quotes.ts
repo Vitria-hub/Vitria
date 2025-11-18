@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { sendQuoteNotificationToAgency, sendQuoteConfirmationToClient } from '@/lib/email';
+import { sendQuoteNotificationToAgency, sendQuoteConfirmationToClient, sendQuoteNotificationToAdmin } from '@/lib/email';
 
 export const quotesRouter = router({
   submitQuote: publicProcedure
@@ -73,25 +73,38 @@ export const quotesRouter = router({
       }
 
       try {
-        await sendQuoteNotificationToAgency({
-          agencyName: agency.name,
-          agencyEmail: agencyEmail,
-          clientName,
-          clientEmail,
-          clientPhone: clientPhone || '',
-          projectName,
-          projectDescription,
-          budgetRange: budgetRange || 'No especificado',
-          serviceCategory: serviceCategory || 'No especificado',
-          quoteId: quote.id,
-        });
-
-        await sendQuoteConfirmationToClient({
-          clientName,
-          clientEmail,
-          agencyName: agency.name,
-          projectName,
-        });
+        await Promise.all([
+          sendQuoteNotificationToAgency({
+            agencyName: agency.name,
+            agencyEmail: agencyEmail,
+            clientName,
+            clientEmail,
+            clientPhone: clientPhone || '',
+            projectName,
+            projectDescription,
+            budgetRange: budgetRange || 'No especificado',
+            serviceCategory: serviceCategory || 'No especificado',
+            quoteId: quote.id,
+          }),
+          sendQuoteConfirmationToClient({
+            clientName,
+            clientEmail,
+            agencyName: agency.name,
+            projectName,
+          }),
+          sendQuoteNotificationToAdmin({
+            clientName,
+            clientEmail,
+            clientPhone: clientPhone || undefined,
+            projectName,
+            projectDescription,
+            budgetRange: budgetRange || undefined,
+            serviceCategory: serviceCategory || undefined,
+            agencyName: agency.name,
+            agencyId,
+            quoteId: quote.id,
+          }),
+        ]);
       } catch (emailError) {
         console.error('Error sending quote emails:', emailError);
       }

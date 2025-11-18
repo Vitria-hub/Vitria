@@ -970,3 +970,138 @@ export async function sendQuoteConfirmationToClient(data: QuoteConfirmationData)
     throw error;
   }
 }
+
+interface AdminQuoteNotificationData {
+  clientName: string;
+  clientEmail: string;
+  clientPhone?: string;
+  projectName: string;
+  projectDescription: string;
+  budgetRange?: string;
+  serviceCategory?: string;
+  agencyName: string;
+  agencyId: string;
+  quoteId: string;
+}
+
+export async function sendQuoteNotificationToAdmin(data: AdminQuoteNotificationData) {
+  const baseUrl = getBaseUrl();
+  const adminQuoteUrl = `${baseUrl}/admin/cotizaciones`;
+
+  try {
+    await brevoApi.sendTransacEmail({
+      sender: {
+        name: "Vitria Platform",
+        email: "noreply@vitria.cl"
+      },
+      to: [{
+        email: getAdminEmail(),
+        name: "Equipo Vitria"
+      }],
+      subject: `📊 Nueva cotización - ${data.clientName} → ${data.agencyName}`,
+      htmlContent: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #1B5568; color: white; padding: 20px; text-align: center; }
+            .content { background-color: #f9f9f9; padding: 20px; }
+            .info-box { background-color: white; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #F5D35E; }
+            .info-row { margin: 10px 0; }
+            .label { font-weight: bold; color: #1B5568; display: inline-block; min-width: 120px; }
+            .button { display: inline-block; padding: 12px 25px; background-color: #1B5568; color: white !important; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 0; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📊 Nueva Solicitud de Cotización</h1>
+            </div>
+            <div class="content">
+              <p>Se ha generado una nueva solicitud de cotización en la plataforma:</p>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">Información del Cliente</h3>
+                
+                <div class="info-row">
+                  <span class="label">Nombre:</span> ${data.clientName}
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Email:</span> <a href="mailto:${data.clientEmail}">${data.clientEmail}</a>
+                </div>
+                
+                ${data.clientPhone ? `
+                <div class="info-row">
+                  <span class="label">Teléfono:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
+                </div>
+                ` : ''}
+              </div>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">Detalles del Proyecto</h3>
+                
+                <div class="info-row">
+                  <span class="label">Proyecto:</span> <strong>${data.projectName}</strong>
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">Descripción:</span>
+                  <p style="margin: 8px 0; padding: 12px; background-color: #f9f9f9; border-radius: 4px; border-left: 3px solid #1B5568;">${data.projectDescription}</p>
+                </div>
+                
+                ${data.budgetRange ? `
+                <div class="info-row">
+                  <span class="label">Presupuesto:</span> ${data.budgetRange}
+                </div>
+                ` : ''}
+                
+                ${data.serviceCategory ? `
+                <div class="info-row">
+                  <span class="label">Categoría:</span> ${data.serviceCategory}
+                </div>
+                ` : ''}
+              </div>
+              
+              <div class="info-box">
+                <h3 style="color: #1B5568; margin-top: 0;">Agencia Seleccionada</h3>
+                
+                <div class="info-row">
+                  <span class="label">Agencia:</span> <strong>${data.agencyName}</strong>
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">ID Agencia:</span> <code style="background-color: #f3f4f6; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${data.agencyId}</code>
+                </div>
+                
+                <div class="info-row">
+                  <span class="label">ID Cotización:</span> <code style="background-color: #f3f4f6; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${data.quoteId}</code>
+                </div>
+              </div>
+              
+              <div style="text-align: center; margin-top: 25px;">
+                <a href="${adminQuoteUrl}" class="button">Ver en Panel de Admin</a>
+              </div>
+              
+              <p style="text-align: center; color: #666; font-size: 13px; margin-top: 20px;">
+                Esta cotización también ha sido enviada a la agencia
+              </p>
+            </div>
+            <div class="footer">
+              <p>Notificación automática de Vitria Platform</p>
+              <p style="margin-top: 5px; color: #999;">Generada el ${new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+  } catch (error) {
+    console.error('Error sending quote notification to admin:', error);
+    throw error;
+  }
+}
