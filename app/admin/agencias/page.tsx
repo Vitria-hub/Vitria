@@ -182,7 +182,8 @@ export default function AdminAgenciesPage() {
                         </td>
                         <td className="px-6 py-4">
                           {(() => {
-                            const health = calculateProfileHealth({ ...agency, portfolio_count: 0 });
+                            const portfolioCount = (agency.portfolio_items as any)?.[0]?.count || 0;
+                            const health = calculateProfileHealth({ ...agency, portfolio_count: portfolioCount });
                             const emoji = getHealthEmoji(health.score);
                             const colorClass = health.score >= 80 ? 'text-green-600' : health.score >= 50 ? 'text-yellow-600' : 'text-red-600';
                             return (

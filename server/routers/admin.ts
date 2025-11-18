@@ -79,7 +79,8 @@ export const adminRouter = router({
         approved_at,
         rejection_reason,
         created_at,
-        users!agencies_owner_id_fkey(full_name, role)
+        users!agencies_owner_id_fkey(full_name, role),
+        portfolio_items(count)
       `, { count: 'exact' });
 
       if (status === 'pending') {
