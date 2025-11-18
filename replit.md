@@ -40,6 +40,10 @@ Premium agency status, indicated by a gold badge, is manually managed by adminis
 
 A comprehensive admin panel allows administrators to fully manage all aspects of agency profiles, including basic information, contact details, location, categories, services, images, team size, pricing, technical specialties, and social media links.
 
+## Profile Health System
+
+An automated profile optimization system helps agencies improve their listing quality through a 0-100% health score. The score is calculated based on 9 weighted completion factors: logo (15%), cover image (10%), description length (15%), social media links (5%), specialties (10%), portfolio items with 3+ threshold (15%), team size (10%), price range (10%), and combined categories/services (10%). The system provides two interfaces: (1) a `ProfileHealthWidget` on the agency analytics dashboard (`/mi-agencia/analytics`) showing a progress bar, completion checklist, and optimization suggestions, and (2) a "Salud" column in the admin panel (`/admin/agencias`) displaying emoji indicators (🟢 ≥80%, 🟡 60-79%, 🟠 40-59%, 🔴 <40%), percentage scores, and missing item counts to help administrators identify agencies needing profile assistance.
+
 # External Dependencies
 
 ## Core Infrastructure
