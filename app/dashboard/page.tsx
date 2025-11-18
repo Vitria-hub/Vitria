@@ -375,15 +375,6 @@ function DashboardContent() {
           </div>
         )}
 
-        {agencyError && !isAdmin && (
-          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
-            <p className="text-yellow-800 font-semibold mb-2">Error al cargar información de agencia</p>
-            <p className="text-yellow-700 text-sm">
-              Hubo un problema al verificar si tienes una agencia. Por favor, recarga la página.
-            </p>
-          </div>
-        )}
-
         {showAgencyCTA && (
           <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
             <div className="flex items-center gap-4">
@@ -451,15 +442,6 @@ function DashboardContent() {
                 </p>
               </div>
             </div>
-          </div>
-        )}
-
-        {clientProfileError && !isAdmin && (
-          <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
-            <p className="text-yellow-800 font-semibold mb-2">Error al cargar perfil de cliente</p>
-            <p className="text-yellow-700 text-sm">
-              Hubo un problema al verificar tu perfil de cliente. Por favor, recarga la página.
-            </p>
           </div>
         )}
 
