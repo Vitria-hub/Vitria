@@ -34,7 +34,7 @@ A comprehensive analytics system tracks agency profile views, contact clicks, se
 
 ## Premium Management
 
-Premium agency status, indicated by a gold badge, is manually managed by administrators through an admin panel, allowing activation, deactivation, and expiration date setting.
+Premium agency status, indicated by a gold badge, is manually managed by administrators through an admin panel, allowing activation, deactivation, and expiration date setting. Premium agencies receive exclusive benefits including the ability to display direct contact information (email, phone, website) on their profile pages via a "Ver más formas de contacto" toggle. Non-premium agencies can only receive leads through the platform's quote request system, ensuring all interactions are tracked and measured for analytics purposes.
 
 ## Admin Control System
 
