@@ -80,7 +80,7 @@ export default function Home() {
   const benefits = [
     {
       value: "100%",
-      label: "Gratuito para Clientes",
+      label: "Gratis para Clientes y Agencias",
       description: "Sin costos ocultos ni comisiones",
       icon: Award,
       color: "text-mint"
