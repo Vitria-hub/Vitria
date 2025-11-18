@@ -176,6 +176,29 @@ export const analyticsRouter = router({
         .select('*', { count: 'exact', head: true })
         .gte('created_at', startDateISO);
 
+      const { count: totalQuotes } = await supabaseAdmin
+        .from('quote_requests')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', startDateISO);
+
+      const { count: contactedQuotes } = await supabaseAdmin
+        .from('quote_requests')
+        .select('*', { count: 'exact', head: true })
+        .in('status', ['contacted', 'won'])
+        .gte('created_at', startDateISO);
+
+      const { count: wonQuotes } = await supabaseAdmin
+        .from('quote_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'won')
+        .gte('created_at', startDateISO);
+
+      const { count: totalViews } = await supabaseAdmin
+        .from('interaction_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('interaction_type', 'view')
+        .gte('created_at', startDateISO);
+
       return {
         totalUsers: totalUsers || 0,
         totalAgencies: totalAgencies || 0,
@@ -183,6 +206,10 @@ export const analyticsRouter = router({
         totalReviews: totalReviews || 0,
         totalSearches: totalSearches || 0,
         totalContacts: totalContacts || 0,
+        totalViews: totalViews || 0,
+        totalQuotes: totalQuotes || 0,
+        contactedQuotes: contactedQuotes || 0,
+        wonQuotes: wonQuotes || 0,
         newUsers: newUsers || 0,
         newAgencies: newAgencies || 0,
       };
@@ -232,10 +259,32 @@ export const analyticsRouter = router({
       });
 
       contactStats?.forEach((row: any) => {
-        const existing = statsMap.get(row.agency_id) || { agencyId: row.agency_id, views: 0, contacts: 0 };
+        const existing = statsMap.get(row.agency_id) || { agencyId: row.agency_id, views: 0, contacts: 0, quotes: 0, wonQuotes: 0 };
         existing.contacts = row.contact_count || 0;
         statsMap.set(row.agency_id, existing);
       });
+
+      const { data: quoteStats, error: quoteError } = await supabaseAdmin
+        .from('quote_requests')
+        .select('agency_id, status')
+        .gte('created_at', startDateISO);
+
+      if (!quoteError && quoteStats) {
+        quoteStats.forEach((row: any) => {
+          const existing = statsMap.get(row.agency_id) || { 
+            agencyId: row.agency_id, 
+            views: 0, 
+            contacts: 0, 
+            quotes: 0, 
+            wonQuotes: 0 
+          };
+          existing.quotes = (existing.quotes || 0) + 1;
+          if (row.status === 'won') {
+            existing.wonQuotes = (existing.wonQuotes || 0) + 1;
+          }
+          statsMap.set(row.agency_id, existing);
+        });
+      }
 
       const agencyIds = Array.from(statsMap.keys());
       if (agencyIds.length === 0) return [];
@@ -251,8 +300,9 @@ export const analyticsRouter = router({
       }
 
       const ranking = agencies.map((agency) => {
-        const stats = statsMap.get(agency.id) || { views: 0, contacts: 0 };
+        const stats = statsMap.get(agency.id) || { views: 0, contacts: 0, quotes: 0, wonQuotes: 0 };
         const ctr = stats.views > 0 ? (stats.contacts / stats.views) * 100 : 0;
+        const conversionRate = stats.quotes > 0 ? (stats.wonQuotes / stats.quotes) * 100 : 0;
         
         return {
           id: agency.id,
@@ -261,7 +311,10 @@ export const analyticsRouter = router({
           logoUrl: agency.logo_url,
           views: stats.views,
           contacts: stats.contacts,
+          quotes: stats.quotes || 0,
+          wonQuotes: stats.wonQuotes || 0,
           ctr: parseFloat(ctr.toFixed(2)),
+          conversionRate: parseFloat(conversionRate.toFixed(2)),
           avgRating: agency.avg_rating,
           reviewsCount: agency.reviews_count,
           isPremium: agency.is_premium,
