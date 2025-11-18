@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
-import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban, Star } from 'lucide-react';
+import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Crown, Eye, Clock, Ban, Star, Pencil } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
@@ -222,6 +222,13 @@ export default function AdminAgenciesPage() {
                             >
                               <Eye className="w-5 h-5 text-blue-600" />
                             </button>
+                            <Link
+                              href={`/admin/agencias/${agency.id}/editar`}
+                              className="p-2 hover:bg-primary/10 rounded-lg transition"
+                              title="Editar agencia"
+                            >
+                              <Pencil className="w-5 h-5 text-primary" />
+                            </Link>
                             {agency.approval_status === 'pending' && (
                               <>
                                 <button
