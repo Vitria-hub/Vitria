@@ -43,9 +43,12 @@ export default function EditAgencyPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const { data: agency, isLoading } = trpc.admin.getAgency.useQuery(
+  const { data: agency, isLoading, error: queryError } = trpc.admin.getAgency.useQuery(
     { agencyId },
-    { enabled: userData?.role === 'admin' }
+    { 
+      enabled: !!userData && userData.role === 'admin',
+      retry: false
+    }
   );
 
   const updateMutation = trpc.admin.updateAgency.useMutation({
@@ -134,12 +137,15 @@ export default function EditAgencyPage() {
     );
   }
 
-  if (!agency) {
+  if (queryError || (!isLoading && !agency)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-dark mb-2">Agencia no encontrada</h1>
+          {queryError && (
+            <p className="text-dark/60 mb-4">{queryError.message}</p>
+          )}
           <Button variant="primary" onClick={() => router.push('/admin/agencias')}>
             Volver al panel
           </Button>
