@@ -63,30 +63,35 @@ export default function EditAgencyPage() {
 
   useEffect(() => {
     if (agency) {
-      setFormData({
-        name: agency.name || '',
-        slug: agency.slug || '',
-        description: agency.description || '',
-        email: agency.email || '',
-        phone: agency.phone || '',
-        website: agency.website || '',
-        location_city: agency.location_city || '',
-        location_region: agency.location_region || '',
-        categories: agency.categories || [],
-        services: agency.services || [],
-        logo_url: agency.logo_url || '',
-        cover_url: agency.cover_url || '',
-        employees_min: agency.employees_min ?? null,
-        employees_max: agency.employees_max ?? null,
-        price_range: agency.price_range || '',
-        specialties: agency.specialties || [],
-        facebook_url: agency.facebook_url || '',
-        instagram_url: agency.instagram_url || '',
-        linkedin_url: agency.linkedin_url || '',
-        twitter_url: agency.twitter_url || '',
-        youtube_url: agency.youtube_url || '',
-        tiktok_url: agency.tiktok_url || '',
-      });
+      try {
+        setFormData({
+          name: agency.name || '',
+          slug: agency.slug || '',
+          description: agency.description || '',
+          email: agency.email || '',
+          phone: agency.phone || '',
+          website: agency.website || '',
+          location_city: agency.location_city || '',
+          location_region: agency.location_region || '',
+          categories: Array.isArray(agency.categories) ? agency.categories : [],
+          services: Array.isArray(agency.services) ? agency.services : [],
+          logo_url: agency.logo_url || '',
+          cover_url: agency.cover_url || '',
+          employees_min: agency.employees_min ?? null,
+          employees_max: agency.employees_max ?? null,
+          price_range: agency.price_range || '',
+          specialties: Array.isArray(agency.specialties) ? agency.specialties : [],
+          facebook_url: agency.facebook_url || '',
+          instagram_url: agency.instagram_url || '',
+          linkedin_url: agency.linkedin_url || '',
+          twitter_url: agency.twitter_url || '',
+          youtube_url: agency.youtube_url || '',
+          tiktok_url: agency.tiktok_url || '',
+        });
+      } catch (err) {
+        console.error('Error setting form data:', err);
+        setError('Error al cargar los datos de la agencia');
+      }
     }
   }, [agency]);
 
