@@ -57,11 +57,24 @@ function AgenciasContent() {
   }, [data, filters, trackSearch]);
 
   const handleFilterChange = (newFilters: any) => {
-    const processedFilters = { ...newFilters };
-    if (processedFilters.priceRange === '') {
-      processedFilters.priceRange = undefined;
-    }
-    setFilters((prev: any) => ({ ...prev, ...processedFilters, page: 1 }));
+    setFilters((prev: any) => {
+      const processedFilters = { ...newFilters };
+      if (processedFilters.priceRange === '') {
+        processedFilters.priceRange = undefined;
+      }
+      
+      const merged = { ...prev, ...processedFilters, page: 1 };
+      
+      const hasChanges = Object.keys(processedFilters).some(
+        key => prev[key] !== processedFilters[key]
+      );
+      
+      if (!hasChanges) {
+        return prev;
+      }
+      
+      return merged;
+    });
   };
 
   const handlePageChange = (newPage: number) => {
@@ -75,7 +88,7 @@ function AgenciasContent() {
 
       <FilterBar onFilterChange={handleFilterChange} currentFilters={filters} />
 
-      {isLoading || isFetching ? (
+      {isLoading && !data ? (
         <div className="py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
