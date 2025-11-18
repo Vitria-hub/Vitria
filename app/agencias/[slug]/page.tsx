@@ -17,6 +17,7 @@ export default function AgencyDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const [showContactForm, setShowContactForm] = useState(false);
+  const [showDirectContact, setShowDirectContact] = useState(false);
 
   const { data: agencyData, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
   const agency = agencyData as any;
@@ -106,6 +107,15 @@ export default function AgencyDetailPage() {
                 </div>
               </div>
 
+              <div className="mt-6">
+                <Button onClick={handleContactClick} variant="accent" size="lg" className="w-full md:w-auto">
+                  💬 Solicitar Cotización Gratis
+                </Button>
+                <p className="text-sm text-dark/60 mt-2">
+                  Recibe una propuesta personalizada sin compromiso
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-dark/70">
                 {agency.location_city && (
                   <div className="flex items-center gap-2">
@@ -113,43 +123,6 @@ export default function AgencyDetailPage() {
                     <span>
                       {agency.location_city}, {agency.location_region}
                     </span>
-                  </div>
-                )}
-                {agency.website && (
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-5 h-5" />
-                    <a 
-                      href={agency.website} 
-                      target="_blank" 
-                      onClick={handleWebsiteClick}
-                      className="hover:text-primary"
-                    >
-                      {agency.website}
-                    </a>
-                  </div>
-                )}
-                {agency.email && (
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-5 h-5" />
-                    <a 
-                      href={`mailto:${agency.email}`} 
-                      onClick={handleEmailClick}
-                      className="hover:text-primary"
-                    >
-                      {agency.email}
-                    </a>
-                  </div>
-                )}
-                {agency.phone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-5 h-5" />
-                    <a 
-                      href={`tel:${agency.phone}`}
-                      onClick={handlePhoneClick}
-                      className="hover:text-primary cursor-pointer"
-                    >
-                      {agency.phone}
-                    </a>
                   </div>
                 )}
                 {agency.employees_min && agency.employees_max && (
@@ -162,11 +135,58 @@ export default function AgencyDetailPage() {
                 )}
               </div>
 
-              <div className="mt-6">
-                <Button onClick={handleContactClick} variant="accent" size="lg">
-                  Solicitar Cotización
-                </Button>
-              </div>
+              {(agency.email || agency.phone || agency.website) && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => setShowDirectContact(!showDirectContact)}
+                    className="text-sm text-primary hover:underline font-semibold"
+                  >
+                    {showDirectContact ? '▼ Ocultar' : '▶'} Ver más formas de contacto
+                  </button>
+
+                  {showDirectContact && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      {agency.email && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-5 h-5" />
+                          <a 
+                            href={`mailto:${agency.email}`} 
+                            onClick={handleEmailClick}
+                            className="hover:text-primary"
+                          >
+                            {agency.email}
+                          </a>
+                        </div>
+                      )}
+                      {agency.phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-5 h-5" />
+                          <a 
+                            href={`tel:${agency.phone}`}
+                            onClick={handlePhoneClick}
+                            className="hover:text-primary cursor-pointer"
+                          >
+                            {agency.phone}
+                          </a>
+                        </div>
+                      )}
+                      {agency.website && (
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-5 h-5" />
+                          <a 
+                            href={agency.website} 
+                            target="_blank" 
+                            onClick={handleWebsiteClick}
+                            className="hover:text-primary"
+                          >
+                            {agency.website}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <QuoteRequestModal
                 agencyId={agency.id}

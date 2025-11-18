@@ -77,28 +77,32 @@ export default function Home() {
     }
   ];
 
-  const stats = [
+  const benefits = [
     {
-      value: "500+",
-      label: "Agencias Verificadas",
+      value: "100%",
+      label: "Gratuito para Clientes",
+      description: "Sin costos ocultos ni comisiones",
       icon: Award,
       color: "text-mint"
     },
     {
-      value: "10,000+",
-      label: "Proyectos Completados",
+      value: "Directo",
+      label: "Conexión Inmediata",
+      description: "Sin intermediarios, habla con la agencia",
       icon: Rocket,
       color: "text-accent"
     },
     {
-      value: "95%",
-      label: "Satisfacción de Clientes",
+      value: "Verificadas",
+      label: "Reseñas Reales",
+      description: "Opiniones auténticas de clientes",
       icon: Star,
       color: "text-secondary"
     },
     {
-      value: "4.8/5",
-      label: "Calificación Promedio",
+      value: "Completo",
+      label: "Todo en un Lugar",
+      description: "Compara, evalúa y contacta fácil",
       icon: BarChart3,
       color: "text-lilac"
     }
@@ -152,16 +156,19 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
+            {benefits.map((benefit, index) => {
+              const Icon = benefit.icon;
               return (
                 <div key={index} className="text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
-                  <Icon className={`w-12 h-12 mx-auto mb-4 ${stat.color}`} />
-                  <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                    {stat.value}
+                  <Icon className={`w-12 h-12 mx-auto mb-4 ${benefit.color}`} />
+                  <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
+                    {benefit.value}
                   </div>
-                  <div className="text-sm font-semibold text-dark/70">
-                    {stat.label}
+                  <div className="text-base font-semibold text-dark mb-2">
+                    {benefit.label}
+                  </div>
+                  <div className="text-sm text-dark/60">
+                    {benefit.description}
                   </div>
                 </div>
               );
