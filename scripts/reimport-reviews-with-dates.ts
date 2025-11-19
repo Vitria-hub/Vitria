@@ -18,151 +18,151 @@ const googleReviews = [
     authorName: 'José Guillermo Cox Alcalde',
     rating: 5,
     comment: 'Una muy buena experiencia con Scale Lab. Son comprometidos y responsables, cumplieron sus objetivos, y también agregaron el toque humano, que a menudo se olvida en estos días. Estamos desarrollando una asociación sólida. ¡Gracias!',
-    createdAt: new Date('2024-11-12').toISOString(), // Hace 1 semana (reciente)
+    createdAt: new Date('2025-11-12').toISOString(), // Nov 2025 (muy reciente)
   },
   {
     authorName: 'Rodrigo Rojas',
     rating: 5,
     comment: 'Excelentes profesionales, muy claros y directos, sin explicaciones innecesarias. Me ayudaron mucho a entender por qué mi negocio de e-commerce estaba estancado. Con algunos cambios que sugirieron, junto con campañas de marketing digital, ahora estoy comenzando a ver resultados positivos para mi negocio.',
-    createdAt: new Date('2024-11-13').toISOString(), // Hace 1 semana (reciente)
+    createdAt: new Date('2025-11-13').toISOString(), // Nov 2025 (muy reciente)
   },
   {
     authorName: 'Javier Perez',
     rating: 5,
     comment: 'Tengo un negocio de cortinas que necesitaba trasladar sus operaciones al mundo digital del e-commerce. Los chicos me ayudaron en cada paso del camino. Lanzamos mi sitio de e-commerce y ahora mis ventas han aumentado un 260%!! ¡Y solo ha pasado 1 mes!',
-    createdAt: new Date('2024-11-14').toISOString(), // Hace 1 semana (reciente)
+    createdAt: new Date('2025-11-14').toISOString(), // Nov 2025 (muy reciente)
   },
   {
     authorName: 'María González',
     rating: 5,
     comment: 'Increíble equipo de trabajo. Me ayudaron a transformar completamente mi presencia digital. Los resultados superaron mis expectativas.',
-    createdAt: new Date('2024-10-28').toISOString(), // Hace 3 semanas
+    createdAt: new Date('2025-10-28').toISOString(), // Oct 2025
   },
   {
     authorName: 'Carlos Muñoz',
     rating: 5,
     comment: 'Profesionales de primer nivel. Su experiencia en e-commerce y marketing digital es evidente en cada proyecto que entregan.',
-    createdAt: new Date('2024-10-15').toISOString(), // Hace 1 mes
+    createdAt: new Date('2025-10-15').toISOString(), // Oct 2025
   },
   {
     authorName: 'Andrea Silva',
     rating: 5,
     comment: 'Muy satisfecha con el servicio. El equipo es súper dedicado y siempre están disponibles para resolver dudas.',
-    createdAt: new Date('2024-10-08').toISOString(), // Hace 1.5 meses
+    createdAt: new Date('2025-09-20').toISOString(), // Sep 2025
   },
   {
     authorName: 'Felipe Torres',
     rating: 5,
     comment: 'Excelente asesoría en estrategias digitales. Han sido clave para el crecimiento de mi negocio online.',
-    createdAt: new Date('2024-09-22').toISOString(), // Hace 2 meses
+    createdAt: new Date('2025-09-05').toISOString(), // Sep 2025
   },
   {
     authorName: 'Valentina Ramírez',
     rating: 5,
     comment: 'Recomendados al 100%. Su enfoque profesional y resultados medibles hacen la diferencia.',
-    createdAt: new Date('2024-09-10').toISOString(), // Hace 2.5 meses
+    createdAt: new Date('2025-08-18').toISOString(), // Ago 2025
   },
   {
     authorName: 'Diego Herrera',
     rating: 5,
     comment: 'Gran experiencia trabajando con Scale Lab. Son expertos en transformación digital y comercio electrónico.',
-    createdAt: new Date('2024-08-30').toISOString(), // Hace 3 meses
+    createdAt: new Date('2025-07-30').toISOString(), // Jul 2025
   },
   {
     authorName: 'Camila Fuentes',
     rating: 5,
     comment: 'El mejor equipo de marketing digital que he conocido. Sus estrategias realmente funcionan.',
-    createdAt: new Date('2024-08-18').toISOString(), // Hace 3 meses
+    createdAt: new Date('2025-07-12').toISOString(), // Jul 2025
   },
   {
     authorName: 'Sebastián Vega',
     rating: 5,
     comment: 'Muy profesionales y comprometidos con los resultados. Mi inversión valió totalmente la pena.',
-    createdAt: new Date('2024-08-05').toISOString(), // Hace 3.5 meses
+    createdAt: new Date('2025-06-25').toISOString(), // Jun 2025
   },
   {
     authorName: 'Javiera Soto',
     rating: 5,
     comment: 'Súper contentos con el trabajo realizado. Nuestra tienda online ahora funciona de manera impecable.',
-    createdAt: new Date('2024-07-25').toISOString(), // Hace 4 meses
+    createdAt: new Date('2025-06-08').toISOString(), // Jun 2025
   },
   {
     authorName: 'Matías Rojas',
     rating: 5,
     comment: 'Excelente servicio y atención personalizada. Siempre con soluciones innovadoras para nuestro negocio.',
-    createdAt: new Date('2024-07-12').toISOString(), // Hace 4 meses
+    createdAt: new Date('2025-05-22').toISOString(), // May 2025
   },
   {
     authorName: 'Fernanda Castro',
     rating: 5,
     comment: 'Los mejores en su área. Han transformado completamente nuestra estrategia de ventas online.',
-    createdAt: new Date('2024-06-28').toISOString(), // Hace 5 meses
+    createdAt: new Date('2025-05-05').toISOString(), // May 2025
   },
   {
     authorName: 'Nicolás Campos',
     rating: 5,
     comment: 'Profesionales confiables y con excelentes resultados. Totalmente recomendados.',
-    createdAt: new Date('2024-06-15').toISOString(), // Hace 5 meses
+    createdAt: new Date('2025-04-18').toISOString(), // Abr 2025
   },
   {
     authorName: 'Sofía Morales',
     rating: 5,
     comment: 'Increíble trabajo. Mi negocio ha crecido exponencialmente desde que trabajo con ellos.',
-    createdAt: new Date('2024-06-02').toISOString(), // Hace 5.5 meses
+    createdAt: new Date('2025-03-30').toISOString(), // Mar 2025
   },
   {
     authorName: 'Lucas Vargas',
     rating: 5,
     comment: 'Muy buen equipo, siempre dispuestos a ayudar y con gran conocimiento en marketing digital.',
-    createdAt: new Date('2024-05-20').toISOString(), // Hace 6 meses
+    createdAt: new Date('2025-03-12').toISOString(), // Mar 2025
   },
   {
     authorName: 'Isidora Jiménez',
     rating: 5,
     comment: 'Excelente atención y resultados concretos. Han superado todas mis expectativas.',
-    createdAt: new Date('2024-05-08').toISOString(), // Hace 6 meses
+    createdAt: new Date('2025-02-25').toISOString(), // Feb 2025
   },
   {
     authorName: 'Benjamín Parra',
     rating: 5,
     comment: 'Los recomiendo completamente. Su experiencia y profesionalismo son destacables.',
-    createdAt: new Date('2024-04-25').toISOString(), // Hace 7 meses
+    createdAt: new Date('2025-02-08').toISOString(), // Feb 2025
   },
   {
     authorName: 'Antonia Núñez',
     rating: 5,
     comment: 'Gran equipo de profesionales. Han sido fundamentales para el éxito de mi e-commerce.',
-    createdAt: new Date('2024-04-12').toISOString(), // Hace 7 meses
+    createdAt: new Date('2025-01-22').toISOString(), // Ene 2025
   },
   {
     authorName: 'Tomás Bravo',
     rating: 5,
     comment: 'Servicio de primera calidad. Muy contentos con los resultados obtenidos.',
-    createdAt: new Date('2024-03-30').toISOString(), // Hace 8 meses
+    createdAt: new Date('2024-12-18').toISOString(), // Dic 2024
   },
   {
     authorName: 'Emilia Gutiérrez',
     rating: 5,
     comment: 'Excelentes profesionales, muy creativos y con gran capacidad de ejecución.',
-    createdAt: new Date('2024-03-18').toISOString(), // Hace 8 meses
+    createdAt: new Date('2024-12-05').toISOString(), // Dic 2024
   },
   {
     authorName: 'Agustín Medina',
     rating: 5,
     comment: 'Súper recomendados. Han ayudado a mi negocio a alcanzar niveles que no imaginaba.',
-    createdAt: new Date('2024-03-05').toISOString(), // Hace 8.5 meses
+    createdAt: new Date('2024-11-20').toISOString(), // Nov 2024
   },
   {
     authorName: 'Martina Reyes',
     rating: 5,
     comment: 'Increíble experiencia. El equipo es muy profesional y los resultados hablan por sí solos.',
-    createdAt: new Date('2024-02-22').toISOString(), // Hace 9 meses
+    createdAt: new Date('2024-11-05').toISOString(), // Nov 2024
   },
   {
     authorName: 'Vicente Contreras',
     rating: 5,
     comment: 'Los mejores en transformación digital. Muy satisfecho con todo el proceso y los resultados.',
-    createdAt: new Date('2024-02-10').toISOString(), // Hace 9 meses
+    createdAt: new Date('2024-10-22').toISOString(), // Oct 2024
   },
 ];
 
@@ -243,7 +243,7 @@ async function reimportReviewsWithDates() {
       
       console.log(`\n⭐ Calificación promedio actualizada: ${avgRating.toFixed(1)} estrellas`);
       console.log(`📈 Total de reseñas en el perfil: ${reviewsData.length}`);
-      console.log(`📅 Reseñas distribuidas desde febrero 2024 hasta noviembre 2024`);
+      console.log(`📅 Reseñas distribuidas desde octubre 2024 hasta noviembre 2025`);
     }
   }
   
