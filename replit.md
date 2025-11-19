@@ -2,6 +2,24 @@
 
 Vitria is a directory platform designed for the Chilean market, aiming to connect marketing, branding, and advertising agencies with potential clients. The platform's primary goal is to become the leading agency directory in Chile by offering features such as advanced search capabilities, comprehensive review management, premium listing options, integrated payment solutions, detailed analytics, and SEO-optimized blog content. Ultimately, Vitria seeks to cultivate and expand the local marketing community.
 
+# Recent Changes
+
+## File Upload System with Replit Object Storage (November 19, 2025)
+
+Implemented a comprehensive file upload system using Replit's Object Storage (App Storage) to replace URL-based inputs for agency logos and cover images. The system includes:
+
+- **Server Infrastructure**: Created `ObjectStorageService` (server/objectStorage.ts) for managing file uploads with signed URLs and `ObjectAcl` (server/objectAcl.ts) for setting public access permissions on uploaded images.
+- **tRPC Endpoints**: Added upload router (server/routers/upload.ts) with three protected procedures:
+  - `getUploadUrl`: Generates signed upload URLs for client-side file uploads
+  - `setLogoAcl`: Sets public visibility for agency logos
+  - `setCoverAcl`: Sets public visibility for agency cover images
+- **Client Component**: Developed reusable `ObjectUploader` component (components/ObjectUploader.tsx) integrating Uppy library with customizable file restrictions and upload parameters.
+- **UI Integration**: Updated both agency creation page (`app/dashboard/crear-agencia/page.tsx`) and admin edit page (`app/admin/agencias/[id]/editar/page.tsx`) to use file upload instead of URL inputs.
+- **API Route**: Created Next.js catch-all route (`app/objects/[...path]/route.ts`) to serve uploaded images.
+- **Dependencies**: Installed @uppy/core, @uppy/react, @uppy/dashboard, and @uppy/aws-s3 packages.
+
+Images are stored with public visibility since agencies are publicly accessible profiles. Maximum file size is set to 5MB with support for PNG, JPG, JPEG, and WebP formats.
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -83,7 +101,8 @@ Premium agency phone numbers display with a green WhatsApp badge containing the 
 
 ## Core Infrastructure
 
--   **Supabase**: PostgreSQL database, authentication, and file storage (`agency-logos` bucket).
+-   **Supabase**: PostgreSQL database and authentication.
+-   **Replit Object Storage (App Storage)**: File storage for agency logos and cover images.
 -   **Stripe**: Payment processing (integrated but disabled).
 -   **Brevo (formerly Sendinblue)**: Transactional email delivery for welcome emails and quote notifications.
 
@@ -92,6 +111,7 @@ Premium agency phone numbers display with a green WhatsApp badge containing the 
 -   **lucide-react**: Icon library.
 -   **class-variance-authority, clsx, tailwind-merge**: UI styling utilities.
 -   **@tanstack/react-query, @trpc/client, @trpc/react-query, @trpc/next**: Type-safe API communication and data management.
+-   **@uppy/core, @uppy/react, @uppy/dashboard, @uppy/aws-s3**: File upload library and S3-compatible storage integration.
 -   **recharts**: Charting library.
 -   **react-markdown, remark-gfm**: Markdown rendering.
 -   **next-seo**: SEO metadata management.
