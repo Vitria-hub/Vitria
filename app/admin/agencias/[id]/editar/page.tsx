@@ -24,7 +24,6 @@ export default function EditAgencyPage() {
     description: '',
     email: '',
     phone: '',
-    whatsapp_number: '',
     website: '',
     location_city: '',
     location_region: '',
@@ -36,12 +35,6 @@ export default function EditAgencyPage() {
     employees_max: null as number | null,
     price_range: '',
     specialties: [] as string[],
-    facebook_url: '',
-    instagram_url: '',
-    linkedin_url: '',
-    twitter_url: '',
-    youtube_url: '',
-    tiktok_url: '',
   });
 
   const [error, setError] = useState('');
@@ -80,7 +73,6 @@ export default function EditAgencyPage() {
           description: agency.description || '',
           email: agency.email || '',
           phone: agency.phone || '',
-          whatsapp_number: agency.whatsapp_number || '',
           website: agency.website || '',
           location_city: agency.location_city || '',
           location_region: agency.location_region || '',
@@ -92,12 +84,6 @@ export default function EditAgencyPage() {
           employees_max: agency.employees_max ?? null,
           price_range: agency.price_range || '',
           specialties: Array.isArray(agency.specialties) ? agency.specialties : [],
-          facebook_url: agency.facebook_url || '',
-          instagram_url: agency.instagram_url || '',
-          linkedin_url: agency.linkedin_url || '',
-          twitter_url: agency.twitter_url || '',
-          youtube_url: agency.youtube_url || '',
-          tiktok_url: agency.tiktok_url || '',
         });
       } catch (err) {
         console.error('Error setting form data:', err);
@@ -276,18 +262,6 @@ export default function EditAgencyPage() {
                   placeholder="+56 9 1234 5678"
                   required
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  WhatsApp
-                </label>
-                <Input
-                  value={formData.whatsapp_number}
-                  onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
-                  placeholder="+56 9 1234 5678"
-                />
-                <p className="text-sm text-dark/60 mt-1">Número de WhatsApp para contacto directo</p>
               </div>
 
               <div>
@@ -626,84 +600,6 @@ export default function EditAgencyPage() {
               <p className="text-sm text-dark/60 mt-1">
                 Tecnologías, plataformas o habilidades específicas (por ejemplo: React, Shopify, Google Analytics, Adobe Creative Suite)
               </p>
-            </div>
-          </div>
-
-          <div className="border-t-2 border-gray-200 pt-8">
-            <h2 className="text-2xl font-bold text-dark mb-6">Redes Sociales</h2>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  Facebook
-                </label>
-                <Input
-                  type="url"
-                  value={formData.facebook_url}
-                  onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
-                  placeholder="https://facebook.com/agencia"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  Instagram
-                </label>
-                <Input
-                  type="url"
-                  value={formData.instagram_url}
-                  onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
-                  placeholder="https://instagram.com/agencia"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  LinkedIn
-                </label>
-                <Input
-                  type="url"
-                  value={formData.linkedin_url}
-                  onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                  placeholder="https://linkedin.com/company/agencia"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  Twitter / X
-                </label>
-                <Input
-                  type="url"
-                  value={formData.twitter_url}
-                  onChange={(e) => setFormData({ ...formData, twitter_url: e.target.value })}
-                  placeholder="https://twitter.com/agencia"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  YouTube
-                </label>
-                <Input
-                  type="url"
-                  value={formData.youtube_url}
-                  onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
-                  placeholder="https://youtube.com/@agencia"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-dark mb-2">
-                  TikTok
-                </label>
-                <Input
-                  type="url"
-                  value={formData.tiktok_url}
-                  onChange={(e) => setFormData({ ...formData, tiktok_url: e.target.value })}
-                  placeholder="https://tiktok.com/@agencia"
-                />
-              </div>
             </div>
           </div>
 

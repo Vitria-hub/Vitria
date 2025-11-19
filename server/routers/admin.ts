@@ -5,13 +5,6 @@ import { TRPCError } from '@trpc/server';
 import { approveAgencySchema, rejectAgencySchema, adminCreateReviewSchema } from '@/lib/validators';
 import { sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { Pool } from 'pg';
-
-// Direct PostgreSQL connection pool (temporary workaround for frozen PostgREST cache)
-const pgPool = new Pool({
-  connectionString: process.env.DATABASE_URL || 
-    `postgresql://postgres.ccwosdaxmtfzbqcrrfvd:[YOUR-PASSWORD]@aws-0-us-west-1.pooler.supabase.com:6543/postgres`,
-});
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const { data: userData } = await db
@@ -751,7 +744,6 @@ export const adminRouter = router({
       description: z.string().min(1),
       email: z.string().email(),
       phone: z.string().min(1),
-      whatsapp_number: z.string().optional().or(z.literal('')),
       website: z.string().url().optional().or(z.literal('')),
       location_city: z.string().min(1),
       location_region: z.string().min(1),
@@ -763,12 +755,6 @@ export const adminRouter = router({
       employees_max: z.number().int().min(0).nullable(),
       price_range: z.enum(['$', '$$', '$$$']).nullable().or(z.literal('')),
       specialties: z.array(z.string()).optional(),
-      facebook_url: z.string().url().optional().or(z.literal('')),
-      instagram_url: z.string().url().optional().or(z.literal('')),
-      linkedin_url: z.string().url().optional().or(z.literal('')),
-      twitter_url: z.string().url().optional().or(z.literal('')),
-      youtube_url: z.string().url().optional().or(z.literal('')),
-      tiktok_url: z.string().url().optional().or(z.literal('')),
     }))
     .mutation(async ({ input }) => {
       const { agencyId, ...updateData } = input;
@@ -792,7 +778,6 @@ export const adminRouter = router({
         description: updateData.description,
         email: updateData.email,
         phone: updateData.phone,
-        whatsapp_number: updateData.whatsapp_number || null,
         website: updateData.website || null,
         location_city: updateData.location_city,
         location_region: updateData.location_region,
@@ -804,12 +789,6 @@ export const adminRouter = router({
         employees_max: updateData.employees_max ?? null,
         price_range: updateData.price_range || null,
         specialties: updateData.specialties ?? [],
-        facebook_url: updateData.facebook_url || null,
-        instagram_url: updateData.instagram_url || null,
-        linkedin_url: updateData.linkedin_url || null,
-        twitter_url: updateData.twitter_url || null,
-        youtube_url: updateData.youtube_url || null,
-        tiktok_url: updateData.tiktok_url || null,
         updated_at: new Date().toISOString(),
       };
 
