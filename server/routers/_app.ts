@@ -8,6 +8,7 @@ import { analyticsRouter } from './analytics';
 import { clientRouter } from './client';
 import { contactRouter } from './contact';
 import { quotesRouter } from './quotes';
+import { uploadRouter } from './upload';
 import { inferRouterOutputs } from '@trpc/server';
 
 export const appRouter = router({
@@ -20,6 +21,7 @@ export const appRouter = router({
   clientProfile: clientRouter,
   contact: contactRouter,
   quotes: quotesRouter,
+  upload: uploadRouter,
 });
 
 export type AppRouter = typeof appRouter;
