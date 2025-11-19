@@ -3,8 +3,37 @@ import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const createContext = async (opts: FetchCreateContextFnOptions) => {
+  const authHeader = opts.req?.headers.get('authorization');
+  let userId: string | null = null;
+  let user: UserData | null = null;
+
+  // Optionally extract userId if token is present
+  if (authHeader) {
+    try {
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user: authUser } } = await supabaseAdmin.auth.getUser(token);
+      
+      if (authUser) {
+        const { data: userData } = await supabaseAdmin
+          .from('users')
+          .select('id, role, full_name, avatar_url')
+          .eq('auth_id', authUser.id)
+          .single();
+        
+        if (userData) {
+          userId = authUser.id;
+          user = userData as UserData;
+        }
+      }
+    } catch (error) {
+      // Silent fail - just means no auth
+    }
+  }
+
   return {
     req: opts.req,
+    userId,
+    user,
   };
 };
 
