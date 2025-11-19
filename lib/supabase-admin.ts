@@ -8,4 +8,12 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole, {
     autoRefreshToken: false,
     persistSession: false,
   },
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'x-cache-control': 'no-cache',
+    },
+  },
 });

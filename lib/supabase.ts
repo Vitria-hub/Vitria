@@ -59,6 +59,7 @@ export type Database = {
           website: string | null;
           email: string | null;
           phone: string | null;
+          whatsapp_number: string | null;
           location_city: string | null;
           location_region: string | null;
           employees_min: number | null;
@@ -96,6 +97,7 @@ export type Database = {
           website?: string | null;
           email?: string | null;
           phone?: string | null;
+          whatsapp_number?: string | null;
           location_city?: string | null;
           location_region?: string | null;
           employees_min?: number | null;
@@ -133,6 +135,7 @@ export type Database = {
           website?: string | null;
           email?: string | null;
           phone?: string | null;
+          whatsapp_number?: string | null;
           location_city?: string | null;
           location_region?: string | null;
           employees_min?: number | null;
