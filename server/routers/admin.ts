@@ -144,7 +144,7 @@ export const adminRouter = router({
       if (agency.owner_id) {
         const { data: userData, error: userError } = await db
           .from('users')
-          .select('full_name, email, role')
+          .select('full_name, role')
           .eq('id', agency.owner_id as string)
           .single();
         
