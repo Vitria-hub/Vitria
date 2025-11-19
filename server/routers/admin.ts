@@ -5,6 +5,13 @@ import { TRPCError } from '@trpc/server';
 import { approveAgencySchema, rejectAgencySchema, adminCreateReviewSchema } from '@/lib/validators';
 import { sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { Pool } from 'pg';
+
+// Direct PostgreSQL connection pool (temporary workaround for frozen PostgREST cache)
+const pgPool = new Pool({
+  connectionString: process.env.DATABASE_URL || 
+    `postgresql://postgres.ccwosdaxmtfzbqcrrfvd:[YOUR-PASSWORD]@aws-0-us-west-1.pooler.supabase.com:6543/postgres`,
+});
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const { data: userData } = await db
