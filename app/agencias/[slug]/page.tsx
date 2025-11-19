@@ -327,7 +327,18 @@ export default function AgencyDetailPage() {
             <dl className="space-y-3 text-sm">
               <div>
                 <dt className="font-semibold text-dark">Rango de Precios</dt>
-                <dd className="text-dark/70 mt-1">{agency.price_range || 'No especificado'}</dd>
+                {user ? (
+                  <dd className="text-dark/70 mt-1">{agency.price_range || 'No especificado'}</dd>
+                ) : (
+                  <dd className="text-dark/70 mt-1">
+                    <button 
+                      onClick={() => router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname))}
+                      className="text-primary hover:underline"
+                    >
+                      🔒 Inicia sesión para ver
+                    </button>
+                  </dd>
+                )}
               </div>
               <div>
                 <dt className="font-semibold text-dark">Categorías</dt>
