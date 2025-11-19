@@ -4,6 +4,24 @@ Vitria is a directory platform designed for the Chilean market, aiming to connec
 
 # Recent Changes
 
+## Authentication-Based Contact Access Control (November 19, 2025)
+
+Implemented comprehensive authentication-based access control for agency contact information to drive user registration and enable interaction tracking. This is a critical business requirement to build the user base and measure platform engagement.
+
+- **Backend Security**: Modified all public agency tRPC endpoints to filter sensitive contact fields for unauthenticated users:
+  - `agency.list`: Filters email, phone, website, whatsapp_number from agency listing results
+  - `agency.getBySlug`: Filters sensitive contact fields from individual agency profiles
+  - `sponsor.listHome`: Filters contact data from sponsored agencies displayed on homepage
+  - `contact.create`: Already protected with `protectedProcedure` (only authenticated users can submit quotes)
+- **Frontend Authentication Gates**: Updated agency detail page (`app/agencias/[slug]/page.tsx`) to:
+  - Require login before opening the quote request modal
+  - Redirect unauthenticated users to `/login` when attempting to request quotes
+  - Show "Inicia sesión para ver contacto" prompt for premium contact information
+  - Only display direct contact methods (email, phone, website, WhatsApp) to logged-in users
+- **Data Visibility Strategy**: Social media links (Facebook, Instagram, LinkedIn, Twitter) remain publicly visible for marketing purposes, while direct contact methods require authentication to ensure trackable interactions and user acquisition.
+
+This implementation ensures that all agency contact interactions are gated behind authentication, supporting the platform's business model of building a registered user base while maintaining public visibility for social media marketing channels.
+
 ## File Upload System with Replit Object Storage (November 19, 2025)
 
 Implemented a comprehensive file upload system using Replit's Object Storage (App Storage) to replace URL-based inputs for agency logos and cover images. The system includes:
