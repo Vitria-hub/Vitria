@@ -38,7 +38,7 @@ export default function AgencyDetailPage() {
   const handleContactClick = () => {
     if (!user) {
       // Redirect to login if not authenticated
-      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+      router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname));
       return;
     }
     if (agency?.id) {
@@ -219,7 +219,7 @@ export default function AgencyDetailPage() {
                             Esta agencia premium tiene formas de contacto directo disponibles.
                           </p>
                           <Button
-                            onClick={() => router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))}
+                            onClick={() => router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname))}
                             variant="primary"
                             size="sm"
                           >
