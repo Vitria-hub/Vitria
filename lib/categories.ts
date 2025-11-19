@@ -112,6 +112,25 @@ export const MAIN_CATEGORIES = [
   }
 ] as const;
 
+export const REGIONS = [
+  { value: 'arica-parinacota', label: 'Arica y Parinacota' },
+  { value: 'tarapaca', label: 'Tarapacá' },
+  { value: 'antofagasta', label: 'Antofagasta' },
+  { value: 'atacama', label: 'Atacama' },
+  { value: 'coquimbo', label: 'Coquimbo' },
+  { value: 'valparaiso', label: 'Valparaíso' },
+  { value: 'metropolitana', label: 'Metropolitana de Santiago' },
+  { value: 'ohiggins', label: "O'Higgins" },
+  { value: 'maule', label: 'Maule' },
+  { value: 'nuble', label: 'Ñuble' },
+  { value: 'biobio', label: 'Biobío' },
+  { value: 'araucania', label: 'La Araucanía' },
+  { value: 'los-rios', label: 'Los Ríos' },
+  { value: 'los-lagos', label: 'Los Lagos' },
+  { value: 'aysen', label: 'Aysén' },
+  { value: 'magallanes', label: 'Magallanes y la Antártica Chilena' },
+] as const;
+
 export type CategoryId = typeof MAIN_CATEGORIES[number]['id'];
 
 export function getCategoryLabel(categoryId: string): string {
