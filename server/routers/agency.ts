@@ -144,14 +144,7 @@ export const agencyRouter = router({
       // Filter information for unauthenticated users - only show basic public info
       const isAuthenticated = !!ctx.userId;
       
-      console.log('[getBySlug] ctx.userId:', ctx.userId);
-      console.log('[getBySlug] isAuthenticated:', isAuthenticated);
-      console.log('[getBySlug] Agency email:', data.email);
-      console.log('[getBySlug] Agency phone:', data.phone);
-      console.log('[getBySlug] Agency website:', data.website);
-      
       if (!isAuthenticated) {
-        console.log('[getBySlug] Returning filtered data (no auth)');
         return {
           id: data.id,
           name: data.name,
@@ -169,7 +162,6 @@ export const agencyRouter = router({
         };
       }
 
-      console.log('[getBySlug] Returning FULL data (authenticated)');
       return data;
     }),
 

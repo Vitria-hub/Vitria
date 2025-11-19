@@ -556,7 +556,7 @@ export default function EditarPerfilPage() {
                       Rango de Precios *
                     </label>
                     <div className="grid grid-cols-3 gap-4">
-                      {(['$', '$$', '$$$'] as const).map((range) => (
+                      {(['1-3M', '3-5M', '5M+'] as const).map((range) => (
                         <label
                           key={range}
                           className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition ${
@@ -570,15 +570,11 @@ export default function EditarPerfilPage() {
                             name="priceRange"
                             value={range}
                             checked={formData.priceRange === range}
-                            onChange={(e) => setFormData({ ...formData, priceRange: e.target.value as '$' | '$$' | '$$$' })}
+                            onChange={(e) => setFormData({ ...formData, priceRange: e.target.value as '1-3M' | '3-5M' | '5M+' })}
                             className="sr-only"
                           />
-                          <span className="text-2xl font-bold text-primary mb-1">{range}</span>
-                          <span className="text-xs text-dark/60 text-center">
-                            {range === '$' && 'Económico'}
-                            {range === '$$' && 'Medio'}
-                            {range === '$$$' && 'Premium'}
-                          </span>
+                          <span className="text-lg font-bold text-primary mb-1">{range}</span>
+                          <span className="text-xs text-dark/60 text-center">Millones CLP</span>
                         </label>
                       ))}
                     </div>

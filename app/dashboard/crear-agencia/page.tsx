@@ -637,9 +637,9 @@ export default function CrearAgenciaPage() {
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[
-                  { value: '$', label: 'Económico', desc: 'Menos de $1M CLP' },
-                  { value: '$$', label: 'Estándar', desc: '$1M a $3M CLP' },
-                  { value: '$$$', label: 'Premium', desc: '$3M a $5M CLP' },
+                  { value: '1-3M', label: '1-3 Millones', desc: 'Presupuesto mínimo CLP' },
+                  { value: '3-5M', label: '3-5 Millones', desc: 'Presupuesto mínimo CLP' },
+                  { value: '5M+', label: '5+ Millones', desc: 'Presupuesto mínimo CLP' },
                 ].map((price) => (
                   <label
                     key={price.value}
@@ -659,7 +659,7 @@ export default function CrearAgenciaPage() {
                       }}
                       className="sr-only"
                     />
-                    <span className="text-2xl mb-1">{price.value}</span>
+                    <span className="text-lg font-bold mb-1">{price.value}</span>
                     <span className="font-semibold">{price.label}</span>
                     <span className="text-xs text-dark/60 mt-1">{price.desc}</span>
                   </label>

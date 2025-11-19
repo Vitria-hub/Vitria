@@ -5,7 +5,7 @@ async function checkAgencyData() {
   
   const { data, error } = await db
     .from('agencies')
-    .select('id, name, email, phone, whatsapp_number, website, is_premium, location_city')
+    .select('id, name, email, phone, whatsapp_number, website, is_premium, location_city, price_range, employees_min, employees_max')
     .eq('slug', 'scale-lab')
     .single();
   

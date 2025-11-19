@@ -584,12 +584,12 @@ export default function EditAgencyPage() {
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary appearance-none"
               >
                 <option value="">Sin especificar</option>
-                <option value="$">$ - Económico</option>
-                <option value="$$">$$ - Medio</option>
-                <option value="$$$">$$$ - Premium</option>
+                <option value="1-3M">1-3 Millones CLP</option>
+                <option value="3-5M">3-5 Millones CLP</option>
+                <option value="5M+">5+ Millones CLP</option>
               </select>
               <p className="text-sm text-dark/60 mt-1">
-                Indica el rango de precios aproximado de los servicios
+                Indica el rango de precios aproximado de los servicios (presupuesto mínimo de proyecto)
               </p>
             </div>
           </div>
