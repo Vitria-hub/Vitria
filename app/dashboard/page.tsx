@@ -383,7 +383,7 @@ function DashboardContent() {
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-dark mb-2">
-                  ¿Tienes una agencia de marketing?
+                  ¿Tienes una agencia?
                 </h3>
                 <p className="text-dark/60 mb-4">
                   Crea tu perfil de agencia para comenzar a recibir clientes y gestionar tu presencia en la plataforma.
@@ -453,7 +453,7 @@ function DashboardContent() {
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-dark mb-2">
-                  ¿Buscas una agencia de marketing?
+                  ¿Buscas una agencia?
                 </h3>
                 <p className="text-dark/60 mb-4">
                   Completa tu perfil de cliente para recibir recomendaciones personalizadas y contactar agencias.
