@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { Users, ChevronLeft, ChevronRight, Shield, Trash2 } from 'lucide-react';
+import { Users, ChevronLeft, ChevronRight, Shield, Trash2, Pencil } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminUsersPage() {
@@ -146,14 +146,23 @@ export default function AdminUsersPage() {
                           {new Date(user.created_at).toLocaleDateString('es-CL')}
                         </td>
                         <td className="px-6 py-4">
-                          <button
-                            onClick={() => handleDelete(user.id)}
-                            className="p-2 hover:bg-red-50 rounded-lg transition"
-                            title="Eliminar usuario"
-                            disabled={user.id === userData.id}
-                          >
-                            <Trash2 className="w-5 h-5 text-red-600" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <Link
+                              href={`/admin/usuarios/${user.id}/editar`}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition"
+                              title="Editar usuario"
+                            >
+                              <Pencil className="w-5 h-5 text-primary" />
+                            </Link>
+                            <button
+                              onClick={() => handleDelete(user.id)}
+                              className="p-2 hover:bg-red-50 rounded-lg transition"
+                              title="Eliminar usuario"
+                              disabled={user.id === userData.id}
+                            >
+                              <Trash2 className="w-5 h-5 text-red-600" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}

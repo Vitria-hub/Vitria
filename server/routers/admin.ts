@@ -358,6 +358,76 @@ export const adminRouter = router({
       return data;
     }),
 
+  getUser: adminProcedure
+    .input(z.object({ userId: z.string().uuid() }))
+    .query(async ({ input }) => {
+      const { data, error } = await db
+        .from('users')
+        .select('*')
+        .eq('id', input.userId)
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Usuario no encontrado',
+        });
+      }
+
+      return data;
+    }),
+
+  updateUser: adminProcedure
+    .input(z.object({
+      userId: z.string().uuid(),
+      full_name: z.string().min(1),
+      email: z.string().email(),
+    }))
+    .mutation(async ({ input }) => {
+      const { userId, ...updateData } = input;
+
+      const { data, error } = await db
+        .from('users')
+        .update({
+          full_name: updateData.full_name,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message || 'Error al actualizar el usuario',
+        });
+      }
+
+      if (updateData.email) {
+        const { data: existingUser } = await db
+          .from('users')
+          .select('auth_id')
+          .eq('id', userId)
+          .single();
+
+        if (existingUser?.auth_id) {
+          try {
+            await supabaseAdmin.auth.admin.updateUserById(existingUser.auth_id, {
+              email: updateData.email,
+            });
+          } catch (authError: any) {
+            console.error('Error updating auth email:', authError);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Error al actualizar el email en autenticación',
+            });
+          }
+        }
+      }
+
+      return data;
+    }),
+
   deleteUser: adminProcedure
     .input(z.object({ userId: z.string().uuid() }))
     .mutation(async ({ input }) => {
