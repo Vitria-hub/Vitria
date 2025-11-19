@@ -44,24 +44,28 @@ export default function AdminDashboard() {
               value={stats?.totalAgencies || 0}
               icon={<Building2 className="w-8 h-8 text-primary" />}
               subtitle={`+${analyticsStats?.newAgencies || 0} este mes`}
+              href="/admin/agencias"
             />
             <StatsCard
               title="Total Usuarios"
               value={stats?.totalUsers || 0}
               icon={<Users className="w-8 h-8 text-secondary" />}
               subtitle={`+${analyticsStats?.newUsers || 0} este mes`}
+              href="/admin/usuarios"
             />
             <StatsCard
               title="Total Reseñas"
               value={stats?.totalReviews || 0}
               icon={<Star className="w-8 h-8 text-accent" />}
               subtitle={`${stats?.pendingReviews || 0} pendientes`}
+              href="/admin/resenas"
             />
             <StatsCard
               title="Agencias Premium"
               value={analyticsStats?.premiumAgencies || 0}
               icon={<TrendingUp className="w-8 h-8 text-green-600" />}
               subtitle={`de ${stats?.totalAgencies || 0} totales`}
+              href="/admin/agencias"
             />
           </div>
         </div>
@@ -74,12 +78,14 @@ export default function AdminDashboard() {
               value={analyticsStats?.totalSearches || 0}
               icon={<Search className="w-8 h-8 text-blue-600" />}
               subtitle="Búsquedas realizadas"
+              href="/admin/analytics"
             />
             <StatsCard
               title="Contactos Generados"
               value={analyticsStats?.totalContacts || 0}
               icon={<MousePointerClick className="w-8 h-8 text-purple-600" />}
               subtitle="Leads para agencias"
+              href="/admin/cotizaciones"
             />
             <StatsCard
               title="Ver Analytics Completo"
@@ -93,6 +99,7 @@ export default function AdminDashboard() {
                   Ir al Dashboard →
                 </Link>
               }
+              href="/admin/analytics"
             />
           </div>
         </div>
@@ -151,15 +158,17 @@ function StatsCard({
   icon,
   subtitle,
   customContent,
+  href,
 }: {
   title: string;
   value: number;
   icon: React.ReactNode;
   subtitle?: string;
   customContent?: React.ReactNode;
+  href?: string;
 }) {
-  return (
-    <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+  const content = (
+    <>
       <div className="flex items-start justify-between mb-3">
         <div>{icon}</div>
       </div>
@@ -172,6 +181,23 @@ function StatsCard({
           {subtitle && <p className="text-xs text-primary mt-2">{subtitle}</p>}
         </>
       )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link 
+        href={href}
+        className="bg-gray-50 border border-gray-300 rounded-lg p-4 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+      {content}
     </div>
   );
 }
