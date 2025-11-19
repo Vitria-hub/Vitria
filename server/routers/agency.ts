@@ -88,6 +88,7 @@ export const agencyRouter = router({
             avg_rating: agency.avg_rating,
             reviews_count: agency.reviews_count,
             created_at: agency.created_at,
+            location_region: agency.location_region,
           }));
 
       return {
