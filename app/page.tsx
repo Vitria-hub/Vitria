@@ -3,58 +3,70 @@ import CarouselSponsored from '@/components/CarouselSponsored';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3, Heart } from 'lucide-react';
+import { serverClient } from '@/app/_trpc/serverClient';
 
-export default function Home() {
-  const categories = [
-    { 
+export default async function Home() {
+  const caller = await serverClient();
+  const categoryCounts = await caller.agency.getCategoryCounts();
+
+  const categoryMapping: Record<string, { name: string; icon: any; description: string; categoryId: string }> = {
+    'publicidad-digital': { 
       name: 'Marketing Digital', 
       icon: TrendingUp, 
-      count: 45,
-      description: 'SEO, SEM, redes sociales'
+      description: 'SEO, SEM, redes sociales',
+      categoryId: 'publicidad-digital'
     },
-    { 
+    'publicidad': { 
       name: 'Publicidad', 
       icon: Megaphone, 
-      count: 38,
-      description: 'Campañas, medios, estrategia'
+      description: 'Campañas, medios, estrategia',
+      categoryId: 'publicidad'
     },
-    { 
+    'branding-identidad': { 
       name: 'Diseño y Branding', 
       icon: Award, 
-      count: 52,
-      description: 'Identidad, logos, packaging'
+      description: 'Identidad, logos, packaging',
+      categoryId: 'branding-identidad'
     },
-    { 
+    'contenido-redes': { 
       name: 'Contenido', 
       icon: FileText, 
-      count: 28,
-      description: 'Copywriting, blogs, scripts'
+      description: 'Copywriting, blogs, scripts',
+      categoryId: 'contenido-redes'
     },
-    { 
+    'video-fotografia': { 
       name: 'Audiovisual', 
       icon: Camera, 
-      count: 31,
-      description: 'Video, fotografía, producción'
+      description: 'Video, fotografía, producción',
+      categoryId: 'video-fotografia'
     },
-    { 
+    'desarrollo-web': { 
       name: 'Desarrollo Web', 
       icon: Code, 
-      count: 42,
-      description: 'Sitios web, e-commerce, apps'
+      description: 'Sitios web, e-commerce, apps',
+      categoryId: 'desarrollo-web'
     },
-    { 
+    'relaciones-publicas': { 
       name: 'Relaciones Públicas', 
       icon: Users, 
-      count: 22,
-      description: 'RRPP, comunicación, eventos'
+      description: 'RRPP, comunicación, eventos',
+      categoryId: 'relaciones-publicas'
     },
-    { 
+    'social-media': { 
       name: 'Social Media', 
       icon: Star, 
-      count: 35,
-      description: 'Community, influencers, gestión'
+      description: 'Community, influencers, gestión',
+      categoryId: 'social-media'
     },
-  ];
+  };
+
+  const categories = Object.entries(categoryMapping).map(([key, value]) => ({
+    name: value.name,
+    icon: value.icon,
+    count: categoryCounts[key] || 0,
+    description: value.description,
+    categoryId: value.categoryId,
+  }));
 
   const testimonials = [
     {
@@ -243,7 +255,7 @@ export default function Home() {
               return (
                 <Link
                   key={category.name}
-                  href="/agencias"
+                  href={`/agencias?category=${category.categoryId}`}
                   className="group bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary hover:shadow-xl transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">

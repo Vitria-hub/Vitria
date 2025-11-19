@@ -413,4 +413,30 @@ export const agencyRouter = router({
 
       return calculateProfileHealth(agencyWithPortfolio);
     }),
+
+  getCategoryCounts: publicProcedure.query(async () => {
+    const { data: agencies, error } = await db
+      .from('agencies')
+      .select('categories')
+      .eq('approval_status', 'approved');
+
+    if (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Error al obtener estadísticas de categorías: ${error.message}`,
+      });
+    }
+
+    const categoryCounts: Record<string, number> = {};
+    
+    agencies?.forEach((agency: any) => {
+      if (agency.categories && Array.isArray(agency.categories)) {
+        agency.categories.forEach((category: string) => {
+          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        });
+      }
+    });
+
+    return categoryCounts;
+  }),
 });

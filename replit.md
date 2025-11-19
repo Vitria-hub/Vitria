@@ -1,66 +1,6 @@
 # Overview
 
-Vitria is a directory platform designed for the Chilean market, aiming to connect marketing, branding, and advertising agencies with potential clients. The platform's primary goal is to become the leading agency directory in Chile by offering features such as advanced search capabilities, comprehensive review management, premium listing options, integrated payment solutions, detailed analytics, and SEO-optimized blog content. Ultimately, Vitria seeks to cultivate and expand the local marketing community.
-
-# Recent Changes
-
-## Context-Aware Authentication & Premium Auto-Fill (November 19, 2025)
-
-Enhanced authentication detection and premium agency workflow automation:
-
-- **Context-Aware Authentication**: Modified tRPC context (`server/trpc.ts`) to optionally extract user authentication from token headers in all procedures (public and protected):
-  - `createContext` now extracts `userId` and `user` data when authorization token is present
-  - Public procedures (`agency.list`, `agency.getBySlug`, `sponsor.listHome`) can now detect authenticated users via `ctx.userId`
-  - Enables conditional data filtering: unauthenticated users see minimal public data, authenticated users see full agency details
-  - Fixed authentication bug where `ctx.session?.user` was incorrectly used instead of `ctx.userId`
-
-- **Premium Agency WhatsApp Auto-Fill**: Implemented automatic WhatsApp number population when agencies are marked as premium:
-  - `admin.setPremium` mutation (`server/routers/admin.ts`) now auto-populates `whatsapp_number` from `phone` if WhatsApp field is empty
-  - Streamlines premium activation workflow for administrators
-  - Ensures premium agencies have WhatsApp contact available immediately upon upgrade
-
-- **Price Range Standardization**: Migrated from symbolic price ranges to clear monetary values:
-  - **Old system**: "$" (Económico), "$$" (Medio), "$$$" (Premium)
-  - **New system**: "1-3M" (1-3 Millones CLP), "3-5M" (3-5 Millones CLP), "5M+" (5+ Millones CLP)
-  - Updated all forms: agency creation (`app/dashboard/crear-agencia/page.tsx`), agency editing (`app/dashboard/editar-perfil/page.tsx`), admin editing (`app/admin/agencias/[id]/editar/page.tsx`)
-  - Updated display component (`components/AgencyCard.tsx`) to show monetary values directly
-
-## Ultra-Restrictive Public Data Access (November 19, 2025)
-
-Implemented aggressive data filtering strategy to maximize user registration conversion by showing only essential agency information publicly. This forces visitors to create an account to access detailed agency information, contact methods, and social media profiles.
-
-- **Backend Security**: Modified all public agency tRPC endpoints to implement minimal public data visibility:
-  - `agency.list`, `agency.getBySlug`, `sponsor.listHome`: Only expose id, name, slug, description, logo_url, cover_url, categories, is_premium, avg_rating, reviews_count, created_at, location_region
-  - `contact.create`: Protected with `protectedProcedure` (only authenticated users can submit quotes)
-- **Hidden Fields (Login Required)**: All of the following require authentication to view:
-  - Direct contact: email, phone, whatsapp_number, website
-  - Location details: location_city
-  - Business info: employees_min, employees_max, price_range, services, specialties
-  - Social media: facebook_url, instagram_url, linkedin_url, twitter_url, youtube_url, tiktok_url
-- **Frontend Authentication Gates**: Updated agency detail page (`app/agencias/[slug]/page.tsx`) to:
-  - Require login before opening the quote request modal
-  - Redirect unauthenticated users to `/login` when attempting to access contact or detailed information
-  - Show authentication prompts for all gated content
-- **Admin Control**: Administrators have unrestricted access to edit all agency fields, including new WhatsApp field added to `admin.updateAgency` mutation and admin edit form.
-- **Database Enhancement**: Added `whatsapp_number` field to agencies table for direct WhatsApp contact management.
-
-This ultra-restrictive strategy ensures maximum user registration conversion while maintaining just enough public information (name, description, logo, region, ratings) for basic agency discovery and SEO purposes.
-
-## File Upload System with Replit Object Storage (November 19, 2025)
-
-Implemented a comprehensive file upload system using Replit's Object Storage (App Storage) to replace URL-based inputs for agency logos and cover images. The system includes:
-
-- **Server Infrastructure**: Created `ObjectStorageService` (server/objectStorage.ts) for managing file uploads with signed URLs and `ObjectAcl` (server/objectAcl.ts) for setting public access permissions on uploaded images.
-- **tRPC Endpoints**: Added upload router (server/routers/upload.ts) with three protected procedures:
-  - `getUploadUrl`: Generates signed upload URLs for client-side file uploads
-  - `setLogoAcl`: Sets public visibility for agency logos
-  - `setCoverAcl`: Sets public visibility for agency cover images
-- **Client Component**: Developed reusable `ObjectUploader` component (components/ObjectUploader.tsx) integrating Uppy library with customizable file restrictions and upload parameters.
-- **UI Integration**: Updated both agency creation page (`app/dashboard/crear-agencia/page.tsx`) and admin edit page (`app/admin/agencias/[id]/editar/page.tsx`) to use file upload instead of URL inputs.
-- **API Route**: Created Next.js catch-all route (`app/objects/[...path]/route.ts`) to serve uploaded images.
-- **Dependencies**: Installed @uppy/core, @uppy/react, @uppy/dashboard, and @uppy/aws-s3 packages.
-
-Images are stored with public visibility since agencies are publicly accessible profiles. Maximum file size is set to 5MB with support for PNG, JPG, JPEG, and WebP formats.
+Vitria is a directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with potential clients. Its purpose is to become the leading agency directory in Chile by offering advanced search, review management, premium listings, integrated payments, detailed analytics, and SEO-optimized content, thereby fostering the local marketing community.
 
 # User Preferences
 
@@ -70,74 +10,55 @@ Preferred communication style: Simple, everyday language.
 
 ## Frontend
 
-The frontend is built using Next.js 14 (App Router), adhering to Atomic Design principles. It utilizes React server and client components, styled with TailwindCSS and `class-variance-authority`. A custom design system defines brand colors (primary: #1B5568, accent: #F5D35E). Data fetching and state management are handled by tRPC React Query hooks. Key features include a simplified agency category system, a community-focused homepage with clear Calls-to-Action (CTAs), an SEO-optimized blog, and full mobile responsiveness. The agency detail page prioritizes a "Request a Quote" flow for trackable interactions.
+The frontend uses Next.js 14 (App Router) with Atomic Design principles, React server and client components, and TailwindCSS. It features a custom design system with brand colors (primary: #1B5568, accent: #F5D35E). Data fetching is managed via tRPC React Query hooks. Key features include a simplified agency category system, a community-focused homepage with CTAs, an SEO-optimized blog, and full mobile responsiveness. The agency detail page emphasizes a "Request a Quote" flow.
 
 ## Backend
 
-The backend is developed with tRPC for a type-safe RPC-style API and uses Zod for robust input validation. It interacts with Supabase for data access and implements business logic for advanced agency filtering, review moderation, agency performance tracking, and sponsored content management. Secure analytics endpoints feed data to an admin-only performance dashboard. A comprehensive quote request system is a core feature, including client submission, agency viewing, and admin management.
+The backend is built with tRPC for a type-safe API and Zod for validation. It integrates with Supabase for data access and implements business logic for agency filtering, review moderation, performance tracking, and sponsored content. Secure analytics endpoints feed an admin dashboard. A comprehensive quote request system is central, covering client submissions, agency viewing, and admin management. Public data access is highly restricted to encourage user registration, requiring authentication for detailed agency information and contact methods.
 
 ## Database
 
-Supabase (PostgreSQL) is used for data storage, with tables for `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, and `quote_requests`. It uses UUID primary keys, foreign key relationships with CASCADE behaviors, and optimized indexing. Row Level Security (RLS) is enabled for granular access control.
+Supabase (PostgreSQL) is used for data storage, including `users`, `agencies`, `reviews`, `portfolio_items`, `agency_metrics_daily`, and `quote_requests` tables. It utilizes UUID primary keys, foreign key relationships, and optimized indexing. Row Level Security (RLS) is enabled for granular access control.
 
 ## Authentication and Authorization
 
-Supabase Auth manages email/password and Google OAuth, supporting role-based authorization (`user`, `agency`, `admin`). Email verification is disabled to facilitate immediate user access. The system includes an OAuth Role Preservation System and a password recovery flow. New agencies require manual approval via an admin panel. Dual roles (client and agency) are supported.
+Supabase Auth handles email/password and Google OAuth, supporting role-based authorization (`user`, `agency`, `admin`). Email verification is disabled. It includes an OAuth Role Preservation System and password recovery. New agencies require manual admin approval. The system supports dual roles for clients and agencies.
 
 ## SEO
 
-SEO is implemented using `next-seo` for metadata management and `next-sitemap` for generating `sitemap.xml` and `robots.txt`. Blog content is structured for optimal search engine indexing.
+SEO is managed using `next-seo` for metadata and `next-sitemap` for `sitemap.xml` and `robots.txt` generation. Blog content is optimized for search engines.
 
 ## Analytics
 
-A comprehensive analytics system tracks agency profile views, contact clicks, search queries, and critical quote lifecycle metrics (received, contacted, won). Frontend tracking uses custom React hooks, while backend tRPC endpoints record interaction data. An admin dashboard provides Key Performance Indicators (KPIs), agency rankings, and conversion funnels, while agency owners can access their specific performance metrics.
+A comprehensive analytics system tracks agency profile views, contact clicks, search queries, and quote lifecycle metrics. Frontend tracking uses custom React hooks, while backend tRPC endpoints record data. An admin dashboard provides KPIs, agency rankings, and conversion funnels, with agencies able to access their specific performance metrics.
 
 ## Premium Management
 
-Premium agency status, indicated by a gold badge, is manually managed by administrators through an admin panel, allowing activation, deactivation, and expiration date setting. Premium agencies receive exclusive benefits including the ability to display direct contact information (email, phone, website) on their profile pages via a "Ver más formas de contacto" toggle. Non-premium agencies can only receive leads through the platform's quote request system, ensuring all interactions are tracked and measured for analytics purposes.
+Premium agency status is manually managed by administrators, offering benefits like direct contact information display (email, phone, website) via a "Ver más formas de contacto" toggle. Non-premium agencies use the platform's quote request system for lead generation.
 
 ## Admin Control System
 
-A comprehensive admin panel allows administrators to fully manage all aspects of agency profiles, including basic information, contact details, location, categories, services, images, team size, pricing, technical specialties, and social media links.
+A comprehensive admin panel allows full management of agency profiles, including basic info, contact details, location, categories, services, images, team size, pricing, technical specialties, and social media links. It also includes features for setting premium status and auto-populating WhatsApp numbers for premium agencies.
 
 ## Profile Health System
 
-An automated profile optimization system helps agencies improve their listing quality through a 0-100% health score. The score is calculated based on 9 weighted completion factors: logo (15%), cover image (10%), description length (15%), social media links (5%), specialties (10%), portfolio items with 3+ threshold (15%), team size (10%), price range (10%), and combined categories/services (10%). The system provides two interfaces: (1) a `ProfileHealthWidget` on the agency analytics dashboard (`/mi-agencia/analytics`) showing a progress bar, completion checklist, and optimization suggestions, and (2) a "Salud" column in the admin panel (`/admin/agencias`) displaying emoji indicators (🟢 ≥80%, 🟡 60-79%, 🟠 40-59%, 🔴 <40%), percentage scores, and missing item counts to help administrators identify agencies needing profile assistance.
+An automated system calculates a 0-100% profile health score based on weighted completion factors (e.g., logo, cover image, description, social media, portfolio, team size, price range, specialties, categories/services). This is displayed via a `ProfileHealthWidget` on the agency dashboard and as emoji indicators in the admin panel.
 
 ## Legal Compliance
 
-The platform includes comprehensive legal documentation aligned with Chilean legislation:
+The platform includes a 17-section Privacy Policy (`/privacidad`) and Terms of Service (`/terminos`) compliant with Chilean legislation (Law N° 21.719 and Law 19.496). An FAQ page (`/faq`) covers common questions. Registration forms include explicit consent notices for data processing. Premium agency phone numbers display a WhatsApp badge for direct wa.me chats.
 
-### Privacy Policy (`/privacidad`)
-A detailed 17-section privacy policy compliant with Chile's Law N° 21.719 (Data Protection Law, effective December 2026). Key sections include:
-- ARCO-P rights (Access, Rectification, Cancellation, Opposition, Portability) with detailed procedures
-- Specific data retention schedules (account data, quotes, reviews, payments, logs)
-- Data breach notification procedures (APDP notification, user notification criteria)
-- International data transfer safeguards (Supabase, Brevo)
-- Cookie and tracking technology disclosures
-- Automated decision-making and profiling clarifications
-- Complaint procedures and APDP contact information
-- Last updated: November 18, 2025
+## File Upload System
 
-### Terms of Service (`/terminos`)
-Comprehensive 17-section terms covering platform usage, rights, and obligations:
-- Premium billing, renewal, and cancellation policies
-- Consumer rights per Law 19.496 (10-day retraction right for paid services)
-- Liability limitations adapted to Chilean consumer protection law
-- Termination and suspension procedures
-- Dispute resolution process (negotiation → mediation → tribunals)
-- Force majeure clauses
-- Applicable law (Chilean legislation) and jurisdiction (Chilean courts)
-- Last updated: November 18, 2025
+A comprehensive file upload system uses Replit's Object Storage (App Storage) for agency logos and cover images. It involves a `ObjectStorageService` for signed URLs, `ObjectAcl` for public access, and tRPC endpoints for upload management. A reusable `ObjectUploader` component (using Uppy) is integrated into agency creation and admin edit pages. Uploaded images are served via a Next.js catch-all route (`app/objects/[...path]/route.ts`).
 
-### FAQ Page (`/faq`)
-User-friendly FAQ covering clients, agencies, reviews, privacy, and technical issues. Organized by category with clear, non-technical language aligned with user preferences.
+## Price Range Standardization
 
-### Registration Consent
-Both client and agency registration forms include explicit consent notices (no checkbox) stating: "Al crear tu cuenta, aceptas nuestros Términos de Uso y Política de Privacidad, y consientes expresamente el tratamiento de tus datos personales según lo descrito, incluyendo el almacenamiento, procesamiento y transferencia internacional de datos conforme a la Ley 21.719." Links open terms and privacy policy in new tabs.
+Price ranges have been standardized from symbolic values ($, $$, $$$) to clear monetary values (e.g., "1-3M", "3-5M", "5M+" CLP) across all forms and display components.
 
-### WhatsApp Integration
-Premium agency phone numbers display with a green WhatsApp badge containing the official WhatsApp icon and "WhatsApp" label, opening direct wa.me chats with sanitized Chilean phone numbers.
+## Dynamic Category Counts
+
+Homepage category cards now display real-time agency counts fetched via a tRPC endpoint, dynamically linking to filtered agency listings.
 
 # External Dependencies
 
@@ -146,7 +67,7 @@ Premium agency phone numbers display with a green WhatsApp badge containing the 
 -   **Supabase**: PostgreSQL database and authentication.
 -   **Replit Object Storage (App Storage)**: File storage for agency logos and cover images.
 -   **Stripe**: Payment processing (integrated but disabled).
--   **Brevo (formerly Sendinblue)**: Transactional email delivery for welcome emails and quote notifications.
+-   **Brevo (formerly Sendinblue)**: Transactional email delivery.
 
 ## Frontend Libraries
 
