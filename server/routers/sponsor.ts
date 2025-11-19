@@ -38,18 +38,25 @@ export const sponsorRouter = router({
       })
     );
 
-    // Filter sensitive contact information for unauthenticated users
+    // Filter information for unauthenticated users - only show basic public info
     const isAuthenticated = !!ctx.session?.user;
     const filteredSlots = isAuthenticated
       ? freshSlots
       : freshSlots.map((slot: any) => ({
           ...slot,
           agency: slot.agency ? {
-            ...slot.agency,
-            email: null,
-            phone: null,
-            website: null,
-            whatsapp_number: null,
+            id: slot.agency.id,
+            name: slot.agency.name,
+            slug: slot.agency.slug,
+            description: slot.agency.description,
+            logo_url: slot.agency.logo_url,
+            cover_url: slot.agency.cover_url,
+            categories: slot.agency.categories,
+            is_premium: slot.agency.is_premium,
+            avg_rating: slot.agency.avg_rating,
+            reviews_count: slot.agency.reviews_count,
+            created_at: slot.agency.created_at,
+            location_region: slot.agency.location_region,
           } : null,
         }));
 

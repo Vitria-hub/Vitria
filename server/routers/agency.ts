@@ -72,16 +72,22 @@ export const agencyRouter = router({
 
       const freshAgencies = await enforcePremiumFreshness(data || []);
 
-      // Filter sensitive contact information for unauthenticated users
+      // Filter information for unauthenticated users - only show basic public info
       const isAuthenticated = !!ctx.session?.user;
       const filteredAgencies = isAuthenticated
         ? freshAgencies
         : freshAgencies.map((agency: any) => ({
-            ...agency,
-            email: null,
-            phone: null,
-            website: null,
-            whatsapp_number: null,
+            id: agency.id,
+            name: agency.name,
+            slug: agency.slug,
+            description: agency.description,
+            logo_url: agency.logo_url,
+            cover_url: agency.cover_url,
+            categories: agency.categories,
+            is_premium: agency.is_premium,
+            avg_rating: agency.avg_rating,
+            reviews_count: agency.reviews_count,
+            created_at: agency.created_at,
           }));
 
       return {
@@ -133,18 +139,23 @@ export const agencyRouter = router({
         }
       }
 
-      // Filter sensitive contact information for unauthenticated users
+      // Filter information for unauthenticated users - only show basic public info
       const isAuthenticated = !!ctx.session?.user;
       
       if (!isAuthenticated) {
-        // Hide direct contact details for all non-authenticated users
-        // Social media links remain public as they're part of the public profile
         return {
-          ...data,
-          email: null,
-          phone: null,
-          website: null,
-          whatsapp_number: null,
+          id: data.id,
+          name: data.name,
+          slug: data.slug,
+          description: data.description,
+          logo_url: data.logo_url,
+          cover_url: data.cover_url,
+          categories: data.categories,
+          is_premium: data.is_premium,
+          avg_rating: data.avg_rating,
+          reviews_count: data.reviews_count,
+          created_at: data.created_at,
+          location_region: data.location_region,
         };
       }
 

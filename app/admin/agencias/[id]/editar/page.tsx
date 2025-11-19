@@ -24,6 +24,7 @@ export default function EditAgencyPage() {
     description: '',
     email: '',
     phone: '',
+    whatsapp_number: '',
     website: '',
     location_city: '',
     location_region: '',
@@ -79,6 +80,7 @@ export default function EditAgencyPage() {
           description: agency.description || '',
           email: agency.email || '',
           phone: agency.phone || '',
+          whatsapp_number: agency.whatsapp_number || '',
           website: agency.website || '',
           location_city: agency.location_city || '',
           location_region: agency.location_region || '',
@@ -274,6 +276,18 @@ export default function EditAgencyPage() {
                   placeholder="+56 9 1234 5678"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark mb-2">
+                  WhatsApp
+                </label>
+                <Input
+                  value={formData.whatsapp_number}
+                  onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
+                  placeholder="+56 9 1234 5678"
+                />
+                <p className="text-sm text-dark/60 mt-1">Número de WhatsApp para contacto directo</p>
               </div>
 
               <div>
