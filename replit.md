@@ -4,23 +4,26 @@ Vitria is a directory platform designed for the Chilean market, aiming to connec
 
 # Recent Changes
 
-## Authentication-Based Contact Access Control (November 19, 2025)
+## Ultra-Restrictive Public Data Access (November 19, 2025)
 
-Implemented comprehensive authentication-based access control for agency contact information to drive user registration and enable interaction tracking. This is a critical business requirement to build the user base and measure platform engagement.
+Implemented aggressive data filtering strategy to maximize user registration conversion by showing only essential agency information publicly. This forces visitors to create an account to access detailed agency information, contact methods, and social media profiles.
 
-- **Backend Security**: Modified all public agency tRPC endpoints to filter sensitive contact fields for unauthenticated users:
-  - `agency.list`: Filters email, phone, website, whatsapp_number from agency listing results
-  - `agency.getBySlug`: Filters sensitive contact fields from individual agency profiles
-  - `sponsor.listHome`: Filters contact data from sponsored agencies displayed on homepage
-  - `contact.create`: Already protected with `protectedProcedure` (only authenticated users can submit quotes)
+- **Backend Security**: Modified all public agency tRPC endpoints to implement minimal public data visibility:
+  - `agency.list`, `agency.getBySlug`, `sponsor.listHome`: Only expose id, name, slug, description, logo_url, cover_url, categories, is_premium, avg_rating, reviews_count, created_at, location_region
+  - `contact.create`: Protected with `protectedProcedure` (only authenticated users can submit quotes)
+- **Hidden Fields (Login Required)**: All of the following require authentication to view:
+  - Direct contact: email, phone, whatsapp_number, website
+  - Location details: location_city
+  - Business info: employees_min, employees_max, price_range, services, specialties
+  - Social media: facebook_url, instagram_url, linkedin_url, twitter_url, youtube_url, tiktok_url
 - **Frontend Authentication Gates**: Updated agency detail page (`app/agencias/[slug]/page.tsx`) to:
   - Require login before opening the quote request modal
-  - Redirect unauthenticated users to `/login` when attempting to request quotes
-  - Show "Inicia sesión para ver contacto" prompt for premium contact information
-  - Only display direct contact methods (email, phone, website, WhatsApp) to logged-in users
-- **Data Visibility Strategy**: Social media links (Facebook, Instagram, LinkedIn, Twitter) remain publicly visible for marketing purposes, while direct contact methods require authentication to ensure trackable interactions and user acquisition.
+  - Redirect unauthenticated users to `/login` when attempting to access contact or detailed information
+  - Show authentication prompts for all gated content
+- **Admin Control**: Administrators have unrestricted access to edit all agency fields, including new WhatsApp field added to `admin.updateAgency` mutation and admin edit form.
+- **Database Enhancement**: Added `whatsapp_number` field to agencies table for direct WhatsApp contact management.
 
-This implementation ensures that all agency contact interactions are gated behind authentication, supporting the platform's business model of building a registered user base while maintaining public visibility for social media marketing channels.
+This ultra-restrictive strategy ensures maximum user registration conversion while maintaining just enough public information (name, description, logo, region, ratings) for basic agency discovery and SEO purposes.
 
 ## File Upload System with Replit Object Storage (November 19, 2025)
 
