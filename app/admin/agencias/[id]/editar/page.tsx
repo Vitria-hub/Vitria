@@ -7,7 +7,10 @@ import { trpc } from '@/lib/trpc';
 import { MAIN_CATEGORIES, REGIONS } from '@/lib/categories';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { ChevronLeft, AlertCircle, Save } from 'lucide-react';
+import { ObjectUploader } from '@/components/ObjectUploader';
+import { ChevronLeft, AlertCircle, Save, Upload, Image as ImageIcon } from 'lucide-react';
+import type { UploadResult } from '@uppy/core';
+import Image from 'next/image';
 
 export default function EditAgencyPage() {
   const { userData, loading: authLoading } = useAuth();
@@ -42,6 +45,12 @@ export default function EditAgencyPage() {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  const getUploadUrlMutation = trpc.upload.getUploadUrl.useMutation();
+  const setLogoAclMutation = trpc.upload.setLogoAcl.useMutation();
+  const setCoverAclMutation = trpc.upload.setCoverAcl.useMutation();
 
   const { data: agency, isLoading, error: queryError } = trpc.admin.getAgency.useQuery(
     { agencyId },
@@ -406,31 +415,120 @@ export default function EditAgencyPage() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  URL del Logo
+                  Logo de la Agencia
                 </label>
-                <Input
-                  type="url"
-                  value={formData.logo_url}
-                  onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
-                  placeholder="https://ejemplo.com/logo.png"
-                />
-                <p className="text-sm text-dark/60 mt-1">
-                  Recomendado: 200x200px, formato PNG con fondo transparente
+                
+                {formData.logo_url && (
+                  <div className="mb-4 p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-4">
+                      <div className="w-20 h-20 relative border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                        <Image
+                          src={formData.logo_url}
+                          alt="Logo actual"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-dark/80 font-medium">Logo actual</p>
+                        <p className="text-xs text-dark/60 mt-1">{formData.logo_url}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <ObjectUploader
+                  maxNumberOfFiles={1}
+                  maxFileSize={5242880}
+                  allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
+                  onGetUploadParameters={async () => {
+                    const result = await getUploadUrlMutation.mutateAsync();
+                    return {
+                      method: 'PUT' as const,
+                      url: result.uploadURL,
+                    };
+                  }}
+                  onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+                    if (result.successful && result.successful[0]) {
+                      setUploadingLogo(true);
+                      try {
+                        const uploadURL = result.successful[0].uploadURL as string;
+                        const aclResult = await setLogoAclMutation.mutateAsync({
+                          logoURL: uploadURL,
+                          agencyId,
+                        });
+                        setFormData({ ...formData, logo_url: aclResult.objectPath });
+                        setUploadingLogo(false);
+                      } catch (err) {
+                        console.error('Error al configurar el logo:', err);
+                        setError('Error al subir el logo');
+                        setUploadingLogo(false);
+                      }
+                    }
+                  }}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploadingLogo ? 'Procesando...' : 'Subir Logo'}
+                </ObjectUploader>
+                <p className="text-sm text-dark/60 mt-2">
+                  Recomendado: 200x200px, formato PNG con fondo transparente (máx. 5MB)
                 </p>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  URL de Imagen de Portada
+                  Imagen de Portada
                 </label>
-                <Input
-                  type="url"
-                  value={formData.cover_url}
-                  onChange={(e) => setFormData({ ...formData, cover_url: e.target.value })}
-                  placeholder="https://ejemplo.com/portada.jpg"
-                />
-                <p className="text-sm text-dark/60 mt-1">
-                  Recomendado: 1200x400px, formato JPG o PNG
+                
+                {formData.cover_url && (
+                  <div className="mb-4 p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+                    <div className="relative w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                      <Image
+                        src={formData.cover_url}
+                        alt="Portada actual"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="text-xs text-dark/60 mt-2">{formData.cover_url}</p>
+                  </div>
+                )}
+
+                <ObjectUploader
+                  maxNumberOfFiles={1}
+                  maxFileSize={10485760}
+                  allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
+                  onGetUploadParameters={async () => {
+                    const result = await getUploadUrlMutation.mutateAsync();
+                    return {
+                      method: 'PUT' as const,
+                      url: result.uploadURL,
+                    };
+                  }}
+                  onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+                    if (result.successful && result.successful[0]) {
+                      setUploadingCover(true);
+                      try {
+                        const uploadURL = result.successful[0].uploadURL as string;
+                        const aclResult = await setCoverAclMutation.mutateAsync({
+                          coverURL: uploadURL,
+                          agencyId,
+                        });
+                        setFormData({ ...formData, cover_url: aclResult.objectPath });
+                        setUploadingCover(false);
+                      } catch (err) {
+                        console.error('Error al configurar la portada:', err);
+                        setError('Error al subir la portada');
+                        setUploadingCover(false);
+                      }
+                    }
+                  }}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploadingCover ? 'Procesando...' : 'Subir Portada'}
+                </ObjectUploader>
+                <p className="text-sm text-dark/60 mt-2">
+                  Recomendado: 1200x400px, formato JPG o PNG (máx. 10MB)
                 </p>
               </div>
             </div>
