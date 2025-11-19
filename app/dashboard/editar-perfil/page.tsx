@@ -62,7 +62,7 @@ export default function EditarPerfilPage() {
     categories: [] as string[],
     employeesMin: undefined as number | undefined,
     employeesMax: undefined as number | undefined,
-    priceRange: '' as '' | '$' | '$$' | '$$$',
+    priceRange: '' as '' | '1-3M' | '3-5M' | '5M+',
   });
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function EditarPerfilPage() {
         categories: (agency.categories as string[]) || [],
         employeesMin: agency.employees_min || undefined,
         employeesMax: agency.employees_max || undefined,
-        priceRange: (agency.price_range as '' | '$' | '$$' | '$$$') || '',
+        priceRange: (agency.price_range as '' | '1-3M' | '3-5M' | '5M+') || '',
       });
       if (agency.logo_url) {
         setLogoPreview(agency.logo_url);
