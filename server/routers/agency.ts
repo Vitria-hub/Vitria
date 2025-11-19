@@ -11,7 +11,7 @@ import { z } from 'zod';
 export const agencyRouter = router({
   list: publicProcedure
     .input(agencyListSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { q, region, city, service, category, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
       const offset = (page - 1) * limit;
 
@@ -72,8 +72,20 @@ export const agencyRouter = router({
 
       const freshAgencies = await enforcePremiumFreshness(data || []);
 
+      // Filter sensitive contact information for unauthenticated users
+      const isAuthenticated = !!ctx.session?.user;
+      const filteredAgencies = isAuthenticated
+        ? freshAgencies
+        : freshAgencies.map((agency: any) => ({
+            ...agency,
+            email: null,
+            phone: null,
+            website: null,
+            whatsapp_number: null,
+          }));
+
       return {
-        agencies: freshAgencies,
+        agencies: filteredAgencies,
         total: count || 0,
         page,
         totalPages: Math.ceil((count || 0) / limit),
@@ -82,7 +94,7 @@ export const agencyRouter = router({
 
   getBySlug: publicProcedure
     .input(agencyBySlugSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { data, error } = await db
         .from('agencies')
         .select('*')
@@ -117,11 +129,23 @@ export const agencyRouter = router({
             })
             .eq('id', data.id);
 
-          return {
-            ...data,
-            is_premium: false,
-          };
+          data.is_premium = false;
         }
+      }
+
+      // Filter sensitive contact information for unauthenticated users
+      const isAuthenticated = !!ctx.session?.user;
+      
+      if (!isAuthenticated) {
+        // Hide direct contact details for all non-authenticated users
+        // Social media links remain public as they're part of the public profile
+        return {
+          ...data,
+          email: null,
+          phone: null,
+          website: null,
+          whatsapp_number: null,
+        };
       }
 
       return data;

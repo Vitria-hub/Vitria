@@ -3,13 +3,13 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 import { enforcePremiumFreshness } from '../utils/premiumExpiration';
 
 export const sponsorRouter = router({
-  listHome: publicProcedure.query(async () => {
+  listHome: publicProcedure.query(async ({ ctx }) => {
     const now = new Date();
 
     const { data, error } = await supabaseAdmin
       .from('sponsored_slots')
       .select('*, agency:agencies(*)')
-      .order('position', { ascending: true });
+      .order('position', { ascending: true});
 
     if (error) {
       throw error;
@@ -38,6 +38,21 @@ export const sponsorRouter = router({
       })
     );
 
-    return freshSlots;
+    // Filter sensitive contact information for unauthenticated users
+    const isAuthenticated = !!ctx.session?.user;
+    const filteredSlots = isAuthenticated
+      ? freshSlots
+      : freshSlots.map((slot: any) => ({
+          ...slot,
+          agency: slot.agency ? {
+            ...slot.agency,
+            email: null,
+            phone: null,
+            website: null,
+            whatsapp_number: null,
+          } : null,
+        }));
+
+    return filteredSlots;
   }),
 });
