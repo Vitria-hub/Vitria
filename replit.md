@@ -4,6 +4,27 @@ Vitria is a directory platform designed for the Chilean market, aiming to connec
 
 # Recent Changes
 
+## Context-Aware Authentication & Premium Auto-Fill (November 19, 2025)
+
+Enhanced authentication detection and premium agency workflow automation:
+
+- **Context-Aware Authentication**: Modified tRPC context (`server/trpc.ts`) to optionally extract user authentication from token headers in all procedures (public and protected):
+  - `createContext` now extracts `userId` and `user` data when authorization token is present
+  - Public procedures (`agency.list`, `agency.getBySlug`, `sponsor.listHome`) can now detect authenticated users via `ctx.userId`
+  - Enables conditional data filtering: unauthenticated users see minimal public data, authenticated users see full agency details
+  - Fixed authentication bug where `ctx.session?.user` was incorrectly used instead of `ctx.userId`
+
+- **Premium Agency WhatsApp Auto-Fill**: Implemented automatic WhatsApp number population when agencies are marked as premium:
+  - `admin.setPremium` mutation (`server/routers/admin.ts`) now auto-populates `whatsapp_number` from `phone` if WhatsApp field is empty
+  - Streamlines premium activation workflow for administrators
+  - Ensures premium agencies have WhatsApp contact available immediately upon upgrade
+
+- **Price Range Standardization**: Migrated from symbolic price ranges to clear monetary values:
+  - **Old system**: "$" (Económico), "$$" (Medio), "$$$" (Premium)
+  - **New system**: "1-3M" (1-3 Millones CLP), "3-5M" (3-5 Millones CLP), "5M+" (5+ Millones CLP)
+  - Updated all forms: agency creation (`app/dashboard/crear-agencia/page.tsx`), agency editing (`app/dashboard/editar-perfil/page.tsx`), admin editing (`app/admin/agencias/[id]/editar/page.tsx`)
+  - Updated display component (`components/AgencyCard.tsx`) to show monetary values directly
+
 ## Ultra-Restrictive Public Data Access (November 19, 2025)
 
 Implemented aggressive data filtering strategy to maximize user registration conversion by showing only essential agency information publicly. This forces visitors to create an account to access detailed agency information, contact methods, and social media profiles.
