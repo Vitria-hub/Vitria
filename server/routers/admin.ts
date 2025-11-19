@@ -197,6 +197,12 @@ export const adminRouter = router({
       durationDays: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
+      const { data: agency } = await db
+        .from('agencies')
+        .select('phone, whatsapp_number')
+        .eq('id', input.agencyId)
+        .single();
+
       const updateData: any = {
         is_premium: input.isPremium,
         updated_at: new Date().toISOString(),
@@ -206,6 +212,10 @@ export const adminRouter = router({
         const premiumUntil = new Date();
         premiumUntil.setDate(premiumUntil.getDate() + input.durationDays);
         updateData.premium_until = premiumUntil.toISOString();
+        
+        if (agency && agency.phone && !agency.whatsapp_number) {
+          updateData.whatsapp_number = agency.phone;
+        }
       } else if (!input.isPremium) {
         updateData.premium_until = null;
       }
