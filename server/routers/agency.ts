@@ -73,7 +73,7 @@ export const agencyRouter = router({
       const freshAgencies = await enforcePremiumFreshness(data || []);
 
       // Filter information for unauthenticated users - only show basic public info
-      const isAuthenticated = !!ctx.session?.user;
+      const isAuthenticated = !!ctx.userId;
       const filteredAgencies = isAuthenticated
         ? freshAgencies
         : freshAgencies.map((agency: any) => ({
@@ -142,7 +142,7 @@ export const agencyRouter = router({
       }
 
       // Filter information for unauthenticated users - only show basic public info
-      const isAuthenticated = !!ctx.session?.user;
+      const isAuthenticated = !!ctx.userId;
       
       if (!isAuthenticated) {
         return {
