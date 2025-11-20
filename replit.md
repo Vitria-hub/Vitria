@@ -28,6 +28,8 @@ Critical fixes for quote request functionality:
   - Updated TypeScript types in `lib/supabase.ts` for `client_profiles.budget_range`
   - Changed grid from 3 columns to responsive 2/4 columns for better mobile layout
   - Both registration flow (`/auth/registro/cliente/perfil`) and dashboard edit (`/dashboard/perfil`) now synchronized
+  - Updated `QuoteRequestModal.tsx` budget selector to match client profile values for consistency
+  - Migrated existing Supabase data from old to new values using SQL UPDATE statement
 
 ## Quote Request UX & WhatsApp Rebranding (November 20, 2025)
 

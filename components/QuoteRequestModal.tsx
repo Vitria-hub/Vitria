@@ -185,11 +185,10 @@ export default function QuoteRequestModal({
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
               >
                 <option value="">Selecciona un rango</option>
-                <option value="Menos de $1M CLP">Menos de $1M CLP</option>
-                <option value="$1M - $3M CLP">$1M - $3M CLP</option>
-                <option value="$3M - $5M CLP">$3M - $5M CLP</option>
-                <option value="$5M - $10M CLP">$5M - $10M CLP</option>
-                <option value="Más de $10M CLP">Más de $10M CLP</option>
+                <option value="Menos de 1M">Menos de 1M CLP</option>
+                <option value="1-3M">1M - 3M CLP</option>
+                <option value="3-5M">3M - 5M CLP</option>
+                <option value="5M+">5M+ CLP</option>
                 <option value="Por definir">Por definir</option>
               </select>
             </div>
