@@ -8,6 +8,38 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes
 
+## Quote Request UX & WhatsApp Rebranding (November 20, 2025)
+
+Mejoras en la experiencia del usuario del formulario de cotización y estandarización de terminología:
+
+- **Eliminación de Redundancia en Formulario de Cotización**:
+  - `QuoteRequestModal` ahora pre-llena automáticamente nombre y email para usuarios autenticados
+  - Usa `useEffect` con `useAuth` para obtener `userData.full_name` y `user.email`
+  - Los campos se mantienen pre-llenados tras `resetForm` para usuarios logueados
+  - Mejora UX: usuarios no necesitan ingresar datos que ya están en su perfil
+  - Evita fricción innecesaria en el proceso de solicitud de cotización
+
+- **Actualización de Categorías en Formulario de Cotización**:
+  - Selector de "Categoría del Servicio" ahora muestra las 6 categorías consolidadas:
+    * Performance & Ads
+    * Social Media
+    * Diseño y Branding
+    * Desarrollo Web
+    * Producción de Contenido
+    * Relaciones Públicas
+  - Eliminadas categorías antiguas (Marketing Digital, Branding, Diseño Gráfico, etc.)
+  - Consistencia con el sistema de categorías actualizado en toda la plataforma
+
+- **Cambio Sistemático de "Teléfono" a "WhatsApp"**:
+  - Refleja preferencia del mercado latinoamericano por WhatsApp como canal principal de contacto
+  - **Componentes actualizados**: QuoteRequestModal, ContactAgencyModal
+  - **Formularios actualizados**: crear-agencia, editar-perfil, admin/editar-agencia
+  - **Validadores actualizados**: lib/validators.ts (mensajes de error)
+  - **Páginas de gestión**: mi-agencia/analytics ("Clicks en WhatsApp"), mi-agencia/leads, admin/agencias
+  - **Documentación legal**: FAQ, Términos de Servicio, Política de Privacidad
+  - Cambio cosmético: internamente el campo sigue siendo `phone` en base de datos, solo cambian labels/placeholders/mensajes
+  - Campo admin "WhatsApp (Premium)" renombrado a "WhatsApp Adicional (Premium)" para claridad
+
 ## Category Expansion & Analytics Fix (November 20, 2025)
 
 Expanded category structure to 6 categories and fixed critical bugs:
