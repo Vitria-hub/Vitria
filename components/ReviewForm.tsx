@@ -8,10 +8,12 @@ import Textarea from './Textarea';
 import RatingStars from './RatingStars';
 import { trpc } from '@/lib/trpc';
 import { AlertCircle } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ReviewForm({ agencyId }: { agencyId: string }) {
   const router = useRouter();
   const { user } = useAuth();
+  const toast = useToast();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +35,7 @@ export default function ReviewForm({ agencyId }: { agencyId: string }) {
     }
 
     if (rating === 0) {
-      alert('Por favor selecciona una calificación');
+      toast.warning('Por favor selecciona una calificación');
       return;
     }
     createReview.mutate({ agencyId, rating, comment: comment || undefined });

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ActualizarContrasenaPage() {
   const [password, setPassword] = useState('');
@@ -13,6 +14,7 @@ export default function ActualizarContrasenaPage() {
   const [loading, setLoading] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -52,11 +54,11 @@ export default function ActualizarContrasenaPage() {
 
       if (updateError) throw updateError;
 
-      alert('¡Contraseña actualizada exitosamente! Redirigiendo al login...');
+      toast.success('¡Contraseña actualizada exitosamente! Redirigiendo al login...');
       
       await supabase.auth.signOut();
       
-      router.push('/auth/login');
+      setTimeout(() => router.push('/auth/login'), 1500);
     } catch (err: any) {
       setError(err.message || 'Error al actualizar la contraseña');
     } finally {

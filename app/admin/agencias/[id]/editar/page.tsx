@@ -11,12 +11,14 @@ import { ObjectUploader } from '@/components/ObjectUploader';
 import { ChevronLeft, AlertCircle, Save, Upload, Image as ImageIcon } from 'lucide-react';
 import type { UploadResult } from '@uppy/core';
 import Image from 'next/image';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function EditAgencyPage() {
   const { userData, loading: authLoading } = useAuth();
   const router = useRouter();
   const params = useParams();
   const agencyId = params.id as string;
+  const toast = useToast();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -58,10 +60,12 @@ export default function EditAgencyPage() {
   const updateMutation = trpc.admin.updateAgency.useMutation({
     onSuccess: () => {
       setSuccess(true);
+      toast.success('Agencia actualizada exitosamente');
       setTimeout(() => router.push(`/admin/agencias/${agencyId}`), 2000);
     },
     onError: (err) => {
       setError(err.message || 'Error al actualizar la agencia');
+      toast.error(`Error al actualizar: ${err.message || 'Error desconocido'}`);
     },
   });
 

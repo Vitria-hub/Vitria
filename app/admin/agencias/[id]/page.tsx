@@ -7,10 +7,14 @@ import { trpc } from '@/lib/trpc';
 import { CheckCircle, XCircle, ChevronLeft, Building2, MapPin, Mail, Phone, Globe, AlertCircle, Edit } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 
 export default function ReviewAgencyPage() {
   const { userData, loading: authLoading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
+  const confirm = useConfirm();
   const params = useParams();
   const agencyId = params.id as string;
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -25,17 +29,23 @@ export default function ReviewAgencyPage() {
   const approveMutation = trpc.admin.approveAgency.useMutation({
     onSuccess: () => {
       refetch();
+      toast.success('Agencia aprobada exitosamente');
       setTimeout(() => router.push('/admin/agencias'), 2000);
+    },
+    onError: (error) => {
+      toast.error(`Error al aprobar: ${error.message}`);
     },
   });
 
   const rejectMutation = trpc.admin.rejectAgency.useMutation({
     onSuccess: () => {
       refetch();
+      toast.success('Agencia rechazada');
       setTimeout(() => router.push('/admin/agencias'), 2000);
     },
     onError: (err) => {
       setRejectError(err.message || 'Error al rechazar la agencia');
+      toast.error(`Error al rechazar: ${err.message}`);
     },
   });
 
@@ -49,8 +59,16 @@ export default function ReviewAgencyPage() {
     return null;
   }
 
-  const handleApprove = () => {
-    if (confirm('¿Estás seguro de aprobar esta agencia?')) {
+  const handleApprove = async () => {
+    const confirmed = await confirm({
+      title: '¿Aprobar agencia?',
+      message: 'La agencia será visible públicamente y recibirá un email de confirmación.',
+      confirmText: 'Aprobar',
+      cancelText: 'Cancelar',
+      variant: 'info',
+    });
+
+    if (confirmed) {
       approveMutation.mutate({ agencyId });
     }
   };

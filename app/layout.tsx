@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Providers } from '@/lib/providers';
 import NextTopLoader from 'nextjs-toploader';
+import { ToastProvider } from '@/contexts/ToastContext';
+import { ConfirmProvider } from '@/contexts/ConfirmContext';
 
 const quicksand = Quicksand({ 
   subsets: ['latin'],
@@ -76,9 +78,13 @@ export default function RootLayout({
           speed={200}
         />
         <Providers>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <ToastProvider>
+            <ConfirmProvider>
+              <Navbar />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+            </ConfirmProvider>
+          </ToastProvider>
         </Providers>
       </body>
     </html>

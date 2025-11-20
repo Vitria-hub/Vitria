@@ -5,8 +5,12 @@ import { trpc } from '@/lib/trpc';
 import { Star, Trash2, ChevronLeft, Calendar, MapPin } from 'lucide-react';
 import Button from '@/components/Button';
 import Link from 'next/link';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 
 export default function AdminSponsoredSlotsPage() {
+  const toast = useToast();
+  const confirm = useConfirm();
   const { data: slots, isLoading, refetch } = trpc.admin.listSponsoredSlots.useQuery();
   const [editModal, setEditModal] = useState<any>(null);
   const [newEndDate, setNewEndDate] = useState('');
@@ -14,26 +18,34 @@ export default function AdminSponsoredSlotsPage() {
   const removeMutation = trpc.admin.removeSponsoredSlot.useMutation({
     onSuccess: () => {
       refetch();
-      alert('Slot eliminado exitosamente');
+      toast.success('Slot eliminado exitosamente');
     },
     onError: (error) => {
-      alert(`Error al eliminar: ${error.message}`);
+      toast.error(`Error al eliminar: ${error.message}`);
     },
   });
 
   const updateMutation = trpc.admin.updateSponsoredSlot.useMutation({
     onSuccess: () => {
-      alert('Duración actualizada exitosamente');
+      toast.success('Duración actualizada exitosamente');
       setEditModal(null);
       refetch();
     },
     onError: (error) => {
-      alert(`Error al actualizar: ${error.message}`);
+      toast.error(`Error al actualizar: ${error.message}`);
     },
   });
 
-  const handleRemove = (slotId: string, agencyName: string) => {
-    if (confirm(`¿Eliminar a ${agencyName} de los slots destacados?`)) {
+  const handleRemove = async (slotId: string, agencyName: string) => {
+    const confirmed = await confirm({
+      title: '¿Eliminar de destacados?',
+      message: `${agencyName} dejará de aparecer en los slots destacados de la homepage.`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      variant: 'warning',
+    });
+
+    if (confirmed) {
       removeMutation.mutate({ slotId });
     }
   };

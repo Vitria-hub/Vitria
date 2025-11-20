@@ -6,10 +6,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Star, Plus, X, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 
 export default function AdminReviewsPage() {
   const { userData, loading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -30,11 +34,23 @@ export default function AdminReviewsPage() {
   );
 
   const updateStatusMutation = trpc.admin.updateReviewStatus.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+      toast.success('Estado de reseña actualizado');
+    },
+    onError: (error) => {
+      toast.error(`Error al actualizar estado: ${error.message}`);
+    },
   });
 
   const deleteMutation = trpc.admin.deleteReview.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+      toast.success('Reseña eliminada exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al eliminar: ${error.message}`);
+    },
   });
 
   const createReviewMutation = trpc.admin.createReview.useMutation({
@@ -42,6 +58,10 @@ export default function AdminReviewsPage() {
       refetch();
       setShowCreateModal(false);
       resetForm();
+      toast.success('Reseña creada exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al crear reseña: ${error.message}`);
     },
   });
 
@@ -63,8 +83,16 @@ export default function AdminReviewsPage() {
     updateStatusMutation.mutate({ reviewId, status: 'rejected' });
   };
 
-  const handleDelete = (reviewId: string) => {
-    if (confirm('¿Estás seguro de eliminar esta reseña? Esta acción no se puede deshacer.')) {
+  const handleDelete = async (reviewId: string) => {
+    const confirmed = await confirm({
+      title: '¿Eliminar reseña?',
+      message: 'Esta acción no se puede deshacer. La reseña será eliminada permanentemente.',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      variant: 'danger',
+    });
+
+    if (confirmed) {
       deleteMutation.mutate({ reviewId });
     }
   };
@@ -79,7 +107,7 @@ export default function AdminReviewsPage() {
 
   const handleCreateReview = () => {
     if (!selectedAgency || !authorName.trim() || !comment.trim()) {
-      alert('Por favor completa todos los campos');
+      toast.error('Por favor completa todos los campos');
       return;
     }
 

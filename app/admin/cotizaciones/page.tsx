@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
+import EmptyState from '@/components/EmptyState';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 import { 
   FileText, 
   Clock, 
@@ -21,6 +24,8 @@ import {
 export default function AdminQuotesPage() {
   const { userData, loading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'contacted' | 'won' | 'lost'>('all');
   const [expandedQuote, setExpandedQuote] = useState<string | null>(null);
 
@@ -36,6 +41,10 @@ export default function AdminQuotesPage() {
   const updateStatusMutation = trpc.quotes.updateQuoteStatus.useMutation({
     onSuccess: () => {
       refetch();
+      toast.success('Estado actualizado exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al actualizar: ${error.message}`);
     },
   });
 
@@ -52,8 +61,16 @@ export default function AdminQuotesPage() {
     return null;
   }
 
-  const handleStatusChange = (quoteId: string, newStatus: 'pending' | 'contacted' | 'won' | 'lost') => {
-    if (confirm(`¿Cambiar estado a "${newStatus}"?`)) {
+  const handleStatusChange = async (quoteId: string, newStatus: 'pending' | 'contacted' | 'won' | 'lost') => {
+    const confirmed = await confirm({
+      title: '¿Cambiar estado de cotización?',
+      message: `El estado cambiará a "${getStatusLabel(newStatus)}".`,
+      confirmText: 'Cambiar',
+      cancelText: 'Cancelar',
+      variant: 'info',
+    });
+
+    if (confirmed) {
       updateStatusMutation.mutate({
         quoteId,
         status: newStatus,
@@ -327,10 +344,11 @@ export default function AdminQuotesPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <FileText className="w-16 h-16 text-dark/20 mx-auto mb-4" />
-            <p className="text-dark/60">No hay cotizaciones aún</p>
-          </div>
+          <EmptyState
+            icon={FileText}
+            title="No hay cotizaciones aún"
+            description="Cuando los clientes soliciten cotizaciones, aparecerán aquí con toda la información."
+          />
         )}
       </div>
     </div>

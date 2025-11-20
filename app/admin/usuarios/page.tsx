@@ -6,10 +6,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 import { Users, ChevronLeft, ChevronRight, Shield, Trash2, Pencil } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 
 export default function AdminUsersPage() {
   const { userData, loading } = useAuth();
   const router = useRouter();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState<'all' | 'user' | 'agency' | 'admin'>('all');
 
@@ -19,11 +23,23 @@ export default function AdminUsersPage() {
   );
 
   const updateRoleMutation = trpc.admin.updateUserRole.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+      toast.success('Rol actualizado exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al actualizar rol: ${error.message}`);
+    },
   });
 
   const deleteMutation = trpc.admin.deleteUser.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+      toast.success('Usuario eliminado exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al eliminar usuario: ${error.message}`);
+    },
   });
 
   useEffect(() => {
@@ -36,14 +52,30 @@ export default function AdminUsersPage() {
     return null;
   }
 
-  const handleRoleChange = (userId: string, newRole: 'user' | 'agency' | 'admin') => {
-    if (confirm(`¿Cambiar el rol de este usuario a "${newRole}"?`)) {
+  const handleRoleChange = async (userId: string, newRole: 'user' | 'agency' | 'admin') => {
+    const confirmed = await confirm({
+      title: '¿Cambiar rol de usuario?',
+      message: `El rol del usuario cambiará a "${newRole}". Esto afectará sus permisos en la plataforma.`,
+      confirmText: 'Cambiar Rol',
+      cancelText: 'Cancelar',
+      variant: 'warning',
+    });
+
+    if (confirmed) {
       updateRoleMutation.mutate({ userId, role: newRole });
     }
   };
 
-  const handleDelete = (userId: string) => {
-    if (confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer y eliminará todas sus agencias y reseñas.')) {
+  const handleDelete = async (userId: string) => {
+    const confirmed = await confirm({
+      title: '¿Eliminar usuario?',
+      message: 'Esta acción no se puede deshacer. Se eliminarán todas sus agencias, reseñas y datos permanentemente.',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      variant: 'danger',
+    });
+
+    if (confirmed) {
       deleteMutation.mutate({ userId });
     }
   };

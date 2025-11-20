@@ -6,8 +6,12 @@ import { CheckCircle, XCircle, Trash2, ChevronLeft, ChevronRight, Building2, Cro
 import Button from '@/components/Button';
 import Link from 'next/link';
 import { calculateProfileHealth, getHealthEmoji } from '@/lib/profileHealth';
+import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 
 export default function AdminAgenciesPage() {
+  const toast = useToast();
+  const confirm = useConfirm();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [premiumModal, setPremiumModal] = useState<{ agencyId: string; currentStatus: boolean } | null>(null);
@@ -25,6 +29,10 @@ export default function AdminAgenciesPage() {
     onSuccess: () => {
       refetch();
       setDetailModal(null);
+      toast.success('Agencia aprobada exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al aprobar: ${error.message}`);
     },
   });
 
@@ -33,33 +41,59 @@ export default function AdminAgenciesPage() {
       refetch();
       setRejectModal(null);
       setRejectionReason('');
+      toast.success('Agencia rechazada');
+    },
+    onError: (error) => {
+      toast.error(`Error al rechazar: ${error.message}`);
     },
   });
 
   const deleteMutation = trpc.admin.deleteAgency.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+      toast.success('Agencia eliminada exitosamente');
+    },
+    onError: (error) => {
+      toast.error(`Error al eliminar: ${error.message}`);
+    },
   });
 
   const premiumMutation = trpc.admin.setPremium.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
       setPremiumModal(null);
+      if (data?.is_premium) {
+        toast.success('Premium activado exitosamente');
+      } else {
+        toast.success('Premium desactivado');
+      }
+    },
+    onError: (error) => {
+      toast.error(`Error al cambiar premium: ${error.message}`);
     },
   });
 
   const addSponsorMutation = trpc.admin.addSponsoredSlot.useMutation({
     onSuccess: () => {
-      alert('¡Agencia destacada exitosamente!');
+      toast.success('¡Agencia destacada exitosamente!');
       setSponsorModal(null);
       refetch();
     },
     onError: (error) => {
-      alert(`Error: ${error.message}`);
+      toast.error(`Error: ${error.message}`);
     },
   });
 
-  const handleApprove = (agencyId: string) => {
-    if (confirm('¿Aprobar esta agencia? Se enviará un email de confirmación al dueño.')) {
+  const handleApprove = async (agencyId: string) => {
+    const confirmed = await confirm({
+      title: '¿Aprobar agencia?',
+      message: 'Se enviará un email de confirmación al dueño de la agencia.',
+      confirmText: 'Aprobar',
+      cancelText: 'Cancelar',
+      variant: 'info',
+    });
+
+    if (confirmed) {
       approveMutation.mutate({ agencyId });
     }
   };
@@ -73,15 +107,31 @@ export default function AdminAgenciesPage() {
     }
   };
 
-  const handleDelete = (agencyId: string) => {
-    if (confirm('¿Estás seguro de eliminar esta agencia? Esta acción no se puede deshacer.')) {
+  const handleDelete = async (agencyId: string) => {
+    const confirmed = await confirm({
+      title: '¿Eliminar agencia?',
+      message: 'Esta acción no se puede deshacer. La agencia será eliminada permanentemente junto con todas sus reviews y datos.',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      variant: 'danger',
+    });
+
+    if (confirmed) {
       deleteMutation.mutate({ agencyId });
     }
   };
 
-  const handlePremiumToggle = (agencyId: string, currentStatus: boolean) => {
+  const handlePremiumToggle = async (agencyId: string, currentStatus: boolean) => {
     if (currentStatus) {
-      if (confirm('¿Desactivar premium para esta agencia?')) {
+      const confirmed = await confirm({
+        title: '¿Desactivar Premium?',
+        message: 'La agencia perderá sus beneficios premium inmediatamente.',
+        confirmText: 'Desactivar',
+        cancelText: 'Cancelar',
+        variant: 'warning',
+      });
+
+      if (confirmed) {
         premiumMutation.mutate({ agencyId, isPremium: false });
       }
     } else {
