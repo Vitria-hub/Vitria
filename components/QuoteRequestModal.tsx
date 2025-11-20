@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { useAuth } from '@/hooks/useAuth';
+import { useFormValidation, validations } from '@/hooks/useFormValidation';
 import Button from './Button';
 import { X, AlertCircle, CheckCircle2, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/contexts/ToastContext';
 
 interface QuoteRequestModalProps {
   agencyId: string;
@@ -22,6 +24,14 @@ export default function QuoteRequestModal({
 }: QuoteRequestModalProps) {
   const router = useRouter();
   const { user, userData } = useAuth();
+  const toast = useToast();
+  
+  const { validateAll, getFieldError } = useFormValidation({
+    clientName: [validations.required(), validations.minLength(2)],
+    clientEmail: [validations.required(), validations.email()],
+    projectName: [validations.required(), validations.minLength(3)],
+    projectDescription: [validations.required(), validations.minLength(10)],
+  });
   
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
@@ -42,6 +52,7 @@ export default function QuoteRequestModal({
   const submitQuoteMutation = trpc.quotes.submitQuote.useMutation({
     onSuccess: () => {
       setShowSuccess(true);
+      toast.success('Cotización enviada exitosamente');
       setTimeout(() => {
         setShowSuccess(false);
         onClose();
@@ -50,6 +61,7 @@ export default function QuoteRequestModal({
     },
     onError: (error) => {
       console.error('Error submitting quote:', error);
+      toast.error(error.message || 'Error al enviar la cotización');
     },
   });
 
@@ -70,6 +82,19 @@ export default function QuoteRequestModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate all fields before submission
+    const isValid = validateAll({
+      clientName,
+      clientEmail,
+      projectName,
+      projectDescription,
+    });
+
+    if (!isValid) {
+      toast.error('Por favor completa todos los campos obligatorios correctamente');
+      return;
+    }
 
     submitQuoteMutation.mutate({
       agencyId,

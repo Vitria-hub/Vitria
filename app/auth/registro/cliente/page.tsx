@@ -8,6 +8,7 @@ import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { ArrowLeft } from 'lucide-react';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ClientRegisterPage() {
   const [fullName, setFullName] = useState('');
@@ -15,11 +16,11 @@ export default function ClientRegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -63,7 +64,6 @@ export default function ClientRegisterPage() {
   }, [router]);
 
   const handleGoogleSignUp = async () => {
-    setError('');
     setGoogleLoading(true);
     try {
       await signInWithGoogle({ 
@@ -71,22 +71,21 @@ export default function ClientRegisterPage() {
         redirectPath: '/dashboard'
       });
     } catch (err: any) {
-      setError(err.message || 'Error al continuar con Google');
+      toast.error(err.message || 'Error al continuar con Google');
       setGoogleLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      toast.error('Las contraseñas no coinciden');
       return;
     }
 
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+      toast.error('La contraseña debe tener al menos 6 caracteres');
       return;
     }
 
@@ -104,9 +103,9 @@ export default function ClientRegisterPage() {
       } catch (signInError: any) {
         console.error('Sign in error:', signInError);
         if (signInError.message?.includes('Invalid')) {
-          setError('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
+          toast.error('Credenciales inválidas. Por favor, verifica tu email y contraseña.');
         } else {
-          setError(signInError.message || 'Error al iniciar sesión. Intenta nuevamente.');
+          toast.error(signInError.message || 'Error al iniciar sesión. Intenta nuevamente.');
         }
         setLoading(false);
         return;
@@ -130,13 +129,14 @@ export default function ClientRegisterPage() {
         throw new Error('La sesión tardó demasiado en establecerse. Por favor, intenta iniciar sesión desde la página de login.');
       }
 
+      toast.success('¡Cuenta creada exitosamente! Bienvenido a Vitria');
       router.push('/dashboard');
     } catch (err: any) {
       console.error('Client registration error:', err);
       if (err.message?.includes('No auth token')) {
-        setError('Error al crear la cuenta. Por favor, intenta iniciar sesión manualmente.');
+        toast.error('Error al crear la cuenta. Por favor, intenta iniciar sesión manualmente.');
       } else {
-        setError(err.message || 'Error al crear la cuenta');
+        toast.error(err.message || 'Error al crear la cuenta');
       }
       setLoading(false);
     }
@@ -164,12 +164,6 @@ export default function ClientRegisterPage() {
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-          {error && (
-            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
-            </div>
-          )}
-
           <button
             type="button"
             onClick={handleGoogleSignUp}

@@ -7,15 +7,16 @@ import { signIn, signInWithGoogle } from '@/lib/auth';
 import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -59,19 +60,17 @@ export default function LoginPage() {
   }, [router]);
 
   const handleGoogleSignIn = async () => {
-    setError('');
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
     } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión con Google');
+      toast.error(err.message || 'Error al iniciar sesión con Google');
       setGoogleLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
@@ -85,6 +84,8 @@ export default function LoginPage() {
           .eq('auth_id', authData.user.id)
           .single();
 
+        toast.success('¡Bienvenido de vuelta!');
+        
         if (userData?.role === 'admin') {
           router.push('/admin');
         } else {
@@ -95,9 +96,11 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.message?.includes('Invalid login credentials')) {
-        setError('Email o contraseña incorrectos');
+        toast.error('Email o contraseña incorrectos');
+      } else if (err.message?.includes('Email not confirmed')) {
+        toast.error('Por favor verifica tu email para continuar');
       } else {
-        setError(err.message || 'Error al iniciar sesión');
+        toast.error(err.message || 'Error al iniciar sesión');
       }
     } finally {
       setLoading(false);
@@ -124,12 +127,6 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-          {error && (
-            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
-            </div>
-          )}
-
           <button
             onClick={handleGoogleSignIn}
             disabled={googleLoading}

@@ -5,17 +5,15 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function RecuperarContrasenaPage() {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess(false);
     setLoading(true);
 
     try {
@@ -27,10 +25,10 @@ export default function RecuperarContrasenaPage() {
 
       if (resetError) throw resetError;
 
-      setSuccess(true);
+      toast.success('¡Enlace enviado! Revisa tu correo electrónico para restablecer tu contraseña.');
       setEmail('');
     } catch (err: any) {
-      setError(err.message || 'Error al enviar el enlace de recuperación');
+      toast.error(err.message || 'Error al enviar el enlace de recuperación');
     } finally {
       setLoading(false);
     }
@@ -45,19 +43,6 @@ export default function RecuperarContrasenaPage() {
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-          {error && (
-            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-              <p className="font-semibold mb-1">¡Enlace enviado!</p>
-              <p className="text-sm">Revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña.</p>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
@@ -69,7 +54,7 @@ export default function RecuperarContrasenaPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tu@email.com"
                 required
-                disabled={loading || success}
+                disabled={loading}
               />
             </div>
 
@@ -78,7 +63,6 @@ export default function RecuperarContrasenaPage() {
               variant="primary" 
               className="w-full" 
               loading={loading}
-              disabled={success}
             >
               Enviar Enlace de Recuperación
             </Button>

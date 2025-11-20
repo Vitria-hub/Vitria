@@ -1,15 +1,17 @@
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import AgencyCard from '@/components/AgencyCard';
 import FilterBar from '@/components/FilterBar';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 import { useTracking } from '@/hooks/useTracking';
 
 function AgenciasContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [filters, setFilters] = useState<any>({
     page: 1,
     limit: 12,
@@ -82,6 +84,17 @@ function AgenciasContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleClearFilters = () => {
+    setFilters({
+      page: 1,
+      limit: 12,
+      sort: 'premium',
+    });
+    router.push('/agencias');
+  };
+
+  const hasActiveFilters = filters.category || filters.region || filters.priceRange || filters.q;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold text-primary mb-8">Explorar Agencias</h1>
@@ -114,11 +127,22 @@ function AgenciasContent() {
         </div>
       ) : data?.agencies && data.agencies.length > 0 ? (
         <>
-          <div className="mt-8 mb-4 text-dark/60">
-            Mostrando {data.agencies.length} de {data.total} agencias
+          <div className="flex items-center justify-between mt-8 mb-4">
+            <div className="text-dark/60">
+              Mostrando {data.agencies.length} de {data.total} agencias
+            </div>
+            {hasActiveFilters && (
+              <button
+                onClick={handleClearFilters}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/5 rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4" />
+                Limpiar filtros
+              </button>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 transition-opacity ${isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
             {data.agencies.map((agency: any) => (
               <AgencyCard key={agency.id} agency={agency} />
             ))}
@@ -149,9 +173,17 @@ function AgenciasContent() {
           )}
         </>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-dark/60">No se encontraron agencias con los filtros seleccionados.</p>
-        </div>
+        <EmptyState
+          icon={Search}
+          title="No encontramos agencias"
+          description={hasActiveFilters 
+            ? "Intenta ajustar los filtros para ver más resultados. También puedes explorar todas las categorías disponibles."
+            : "Actualmente no hay agencias disponibles. Vuelve pronto para descubrir nuevas opciones."}
+          action={hasActiveFilters ? {
+            label: "Limpiar filtros",
+            onClick: handleClearFilters,
+          } : undefined}
+        />
       )}
     </div>
   );
