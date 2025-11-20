@@ -764,7 +764,7 @@ export const adminRouter = router({
       cover_url: z.string().url().optional().or(z.literal('')),
       employees_min: z.number().int().min(0).nullable(),
       employees_max: z.number().int().min(0).nullable(),
-      price_range: z.enum(['1-3M', '3-5M', '5M+']).nullable().or(z.literal('')),
+      price_range: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']).nullable().or(z.literal('')),
       specialties: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input }) => {
