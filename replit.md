@@ -8,29 +8,42 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes
 
-## Category Consolidation & Dynamic Counts (November 19, 2025)
+## Category Expansion & Analytics Fix (November 20, 2025)
 
-Simplified category structure and implemented real-time agency counting:
+Expanded category structure to 6 categories and fixed critical bugs:
 
-- **Category Consolidation**: Reduced from 8 to 5 non-overlapping main categories to eliminate redundancy:
-  - **Marketing Digital** (consolidates Publicidad Digital + Social Media + Estrategia): SEO, SEM, social media, paid ads, analytics
-  - **Diseño y Branding** (merges Branding + Diseño Gráfico): Logo design, brand identity, graphic design, packaging
+- **Category Expansion**: Expanded from 5 to 6 balanced categories for better marketplace segmentation:
+  - **Performance & Ads**: SEO, SEM, paid advertising (Google Ads, Meta Ads, analytics)
+  - **Social Media**: Community management, influencer marketing, RRSS strategy
+  - **Diseño y Branding**: Logo design, brand identity, graphic design, packaging
   - **Desarrollo Web**: Website development, e-commerce, mobile apps, UX/UI
-  - **Producción de Contenido** (consolidates Contenido + Video/Fotografía): Audiovisual production, copywriting, photography, content marketing
+  - **Producción de Contenido**: Audiovisual production, copywriting, photography, content marketing
   - **Relaciones Públicas**: RRPP, corporate communications, crisis management, events
+  - Split "Marketing Digital" into "Performance & Ads" + "Social Media" for clearer service distinction
+  - Homepage grid updated to 3 columns (lg:grid-cols-3) creating balanced 3x2 visual layout
   - Updated `lib/categories.ts` with comprehensive service lists for each category
-  - Removed redundant categories that caused user confusion
 
-- **Dynamic Category Counts**: Homepage category cards now display real-time agency counts instead of hardcoded values:
+- **Category Counting Bug Fix**: Fixed critical deduplication issue in `getCategoryCounts`:
+  - **Problem**: Agencies with multiple legacy categories were counted multiple times per consolidated category
+  - **Solution**: Implemented Set-based deduplication to count unique agencies only
+  - Maps all legacy category IDs to consolidated IDs before counting
+  - Legacy mapping covers all 8 original IDs: publicidad-digital, estrategia-consultoria, publicidad → performance-ads | contenido-redes → social-media | diseno-grafico → branding-identidad | video-fotografia → produccion-contenido | relaciones-publicas, desarrollo-web (self-map)
+  - Ensures accurate counts: each agency counted once per consolidated category regardless of legacy tags
+
+- **Dashboard Analytics Fix**: Replaced mock metrics with real data from `getMyAgencyAnalytics`:
+  - Added `quotesReceived` field to analytics endpoint for accurate lead tracking
+  - Dashboard (`app/dashboard/page.tsx`) now displays actual data: views, clicks, contacts, quotesReceived
+  - New agencies correctly show 0 metrics instead of inflated mock numbers
+  - Maintains authenticated-only access to preserve registration incentive
+
+- **Dynamic Category Counts**: Homepage category cards display real-time agency counts (implemented November 19):
   - Created `getCategoryCounts` tRPC endpoint (`server/routers/agency.ts`) that aggregates approved agencies by category
   - Created server-side caller (`app/_trpc/serverClient.ts`) for Next.js App Router server components (public procedures only)
   - Modified homepage (`app/page.tsx`) to async server component that fetches real category statistics
   - Each category card dynamically shows accurate agency count (e.g., "1 agencia", "0 agencias")
   - Category cards link to filtered agency listings (`/agencias?category=X`)
   - Installed `server-only` package for server-side-only module imports
-  - **Legacy ID Mapping**: Created shared module (`lib/categoryMapping.ts`) that maps consolidated category IDs to legacy IDs
-    - Enables backward compatibility with existing agency data without database migration
-    - Homepage sums counts from all legacy IDs (e.g., Marketing Digital aggregates publicidad-digital + social-media + estrategia-consultoria + publicidad)
+  - **Legacy ID Mapping**: Centralized in `lib/categoryMapping.ts` for backward compatibility without database migration
     - Agency listing filter expands new category IDs to search all legacy IDs
     - Ensures end-to-end functionality: homepage counts → category links → filtered listings show correct agencies
 
