@@ -123,7 +123,7 @@ export default function TerminosPage() {
           <p>Las agencias pueden acceder a funcionalidades premium, incluyendo:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Badge premium dorado visible en el perfil</li>
-            <li>Capacidad de mostrar información de contacto directo (email, teléfono, sitio web)</li>
+            <li>Capacidad de mostrar información de contacto directo (email, WhatsApp, sitio web)</li>
             <li>Mayor visibilidad en resultados de búsqueda</li>
             <li>Acceso prioritario a nuevas funcionalidades</li>
           </ul>

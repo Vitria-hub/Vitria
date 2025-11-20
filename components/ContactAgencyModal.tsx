@@ -206,7 +206,7 @@ export default function ContactAgencyModal({
               required
             >
               <option value="email">Email</option>
-              <option value="phone">Teléfono</option>
+              <option value="phone">WhatsApp</option>
               <option value="form">Formulario de Contacto</option>
               <option value="website">Sitio Web</option>
             </select>

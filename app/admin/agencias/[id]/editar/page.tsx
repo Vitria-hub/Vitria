@@ -256,7 +256,7 @@ export default function EditAgencyPage() {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Teléfono *
+                  WhatsApp *
                 </label>
                 <Input
                   value={formData.phone}
@@ -268,14 +268,14 @@ export default function EditAgencyPage() {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  WhatsApp (Premium)
+                  WhatsApp Adicional (Premium)
                 </label>
                 <Input
                   value={formData.whatsapp_number}
                   onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
                   placeholder="+56 9 1234 5678"
                 />
-                <p className="text-sm text-dark/60 mt-1">Solo visible para agencias premium</p>
+                <p className="text-sm text-dark/60 mt-1">Número WhatsApp adicional, solo visible para agencias premium</p>
               </div>
 
               <div>

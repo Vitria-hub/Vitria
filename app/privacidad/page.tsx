@@ -47,7 +47,7 @@ export default function PrivacidadPage() {
             <li>Nombre de la agencia</li>
             <li>Descripción de servicios</li>
             <li>Ubicación (ciudad y región)</li>
-            <li>Información de contacto (email, teléfono, sitio web)</li>
+            <li>Información de contacto (email, WhatsApp, sitio web)</li>
             <li>Servicios ofrecidos y especialidades técnicas</li>
             <li>Portafolio de trabajos</li>
             <li>Redes sociales</li>

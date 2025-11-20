@@ -50,7 +50,7 @@ export default function AgencyAnalyticsPage() {
       comparison: analytics.platformAverage.contacts,
     },
     {
-      name: 'Clicks en Teléfono',
+      name: 'Clicks en WhatsApp',
       value: analytics.phoneClicks,
       icon: Phone,
       color: 'text-primary',

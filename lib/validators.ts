@@ -74,7 +74,7 @@ export const createAgencySchema = z.object({
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres'),
   website: optionalUrlSchema,
   email: z.string().email('Email inválido'),
-  phone: z.string().min(8, 'Teléfono inválido'),
+  phone: z.string().min(8, 'WhatsApp inválido'),
   whatsappNumber: z.string().optional().refine(
     (val) => !val || val === '' || val.length >= 8,
     { message: 'Número de WhatsApp inválido' }
@@ -125,7 +125,7 @@ export const updateAgencySchema = z.object({
   description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres').optional(),
   website: optionalUrlSchema,
   email: z.string().email('Email inválido').optional(),
-  phone: z.string().min(8, 'Teléfono inválido').optional(),
+  phone: z.string().min(8, 'WhatsApp inválido').optional(),
   whatsappNumber: z.string().optional().refine(
     (val) => !val || val === '' || val.length >= 8,
     { message: 'Número de WhatsApp inválido' }

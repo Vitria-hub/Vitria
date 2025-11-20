@@ -55,7 +55,7 @@ export default function AgencyLeadsPage() {
 
   const contactMethodLabels = {
     email: 'Email',
-    phone: 'Teléfono',
+    phone: 'WhatsApp',
     website: 'Sitio Web',
     form: 'Formulario',
   };

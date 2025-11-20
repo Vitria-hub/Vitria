@@ -362,7 +362,7 @@ export default function AdminAgenciesPage() {
                     <p className="text-dark">{detailModal.email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-dark/70">Teléfono</label>
+                    <label className="text-sm font-semibold text-dark/70">WhatsApp</label>
                     <p className="text-dark">{detailModal.phone || 'N/A'}</p>
                   </div>
                   <div>

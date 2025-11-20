@@ -108,7 +108,7 @@ export default function CrearAgenciaPage() {
         return false;
       }
       if (!formData.phone || formData.phone.length < 8) {
-        setValidationError('Teléfono válido es requerido (mínimo 8 caracteres)');
+        setValidationError('WhatsApp válido es requerido (mínimo 8 caracteres)');
         return false;
       }
       if (!formData.city || formData.city.length < 2) {
@@ -377,7 +377,7 @@ export default function CrearAgenciaPage() {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Teléfono *
+                  WhatsApp *
                 </label>
                 <Input
                   type="tel"

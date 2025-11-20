@@ -13,7 +13,7 @@ export default function FAQPage() {
         },
         {
           q: "¿Puedo contactar directamente a una agencia?",
-          a: "Las agencias con plan Premium pueden mostrar su información de contacto directo (email, teléfono, sitio web). Para agencias regulares, usa el sistema de cotizaciones que garantiza que tu solicitud sea recibida y registrada."
+          a: "Las agencias con plan Premium pueden mostrar su información de contacto directo (email, WhatsApp, sitio web). Para agencias regulares, usa el sistema de cotizaciones que garantiza que tu solicitud sea recibida y registrada."
         },
         {
           q: "¿Las agencias me cobrarán por una cotización?",
@@ -38,7 +38,7 @@ export default function FAQPage() {
         },
         {
           q: "¿Qué incluye el plan Premium?",
-          a: "El plan Premium incluye: badge dorado Premium visible, posicionamiento destacado en búsquedas, y capacidad de mostrar tu información de contacto directo (email, teléfono, sitio web) en tu perfil."
+          a: "El plan Premium incluye: badge dorado Premium visible, posicionamiento destacado en búsquedas, y capacidad de mostrar tu información de contacto directo (email, WhatsApp, sitio web) en tu perfil."
         },
         {
           q: "¿Cómo funciona el sistema de cotizaciones?",

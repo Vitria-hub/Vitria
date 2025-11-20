@@ -172,7 +172,7 @@ export default function EditarPerfilPage() {
       return;
     }
     if (!formData.phone || formData.phone.length < 8) {
-      setErrorMessage('Teléfono válido es requerido');
+      setErrorMessage('WhatsApp válido es requerido');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -387,7 +387,7 @@ export default function EditarPerfilPage() {
 
                     <div>
                       <label className="block text-sm font-semibold text-dark mb-2">
-                        Teléfono *
+                        WhatsApp *
                       </label>
                       <Input
                         type="tel"
