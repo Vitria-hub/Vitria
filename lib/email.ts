@@ -98,7 +98,7 @@ export async function sendAgencyReviewEmail(agencyData: AgencyData) {
                 </div>
                 
                 <div class="info-row">
-                  <span class="label">Teléfono:</span> ${agencyData.phone}
+                  <span class="label">WhatsApp:</span> ${agencyData.phone}
                 </div>
                 
                 ${agencyData.website ? `
@@ -847,7 +847,7 @@ export async function sendQuoteNotificationToAgency(data: QuoteNotificationData)
                 
                 ${data.clientPhone ? `
                 <div class="info-row">
-                  <span class="label">Teléfono:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
+                  <span class="label">WhatsApp:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
                 </div>
                 ` : ''}
               </div>
@@ -1037,7 +1037,7 @@ export async function sendQuoteNotificationToAdmin(data: AdminQuoteNotificationD
                 
                 ${data.clientPhone ? `
                 <div class="info-row">
-                  <span class="label">Teléfono:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
+                  <span class="label">WhatsApp:</span> <a href="tel:${data.clientPhone}">${data.clientPhone}</a>
                 </div>
                 ` : ''}
               </div>
