@@ -128,7 +128,7 @@ async function seed() {
         location_region: region,
         employees_min: 5 + (i % 5) * 3,
         employees_max: 15 + (i % 5) * 8,
-        price_range: ['$', '$$', '$$$'][i % 3],
+        price_range: ['Menos de 1M', '1-3M', '3-5M', '5M+'][i % 4],
         services: agencyData.services,
         categories: [agencyData.category],
         is_verified: i < 20,
