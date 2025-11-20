@@ -8,7 +8,8 @@ export const CATEGORY_LEGACY_MAPPING: Record<string, string[]> = {
 };
 
 export function expandCategoryToLegacyIds(categoryId: string): string[] {
-  return CATEGORY_LEGACY_MAPPING[categoryId] || [categoryId];
+  const legacyIds = CATEGORY_LEGACY_MAPPING[categoryId] || [];
+  return [categoryId, ...legacyIds];
 }
 
 export function sumCategoryCounts(categoryCounts: Record<string, number>, legacyIds: string[]): number {
