@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
 import { ChevronLeft, Building2, Upload, X } from 'lucide-react';
@@ -9,8 +9,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MAIN_CATEGORIES, REGIONS } from '@/lib/categories';
 import { useToast } from '@/contexts/ToastContext';
-import { ObjectUploader } from '@/components/ObjectUploader';
-import type { UploadResult } from '@uppy/core';
+import { uploadAgencyLogo, validateImageFile } from '@/lib/storage';
 import Image from 'next/image';
 
 const TEAM_SIZES = [
@@ -47,10 +46,11 @@ export default function AdminCrearAgenciaPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
-
-  const getUploadUrlMutation = trpc.upload.getUploadUrl.useMutation();
-  const setLogoAclMutation = trpc.upload.setLogoAcl.useMutation();
-  const setCoverAclMutation = trpc.upload.setCoverAcl.useMutation();
+  const [logoError, setLogoError] = useState('');
+  const [coverError, setCoverError] = useState('');
+  
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
   const createMutation = trpc.admin.createAgency.useMutation({
     onSuccess: () => {
@@ -102,6 +102,56 @@ export default function AdminCrearAgenciaPage() {
   const getCategoryServices = (categoryId: string) => {
     const category = MAIN_CATEGORIES.find(c => c.id === categoryId);
     return category?.services || [];
+  };
+
+  const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setLogoError(validation.error || 'Archivo inválido');
+      return;
+    }
+
+    setLogoError('');
+    setUploadingLogo(true);
+
+    try {
+      const agencySlug = formData.name.toLowerCase().replace(/\s+/g, '-') || 'temp';
+      const logoUrl = await uploadAgencyLogo(file, agencySlug);
+      setFormData({ ...formData, logoUrl });
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      setLogoError('Error al subir el logo. Por favor intenta de nuevo.');
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setCoverError(validation.error || 'Archivo inválido');
+      return;
+    }
+
+    setCoverError('');
+    setUploadingCover(true);
+
+    try {
+      const agencySlug = formData.name.toLowerCase().replace(/\s+/g, '-') || 'temp';
+      const coverUrl = await uploadAgencyLogo(file, `${agencySlug}-cover`);
+      setFormData({ ...formData, coverUrl });
+    } catch (error) {
+      console.error('Error uploading cover:', error);
+      setCoverError('Error al subir la portada. Por favor intenta de nuevo.');
+    } finally {
+      setUploadingCover(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -284,39 +334,27 @@ export default function AdminCrearAgenciaPage() {
                     </div>
                   )}
 
-                  <ObjectUploader
-                    maxNumberOfFiles={1}
-                    maxFileSize={5242880}
-                    allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
-                    onGetUploadParameters={async () => {
-                      const result = await getUploadUrlMutation.mutateAsync();
-                      return {
-                        method: 'PUT' as const,
-                        url: result.uploadURL,
-                      };
-                    }}
-                    onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
-                      if (result.successful && result.successful[0]) {
-                        setUploadingLogo(true);
-                        try {
-                          const uploadURL = result.successful[0].uploadURL as string;
-                          const aclResult = await setLogoAclMutation.mutateAsync({
-                            logoURL: uploadURL,
-                            agencyId: 'temp-agency-id',
-                          });
-                          setFormData({ ...formData, logoUrl: aclResult.objectPath });
-                          setUploadingLogo(false);
-                        } catch (err) {
-                          console.error('Error al configurar el logo:', err);
-                          setErrorMessage('Error al subir el logo');
-                          setUploadingLogo(false);
-                        }
-                      }
-                    }}
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={uploadingLogo}
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    {uploadingLogo ? 'Procesando...' : 'Subir Logo'}
-                  </ObjectUploader>
+                    {uploadingLogo ? 'Subiendo...' : 'Subir Logo'}
+                  </Button>
+                  
+                  {logoError && (
+                    <p className="text-sm text-red-600 mt-2">{logoError}</p>
+                  )}
                   <p className="text-sm text-dark/60 mt-2">
                     Recomendado: 200x200px, formato PNG con fondo transparente (máx. 5MB)
                   </p>
@@ -348,39 +386,27 @@ export default function AdminCrearAgenciaPage() {
                     </div>
                   )}
 
-                  <ObjectUploader
-                    maxNumberOfFiles={1}
-                    maxFileSize={10485760}
-                    allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
-                    onGetUploadParameters={async () => {
-                      const result = await getUploadUrlMutation.mutateAsync();
-                      return {
-                        method: 'PUT' as const,
-                        url: result.uploadURL,
-                      };
-                    }}
-                    onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
-                      if (result.successful && result.successful[0]) {
-                        setUploadingCover(true);
-                        try {
-                          const uploadURL = result.successful[0].uploadURL as string;
-                          const aclResult = await setCoverAclMutation.mutateAsync({
-                            coverURL: uploadURL,
-                            agencyId: 'temp-agency-id',
-                          });
-                          setFormData({ ...formData, coverUrl: aclResult.objectPath });
-                          setUploadingCover(false);
-                        } catch (err) {
-                          console.error('Error al configurar la portada:', err);
-                          setErrorMessage('Error al subir la portada');
-                          setUploadingCover(false);
-                        }
-                      }
-                    }}
+                  <input
+                    ref={coverInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={handleCoverChange}
+                    className="hidden"
+                  />
+                  
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => coverInputRef.current?.click()}
+                    disabled={uploadingCover}
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    {uploadingCover ? 'Procesando...' : 'Subir Portada'}
-                  </ObjectUploader>
+                    {uploadingCover ? 'Subiendo...' : 'Subir Portada'}
+                  </Button>
+                  
+                  {coverError && (
+                    <p className="text-sm text-red-600 mt-2">{coverError}</p>
+                  )}
                   <p className="text-sm text-dark/60 mt-2">
                     Recomendado: 1200x400px, formato JPG o PNG (máx. 10MB)
                   </p>
