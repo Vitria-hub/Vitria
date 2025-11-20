@@ -14,10 +14,18 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<'profile' | 'metrics' | 'quotes'>('profile');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessageType, setSuccessMessageType] = useState<'created' | 'updated'>('created');
 
   useEffect(() => {
     if (searchParams.get('agencia_creada') === 'true') {
       setShowSuccessMessage(true);
+      setSuccessMessageType('created');
+      // Clean up the URL
+      window.history.replaceState({}, '', '/dashboard');
+    }
+    if (searchParams.get('perfil_actualizado') === 'true') {
+      setShowSuccessMessage(true);
+      setSuccessMessageType('updated');
       // Clean up the URL
       window.history.replaceState({}, '', '/dashboard');
     }
@@ -96,13 +104,24 @@ function DashboardContent() {
         <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-lg p-6 flex items-start gap-4">
           <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h3 className="font-bold text-green-900 mb-1">¡Tu agencia ha sido creada exitosamente!</h3>
-            <p className="text-green-700 text-sm mb-3">
-              Tu agencia está ahora en nuestra lista de espera. Recibirás un correo cuando sea aprobada y publicada en el directorio.
-            </p>
-            <p className="text-green-700 text-sm font-medium">
-              📧 Hemos enviado una confirmación a tu correo electrónico.
-            </p>
+            {successMessageType === 'created' ? (
+              <>
+                <h3 className="font-bold text-green-900 mb-1">¡Tu agencia ha sido creada exitosamente!</h3>
+                <p className="text-green-700 text-sm mb-3">
+                  Tu agencia está ahora en nuestra lista de espera. Recibirás un correo cuando sea aprobada y publicada en el directorio.
+                </p>
+                <p className="text-green-700 text-sm font-medium">
+                  📧 Hemos enviado una confirmación a tu correo electrónico.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="font-bold text-green-900 mb-1">¡Perfil actualizado exitosamente!</h3>
+                <p className="text-green-700 text-sm">
+                  Los cambios en tu perfil de agencia han sido guardados correctamente.
+                </p>
+              </>
+            )}
           </div>
           <button 
             onClick={() => setShowSuccessMessage(false)}

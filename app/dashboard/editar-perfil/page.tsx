@@ -91,9 +91,7 @@ export default function EditarPerfilPage() {
   const updateMutation = trpc.agency.update.useMutation({
     onSuccess: () => {
       utils.agency.myAgency.invalidate();
-      setSuccessMessage('¡Perfil actualizado exitosamente!');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => setSuccessMessage(''), 5000);
+      router.push('/dashboard?perfil_actualizado=true');
     },
     onError: (error) => {
       setErrorMessage(error.message);
@@ -101,7 +99,6 @@ export default function EditarPerfilPage() {
     },
   });
 
-  const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +151,6 @@ export default function EditarPerfilPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-    setSuccessMessage('');
 
     if (!formData.name || formData.name.length < 2) {
       setErrorMessage('El nombre debe tener al menos 2 caracteres');
@@ -271,12 +267,6 @@ export default function EditarPerfilPage() {
           </div>
 
           <div className="p-8">
-            {successMessage && (
-              <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-lg p-4">
-                <p className="text-green-800 font-semibold">{successMessage}</p>
-              </div>
-            )}
-
             {errorMessage && (
               <div className="mb-6 bg-red-50 border-2 border-red-200 rounded-lg p-4">
                 <p className="text-red-800 font-semibold">{errorMessage}</p>
