@@ -18,19 +18,13 @@ export function calculateProfileHealth(agency: any): ProfileHealthResult {
       field: 'logo_url',
       label: 'Logo agregado',
       completed: !!agency.logo_url,
-      weight: 15
-    },
-    {
-      field: 'cover_url',
-      label: 'Portada agregada',
-      completed: !!agency.cover_url,
-      weight: 10
+      weight: 20
     },
     {
       field: 'description',
       label: 'Descripción completa (min 200 caracteres)',
       completed: agency.description && agency.description.length >= 200,
-      weight: 20
+      weight: 25
     },
     {
       field: 'services',
