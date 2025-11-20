@@ -6,7 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
-import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X, FileText, Mail, Phone, MessageCircle } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X, FileText, Mail, Phone, MessageCircle, Send, Clock, CheckCircle2 } from 'lucide-react';
 
 function DashboardContent() {
   const { user, userData, loading } = useAuth();
@@ -46,9 +47,14 @@ function DashboardContent() {
     enabled: !loading && !!user && !isAdmin,
   });
 
-  const { data: agencyQuotes } = trpc.quotes.getAgencyQuotes.useQuery(
+  const { data: agencyQuotes, isLoading: agencyQuotesLoading } = trpc.quotes.getAgencyQuotes.useQuery(
     { status: 'all', limit: 50 },
     { enabled: !loading && !!user && !!userAgency }
+  );
+
+  const { data: clientQuotes, isLoading: clientQuotesLoading } = trpc.quotes.getMyQuotes.useQuery(
+    { limit: 50 },
+    { enabled: !loading && !!user && !isAdmin }
   );
 
   const { data: analyticsData } = trpc.analytics.getMyAgencyAnalytics.useQuery(
@@ -308,7 +314,17 @@ function DashboardContent() {
                 <div>
                   <h3 className="text-lg font-bold text-dark mb-6">Solicitudes de Cotización</h3>
                   
-                  {agencyQuotes && agencyQuotes.length > 0 ? (
+                  {agencyQuotesLoading ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="border-2 border-gray-200 rounded-lg p-6 animate-pulse">
+                          <div className="h-6 bg-gray-200 rounded w-2/3 mb-4"></div>
+                          <div className="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+                          <div className="h-20 bg-gray-200 rounded mb-4"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : agencyQuotes && agencyQuotes.length > 0 ? (
                     <div className="space-y-4">
                       {agencyQuotes.map((quote: any) => (
                         <div
@@ -403,13 +419,11 @@ function DashboardContent() {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-12 bg-gray-50 rounded-lg">
-                      <FileText className="w-16 h-16 text-dark/20 mx-auto mb-4" />
-                      <p className="text-dark/60 mb-2">No has recibido cotizaciones aún</p>
-                      <p className="text-sm text-dark/50">
-                        Las solicitudes de cotización aparecerán aquí cuando los clientes te contacten
-                      </p>
-                    </div>
+                    <EmptyState
+                      icon={FileText}
+                      title="No has recibido cotizaciones aún"
+                      description="Las solicitudes de cotización aparecerán aquí cuando los clientes te contacten"
+                    />
                   )}
                 </div>
               )}
@@ -450,7 +464,7 @@ function DashboardContent() {
               </div>
             </div>
 
-            <div className="p-8 space-y-6">
+            <div className="p-8 space-y-8">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-dark">Información del Negocio</h3>
@@ -468,20 +482,87 @@ function DashboardContent() {
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-dark mb-4">Agencias Favoritas</h3>
-                <p className="text-dark/60 mb-4">
-                  Aún no has guardado agencias favoritas. Explora el directorio y guarda las que más te interesen.
-                </p>
-                <Link href="/agencias">
-                  <Button variant="primary">Explorar Agencias</Button>
-                </Link>
-              </div>
+                <h3 className="text-lg font-bold text-dark mb-4">Mis Solicitudes de Cotización</h3>
+                {clientQuotesLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="border-2 border-gray-200 rounded-lg p-4 animate-pulse">
+                        <div className="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : clientQuotes && clientQuotes.length > 0 ? (
+                  <div className="space-y-4">
+                    {clientQuotes.map((quote: any) => (
+                      <div
+                        key={quote.id}
+                        className="border-2 border-gray-200 rounded-lg p-6 hover:border-primary/30 transition-colors"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h4 className="text-lg font-bold text-dark mb-2">{quote.project_name}</h4>
+                            <div className="flex items-center gap-2 text-sm text-dark/60 mb-3">
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1 ${
+                                quote.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                quote.status === 'contacted' ? 'bg-blue-100 text-blue-700' :
+                                quote.status === 'won' ? 'bg-green-100 text-green-700' :
+                                'bg-gray-100 text-gray-700'
+                              }`}>
+                                {quote.status === 'pending' && <Clock className="w-3 h-3" />}
+                                {quote.status === 'contacted' && <MessageCircle className="w-3 h-3" />}
+                                {quote.status === 'won' && <CheckCircle2 className="w-3 h-3" />}
+                                {quote.status === 'pending' ? 'En espera' :
+                                 quote.status === 'contacted' ? 'Contactado' :
+                                 quote.status === 'won' ? 'Aceptado' : 'Cerrado'}
+                              </span>
+                              <span>•</span>
+                              <span>Enviado el {new Date(quote.created_at).toLocaleDateString('es-CL')}</span>
+                            </div>
+                          </div>
+                        </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-dark mb-4">Mis Reseñas</h3>
-                <p className="text-dark/60">
-                  No has dejado reseñas aún. Comparte tu experiencia con otras empresas.
-                </p>
+                        <div className="flex items-center gap-3 mb-4">
+                          {quote.agencies?.logo_url && (
+                            <img 
+                              src={quote.agencies.logo_url} 
+                              alt={quote.agencies.name}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                          )}
+                          <div>
+                            <div className="text-sm font-semibold text-dark/60">Agencia contactada</div>
+                            <Link 
+                              href={`/agencias/${quote.agencies?.slug}`}
+                              className="font-bold text-primary hover:text-primary/80"
+                            >
+                              {quote.agencies?.name}
+                            </Link>
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <p className="text-sm text-dark/70">{quote.project_description}</p>
+                          {quote.budget_range && (
+                            <div className="mt-3 text-sm">
+                              <strong>Presupuesto:</strong> {quote.budget_range}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyState
+                    icon={Send}
+                    title="No has enviado cotizaciones aún"
+                    description="Explora el directorio de agencias y solicita cotizaciones para tus proyectos"
+                    action={{
+                      label: 'Explorar Agencias',
+                      onClick: () => router.push('/agencias')
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>

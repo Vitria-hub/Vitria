@@ -43,7 +43,7 @@ export const quotesRouter = router({
       
       if (!agencyEmail) {
         const { data: owner } = await supabaseAdmin.auth.admin.getUserById(agency.owner_id);
-        agencyEmail = owner?.email || null;
+        agencyEmail = owner?.user?.email || null;
         
         if (!agencyEmail) {
           throw new Error('Cannot send quote: agency has no email and owner has no email');
@@ -116,6 +116,35 @@ export const quotesRouter = router({
       });
 
       return { success: true, quoteId: quote.id };
+    }),
+
+  getMyQuotes: protectedProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(100).default(50),
+    }))
+    .query(async ({ input, ctx }) => {
+      const { limit } = input;
+
+      const { data: quotes, error } = await supabaseAdmin
+        .from('quote_requests')
+        .select(`
+          *,
+          agencies:agency_id (
+            name,
+            slug,
+            logo_url
+          )
+        `)
+        .eq('client_user_id', ctx.user?.id)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        console.error('Error fetching client quotes:', error);
+        throw new Error('Failed to fetch quotes');
+      }
+
+      return quotes || [];
     }),
 
   getAgencyQuotes: protectedProcedure

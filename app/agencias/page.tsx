@@ -23,20 +23,23 @@ function AgenciasContent() {
   useEffect(() => {
     const categoryParam = searchParams.get('category');
     const regionParam = searchParams.get('region');
+    const priceRangeParam = searchParams.get('priceRange');
+    const qParam = searchParams.get('q');
+    const pageParam = searchParams.get('page');
     
-    const newFilters: any = {};
+    const newFilters: any = {
+      page: 1,
+      limit: 12,
+      sort: 'premium',
+    };
     
-    if (categoryParam) {
-      newFilters.category = categoryParam;
-    }
+    if (categoryParam) newFilters.category = categoryParam;
+    if (regionParam) newFilters.region = regionParam;
+    if (priceRangeParam) newFilters.priceRange = priceRangeParam;
+    if (qParam) newFilters.q = qParam;
+    if (pageParam) newFilters.page = parseInt(pageParam);
     
-    if (regionParam) {
-      newFilters.region = regionParam;
-    }
-    
-    if (Object.keys(newFilters).length > 0) {
-      setFilters((prev: any) => ({ ...prev, ...newFilters }));
-    }
+    setFilters(newFilters);
   }, [searchParams]);
 
   const { data, isLoading, isFetching } = trpc.agency.list.useQuery(filters);
@@ -49,7 +52,7 @@ function AgenciasContent() {
         trackSearch({
           searchQuery: filters.q,
           serviceCategory: filters.category,
-          locationFilter: filters.location,
+          locationFilter: filters.region,
           resultsCount: data.total || 0,
           agenciesShown: agencyIds,
         });
@@ -75,12 +78,55 @@ function AgenciasContent() {
         return prev;
       }
       
+      // Update URL with new filters
+      updateURL(merged);
+      
       return merged;
     });
   };
 
+  const updateURL = (currentFilters: any) => {
+    const params = new URLSearchParams();
+    
+    if (currentFilters.category) params.set('category', currentFilters.category);
+    if (currentFilters.region) params.set('region', currentFilters.region);
+    if (currentFilters.priceRange) params.set('priceRange', currentFilters.priceRange);
+    if (currentFilters.q) params.set('q', currentFilters.q);
+    if (currentFilters.page && currentFilters.page > 1) params.set('page', currentFilters.page.toString());
+    
+    const queryString = params.toString();
+    const newURL = queryString ? `/agencias?${queryString}` : '/agencias';
+    
+    router.push(newURL, { scroll: false });
+  };
+
+  const removeFilter = (filterKey: string) => {
+    setFilters((prev: any) => {
+      const newFilters = { ...prev };
+      delete newFilters[filterKey];
+      newFilters.page = 1;
+      
+      // Update URL immediately to keep sync
+      const params = new URLSearchParams();
+      if (newFilters.category) params.set('category', newFilters.category);
+      if (newFilters.region) params.set('region', newFilters.region);
+      if (newFilters.priceRange) params.set('priceRange', newFilters.priceRange);
+      if (newFilters.q) params.set('q', newFilters.q);
+      
+      const queryString = params.toString();
+      const newURL = queryString ? `/agencias?${queryString}` : '/agencias';
+      router.push(newURL, { scroll: false });
+      
+      return newFilters;
+    });
+  };
+
   const handlePageChange = (newPage: number) => {
-    setFilters((prev: any) => ({ ...prev, page: newPage }));
+    setFilters((prev: any) => {
+      const newFilters = { ...prev, page: newPage };
+      updateURL(newFilters);
+      return newFilters;
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -100,6 +146,73 @@ function AgenciasContent() {
       <h1 className="text-4xl font-bold text-primary mb-8">Explorar Agencias</h1>
 
       <FilterBar onFilterChange={handleFilterChange} currentFilters={filters} />
+
+      {/* Active Filters Chips */}
+      {hasActiveFilters && (
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="text-sm font-semibold text-dark/60">Filtros activos:</span>
+          
+          {filters.category && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <span>Categoría: {filters.category}</span>
+              <button
+                onClick={() => removeFilter('category')}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                aria-label="Quitar filtro de categoría"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+          
+          {filters.region && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <span>Región: {filters.region}</span>
+              <button
+                onClick={() => removeFilter('region')}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                aria-label="Quitar filtro de región"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+          
+          {filters.priceRange && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <span>Presupuesto: {filters.priceRange}</span>
+              <button
+                onClick={() => removeFilter('priceRange')}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                aria-label="Quitar filtro de presupuesto"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+          
+          {filters.q && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+              <Search className="w-4 h-4" />
+              <span>&quot;{filters.q}&quot;</span>
+              <button
+                onClick={() => removeFilter('q')}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                aria-label="Quitar búsqueda"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+          
+          <button
+            onClick={handleClearFilters}
+            className="text-sm text-dark/60 hover:text-primary font-medium underline"
+          >
+            Limpiar todos
+          </button>
+        </div>
+      )}
 
       {isLoading && !data ? (
         <div className="py-12">

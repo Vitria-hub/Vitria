@@ -7,6 +7,7 @@ import PortfolioGrid from '@/components/PortfolioGrid';
 import ReviewForm from '@/components/ReviewForm';
 import Button from '@/components/Button';
 import QuoteRequestModal from '@/components/QuoteRequestModal';
+import LoginModal from '@/components/LoginModal';
 import AgencyLogo from '@/components/AgencyLogo';
 import { MapPin, Globe, Mail, Phone, Users, LogIn } from 'lucide-react';
 import { useState } from 'react';
@@ -20,6 +21,7 @@ export default function AgencyDetailPage() {
   const slug = params.slug as string;
   const [showContactForm, setShowContactForm] = useState(false);
   const [showDirectContact, setShowDirectContact] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { user } = useAuth();
 
   const { data: agencyData, isLoading } = trpc.agency.getBySlug.useQuery({ slug });
@@ -37,10 +39,18 @@ export default function AgencyDetailPage() {
 
   const handleContactClick = () => {
     if (!user) {
-      // Redirect to login if not authenticated
-      router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname));
+      // Show login modal instead of redirecting
+      setShowLoginModal(true);
       return;
     }
+    if (agency?.id) {
+      trackContact(agency.id, 'form_submit');
+      setShowContactForm(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    // After successful login, open the quote request modal
     if (agency?.id) {
       trackContact(agency.id, 'form_submit');
       setShowContactForm(true);
@@ -219,7 +229,7 @@ export default function AgencyDetailPage() {
                             Esta agencia premium tiene formas de contacto directo disponibles.
                           </p>
                           <Button
-                            onClick={() => router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname))}
+                            onClick={() => setShowLoginModal(true)}
                             variant="primary"
                             size="sm"
                           >
@@ -237,6 +247,13 @@ export default function AgencyDetailPage() {
                 agencyName={agency.name}
                 isOpen={showContactForm}
                 onClose={() => setShowContactForm(false)}
+              />
+
+              <LoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onSuccess={handleLoginSuccess}
+                contextMessage="Inicia sesión para solicitar una cotización"
               />
             </div>
           </div>
