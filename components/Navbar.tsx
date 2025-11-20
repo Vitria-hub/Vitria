@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, LogOut, User, X } from 'lucide-react';
+import { Menu, LogOut, User, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useRef } from 'react';
@@ -10,6 +10,7 @@ export default function Navbar() {
   const { user, userData, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   // Cerrar el menú al hacer click fuera
@@ -84,14 +85,21 @@ export default function Navbar() {
                       </Link>
                     )}
                     <button
-                      onClick={() => {
-                        signOut();
+                      onClick={async () => {
+                        setSigningOut(true);
+                        await signOut();
                         setShowUserMenu(false);
+                        setSigningOut(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-dark hover:bg-gray-100 transition flex items-center gap-2"
+                      disabled={signingOut}
+                      className="w-full text-left px-4 py-2 text-dark hover:bg-gray-100 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <LogOut className="w-4 h-4" />
-                      Cerrar Sesión
+                      {signingOut ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <LogOut className="w-4 h-4" />
+                      )}
+                      {signingOut ? 'Cerrando sesión...' : 'Cerrar Sesión'}
                     </button>
                   </div>
                 )}
@@ -176,14 +184,21 @@ export default function Navbar() {
                   </Link>
                 )}
                 <button
-                  onClick={() => {
-                    signOut();
+                  onClick={async () => {
+                    setSigningOut(true);
+                    await signOut();
                     setShowMobileMenu(false);
+                    setSigningOut(false);
                   }}
-                  className="w-full text-left pl-7 py-2 text-dark hover:text-primary transition flex items-center gap-2"
+                  disabled={signingOut}
+                  className="w-full text-left pl-7 py-2 text-dark hover:text-primary transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <LogOut className="w-4 h-4" />
-                  Cerrar Sesión
+                  {signingOut ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <LogOut className="w-4 h-4" />
+                  )}
+                  {signingOut ? 'Cerrando sesión...' : 'Cerrar Sesión'}
                 </button>
               </div>
             ) : (
