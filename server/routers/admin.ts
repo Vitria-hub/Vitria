@@ -820,4 +820,90 @@ export const adminRouter = router({
 
       return data;
     }),
+
+  createAgency: adminProcedure
+    .input(z.object({
+      name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+      email: z.string().email('Email inválido'),
+      phone: z.string().min(8, 'Teléfono inválido'),
+      website: z.string().url('URL inválida').optional().nullable(),
+      city: z.string().min(2, 'Ciudad requerida'),
+      region: z.string().min(1, 'Región requerida'),
+      description: z.string().min(50, 'La descripción debe tener al menos 50 caracteres').optional().nullable(),
+      services: z.array(z.string()).optional(),
+      categories: z.array(z.string()).min(1, 'Selecciona al menos una categoría'),
+      specialties: z.array(z.string()).optional(),
+      employeesMin: z.number().min(1).optional().nullable(),
+      employeesMax: z.number().min(1).optional().nullable(),
+      priceRange: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']).optional().nullable(),
+      logoUrl: z.string().url('URL inválida').optional().nullable(),
+      coverUrl: z.string().url('URL inválida').optional().nullable(),
+      ownerId: z.string().uuid().optional().nullable(),
+      approvalStatus: z.enum(['pending', 'approved']).default('approved'),
+    }))
+    .mutation(async ({ input }) => {
+      const slug = input.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      const { data: existingSlug } = await db
+        .from('agencies')
+        .select('slug')
+        .eq('slug', slug)
+        .maybeSingle();
+
+      if (existingSlug) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: `Ya existe una agencia con un nombre similar. Por favor usa un nombre diferente.`,
+        });
+      }
+
+      const insertData = {
+        name: input.name,
+        slug,
+        logo_url: input.logoUrl || null,
+        cover_url: input.coverUrl || null,
+        description: input.description || null,
+        website: input.website || null,
+        email: input.email,
+        phone: input.phone,
+        whatsapp_number: input.phone,
+        location_city: input.city,
+        location_region: input.region,
+        services: input.services || [],
+        categories: input.categories,
+        specialties: input.specialties || [],
+        employees_min: input.employeesMin || null,
+        employees_max: input.employeesMax || null,
+        price_range: input.priceRange || null,
+        owner_id: input.ownerId || null,
+        approval_status: input.approvalStatus,
+        approved_at: input.approvalStatus === 'approved' ? new Date().toISOString() : null,
+      };
+
+      const { data, error } = await db
+        .from('agencies')
+        .insert(insertData)
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === '23505') {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: `Ya existe una agencia con este nombre. Por favor elige un nombre diferente.`,
+          });
+        }
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Error al crear la agencia: ${error.message}`,
+        });
+      }
+
+      return data;
+    }),
 });

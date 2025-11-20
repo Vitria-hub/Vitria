@@ -170,8 +170,18 @@ export default function AdminAgenciesPage() {
             <ChevronLeft className="w-4 h-4 mr-1" />
             Volver al panel
           </Link>
-          <h1 className="text-4xl font-bold text-primary mb-2">Gestionar Agencias</h1>
-          <p className="text-dark/70">Aprobar, rechazar o eliminar agencias del marketplace</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-primary mb-2">Gestionar Agencias</h1>
+              <p className="text-dark/70">Aprobar, rechazar o eliminar agencias del marketplace</p>
+            </div>
+            <Link href="/admin/agencias/crear">
+              <Button variant="primary">
+                <Building2 className="w-4 h-4 mr-2" />
+                Crear Nueva Agencia
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6">
