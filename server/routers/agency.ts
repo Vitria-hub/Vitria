@@ -74,11 +74,36 @@ export const agencyRouter = router({
 
       const freshAgencies = await enforcePremiumFreshness(data || []);
 
+      // Custom sorting: Scale Lab always first, then premium, then regular agencies
+      const sortedAgencies = [...freshAgencies].sort((a: any, b: any) => {
+        // Scale Lab always first
+        const aIsScaleLab = a.name === 'Scale Lab';
+        const bIsScaleLab = b.name === 'Scale Lab';
+        if (aIsScaleLab && !bIsScaleLab) return -1;
+        if (!aIsScaleLab && bIsScaleLab) return 1;
+
+        // Then premium agencies
+        if (a.is_premium && !b.is_premium) return -1;
+        if (!a.is_premium && b.is_premium) return 1;
+
+        // Within same tier, apply the user's sort preference
+        switch (sort) {
+          case 'rating':
+            return (b.avg_rating || 0) - (a.avg_rating || 0);
+          case 'reviews':
+            return (b.reviews_count || 0) - (a.reviews_count || 0);
+          case 'recent':
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          default:
+            return (b.avg_rating || 0) - (a.avg_rating || 0);
+        }
+      });
+
       // Filter information for unauthenticated users - only show basic public info
       const isAuthenticated = !!ctx.userId;
       const filteredAgencies = isAuthenticated
-        ? freshAgencies
-        : freshAgencies.map((agency: any) => ({
+        ? sortedAgencies
+        : sortedAgencies.map((agency: any) => ({
             id: agency.id,
             name: agency.name,
             slug: agency.slug,
