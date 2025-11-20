@@ -9,7 +9,6 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MAIN_CATEGORIES } from '@/lib/categories';
 import { uploadAgencyLogo, validateImageFile } from '@/lib/storage';
-import Image from 'next/image';
 
 const REGIONS = [
   'Región Metropolitana',
@@ -305,12 +304,11 @@ export default function EditarPerfilPage() {
                       />
                       {logoPreview ? (
                         <div className="relative inline-block">
-                          <div className="w-32 h-32 relative border-2 border-gray-200 rounded-lg overflow-hidden">
-                            <Image
+                          <div className="w-32 h-32 border-2 border-gray-200 rounded-lg overflow-hidden flex items-center justify-center bg-gray-50">
+                            <img
                               src={logoPreview}
                               alt="Logo preview"
-                              fill
-                              className="object-contain p-2"
+                              className="max-w-full max-h-full object-contain p-2"
                             />
                           </div>
                           <button
