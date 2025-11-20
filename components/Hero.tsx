@@ -11,6 +11,7 @@ import { MAIN_CATEGORIES } from '@/lib/categories';
 export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
 
   const regions = [
@@ -27,6 +28,7 @@ export default function Hero() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSearching(true);
     
     const params = new URLSearchParams();
     if (selectedCategory) {
@@ -104,7 +106,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <Button type="submit" variant="primary" size="lg" className="w-full shadow-lg text-lg">
+            <Button type="submit" variant="primary" size="lg" className="w-full shadow-lg text-lg" loading={isSearching}>
               Ver Agencias Disponibles
             </Button>
           </form>

@@ -1,6 +1,7 @@
 import Hero from '@/components/Hero';
 import CarouselSponsored from '@/components/CarouselSponsored';
 import Link from 'next/link';
+import LoadingLink from '@/components/LoadingLink';
 import Image from 'next/image';
 import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3, Heart } from 'lucide-react';
 import { serverClient } from '@/app/_trpc/serverClient';
@@ -218,12 +219,12 @@ export default async function Home() {
           </div>
 
           <div className="text-center relative z-10">
-            <Link
+            <LoadingLink
               href="/agencias"
               className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-dark transition shadow-lg text-lg"
             >
               Empezar Ahora <ArrowRight className="w-5 h-5" />
-            </Link>
+            </LoadingLink>
           </div>
         </section>
 
@@ -402,12 +403,12 @@ export default async function Home() {
                   <span>Compara opciones antes de decidir</span>
                 </li>
               </ul>
-              <Link
+              <LoadingLink
                 href="/agencias"
                 className="inline-block bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-dark transition shadow-lg"
               >
                 Explorar Agencias
-              </Link>
+              </LoadingLink>
             </div>
           </div>
         </section>
