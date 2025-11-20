@@ -9,13 +9,16 @@ import {
   MousePointerClick,
   TrendingUp,
   BarChart3,
-  FileText
+  FileText,
+  Eye,
+  Crown
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminDashboard() {
   const { data: stats, isLoading: statsLoading } = trpc.admin.stats.useQuery();
   const { data: analyticsStats, isLoading: analyticsLoading } = trpc.analytics.getDashboardStats.useQuery({ days: 30 });
+  const { data: topAgencies, isLoading: topAgenciesLoading } = trpc.analytics.getAgencyRanking.useQuery({ days: 30, limit: 5 });
 
   if (statsLoading || analyticsLoading) {
     return (
@@ -71,37 +74,122 @@ export default function AdminDashboard() {
         </div>
 
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-8">
-          <h2 className="text-2xl font-bold text-dark mb-6">Analytics (Últimos 30 días)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-dark">Analytics (Últimos 30 días)</h2>
+            <Link 
+              href="/admin/analytics" 
+              className="text-primary hover:underline font-semibold text-sm flex items-center gap-1"
+            >
+              Ver Dashboard Completo →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatsCard
-              title="Total Búsquedas"
-              value={analyticsStats?.totalSearches || 0}
-              icon={<Search className="w-8 h-8 text-blue-600" />}
-              subtitle="Búsquedas realizadas"
-              href="/admin/analytics"
-            />
-            <StatsCard
-              title="Contactos Generados"
-              value={analyticsStats?.totalContacts || 0}
-              icon={<MousePointerClick className="w-8 h-8 text-purple-600" />}
-              subtitle="Leads para agencias"
+              title="Total Cotizaciones"
+              value={analyticsStats?.totalQuotes || 0}
+              icon={<FileText className="w-8 h-8 text-blue-600" />}
+              subtitle="Leads generados"
               href="/admin/cotizaciones"
             />
             <StatsCard
-              title="Ver Analytics Completo"
-              value={0}
-              icon={<BarChart3 className="w-8 h-8 text-orange-600" />}
-              customContent={
-                <Link 
-                  href="/admin/analytics" 
-                  className="text-primary hover:underline font-semibold"
-                >
-                  Ir al Dashboard →
-                </Link>
-              }
+              title="Usuarios Nuevos"
+              value={analyticsStats?.newUsers || 0}
+              icon={<Users className="w-8 h-8 text-green-600" />}
+              subtitle="Registros este mes"
+              href="/admin/usuarios"
+            />
+            <StatsCard
+              title="Agencias Nuevas"
+              value={analyticsStats?.newAgencies || 0}
+              icon={<Building2 className="w-8 h-8 text-purple-600" />}
+              subtitle="Creadas este mes"
+              href="/admin/agencias"
+            />
+            <StatsCard
+              title="Total Búsquedas"
+              value={analyticsStats?.totalSearches || 0}
+              icon={<Search className="w-8 h-8 text-orange-600" />}
+              subtitle="Búsquedas realizadas"
               href="/admin/analytics"
             />
           </div>
+        </div>
+
+        {/* Top Agencias Más Vistas */}
+        <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-dark">🏆 Top 5 Agencias Más Vistas (Últimos 30 días)</h2>
+            <Link 
+              href="/admin/analytics" 
+              className="text-primary hover:underline font-semibold text-sm"
+            >
+              Ver Ranking Completo →
+            </Link>
+          </div>
+          
+          {topAgenciesLoading ? (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : topAgencies && topAgencies.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-dark">#</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-dark">Agencia</th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-dark">Vistas</th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-dark">Cotizaciones</th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-dark">Contactos</th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-dark">Rating</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {topAgencies.map((agency, index) => (
+                    <tr key={agency.id} className="hover:bg-gray-50 transition">
+                      <td className="px-4 py-3 text-sm font-bold text-dark">{index + 1}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/agencias/${agency.slug}`}
+                            className="text-primary hover:underline font-medium"
+                          >
+                            {agency.name}
+                          </Link>
+                          {agency.isPremium && (
+                            <Crown className="w-4 h-4 text-accent flex-shrink-0" />
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Eye className="w-4 h-4 text-blue-600" />
+                          <span className="font-semibold">{agency.views}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="font-semibold text-purple-600">{agency.quotes}</span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="font-semibold text-green-600">{agency.contacts}</span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Star className="w-4 h-4 text-accent fill-accent" />
+                          <span className="font-semibold">{agency.avgRating?.toFixed(1) || 'N/A'}</span>
+                          <span className="text-xs text-dark/60">({agency.reviewsCount || 0})</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-dark/60">
+              No hay datos disponibles aún
+            </div>
+          )}
         </div>
 
         <div className="mb-8">
