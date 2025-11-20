@@ -239,6 +239,38 @@ export type Database = {
           created_at: string;
         };
       };
+      portfolio_items: {
+        Row: {
+          id: string;
+          agency_id: string;
+          title: string;
+          description: string | null;
+          media_urls: string[] | null;
+          client_name: string | null;
+          tags: string[] | null;
+          published_at: string;
+        };
+        Insert: {
+          id?: string;
+          agency_id: string;
+          title: string;
+          description?: string | null;
+          media_urls?: string[] | null;
+          client_name?: string | null;
+          tags?: string[] | null;
+          published_at?: string;
+        };
+        Update: {
+          id?: string;
+          agency_id?: string;
+          title?: string;
+          description?: string | null;
+          media_urls?: string[] | null;
+          client_name?: string | null;
+          tags?: string[] | null;
+          published_at?: string;
+        };
+      };
       quote_requests: {
         Row: {
           id: string;
