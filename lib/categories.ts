@@ -1,22 +1,30 @@
 export const MAIN_CATEGORIES = [
   {
     id: 'publicidad-digital',
-    label: 'Publicidad Digital',
-    description: 'Anuncios pagados en plataformas digitales',
+    label: 'Marketing Digital',
+    description: 'SEO, SEM, Social Media y Publicidad',
     services: [
+      'SEO (Posicionamiento Orgánico)',
+      'SEM (Google Ads, Bing Ads)',
       'Meta Ads (Facebook/Instagram)',
-      'Google Ads (Search/Display/YouTube)',
       'TikTok Ads',
       'LinkedIn Ads',
+      'Twitter/X Ads',
       'Publicidad Programática',
-      'Twitter Ads',
-      'Amazon Ads'
+      'Community Management',
+      'Gestión de Redes Sociales',
+      'Marketing de Influencers',
+      'Email Marketing',
+      'Marketing Automation',
+      'Performance Marketing',
+      'Growth Marketing',
+      'Analytics y Reporting'
     ]
   },
   {
     id: 'branding-identidad',
-    label: 'Branding e Identidad',
-    description: 'Construcción y diseño de marca',
+    label: 'Diseño y Branding',
+    description: 'Identidad visual y diseño de marca',
     services: [
       'Diseño de Logo',
       'Identidad Corporativa',
@@ -24,13 +32,19 @@ export const MAIN_CATEGORIES = [
       'Brandbook y Manual de Marca',
       'Rebranding',
       'Packaging',
-      'Diseño Editorial'
+      'Diseño Editorial',
+      'Diseño Gráfico',
+      'Material POP',
+      'Diseño de Presentaciones',
+      'Infografías',
+      'Diseño para Redes Sociales',
+      'Ilustración'
     ]
   },
   {
     id: 'desarrollo-web',
     label: 'Desarrollo Web',
-    description: 'Sitios web, plataformas y aplicaciones',
+    description: 'Sitios web, e-commerce y aplicaciones',
     services: [
       'Sitio Web Corporativo',
       'Landing Pages',
@@ -38,27 +52,15 @@ export const MAIN_CATEGORIES = [
       'Desarrollo de Apps Móviles',
       'Plataformas SaaS',
       'Desarrollo WordPress',
-      'Desarrollo a Medida'
+      'Desarrollo a Medida',
+      'UX/UI Design',
+      'Mantenimiento Web'
     ]
   },
   {
-    id: 'contenido-redes',
-    label: 'Contenido y Redes',
-    description: 'Gestión de contenido y redes sociales',
-    services: [
-      'Community Management',
-      'Gestión de Redes Sociales',
-      'Creación de Contenido',
-      'Copywriting',
-      'Content Marketing',
-      'Marketing de Influencers',
-      'Blogs y Artículos'
-    ]
-  },
-  {
-    id: 'video-fotografia',
-    label: 'Video y Fotografía',
-    description: 'Producción audiovisual y fotografía',
+    id: 'produccion-contenido',
+    label: 'Producción de Contenido',
+    description: 'Audiovisual, copywriting y contenido',
     services: [
       'Producción Audiovisual',
       'Video Corporativo',
@@ -66,48 +68,26 @@ export const MAIN_CATEGORIES = [
       'Fotografía de Producto',
       'Animación y Motion Graphics',
       'Edición de Video',
-      'Fotografía Publicitaria'
-    ]
-  },
-  {
-    id: 'estrategia-consultoria',
-    label: 'Estrategia y Consultoría',
-    description: 'Planificación estratégica y análisis',
-    services: [
-      'Consultoría de Marketing Digital',
-      'Estrategia Digital',
-      'Performance Marketing',
-      'Growth Marketing',
-      'Analytics y Reporting',
-      'Marketing Automation',
-      'CRO (Optimización de Conversión)'
+      'Fotografía Publicitaria',
+      'Copywriting',
+      'Content Marketing',
+      'Creación de Contenido',
+      'Blogs y Artículos',
+      'Guiones y Storytelling'
     ]
   },
   {
     id: 'relaciones-publicas',
     label: 'Relaciones Públicas',
-    description: 'Comunicación corporativa y eventos',
+    description: 'RRPP, comunicación y eventos',
     services: [
       'Relaciones Públicas (RRPP)',
       'Comunicación Corporativa',
       'Gestión de Crisis',
       'Organización de Eventos',
       'Prensa y Medios',
-      'Vocería y Media Training'
-    ]
-  },
-  {
-    id: 'diseno-grafico',
-    label: 'Diseño Gráfico',
-    description: 'Diseño visual y material gráfico',
-    services: [
-      'Diseño Gráfico General',
-      'Material POP',
-      'Diseño de Presentaciones',
-      'Infografías',
-      'Diseño para Redes Sociales',
-      'Ilustración',
-      'Diseño de Merchandising'
+      'Vocería y Media Training',
+      'Comunicación Interna'
     ]
   }
 ] as const;

@@ -6,6 +6,7 @@ import { enforcePremiumFreshness, enforceSingleAgencyPremiumFreshness } from '..
 import { sendAgencyReviewEmail, sendAgencyWaitlistEmail, sendAgencyApprovalEmail } from '@/lib/email';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { calculateProfileHealth } from '@/lib/profileHealth';
+import { expandCategoryToLegacyIds } from '@/lib/categoryMapping';
 import { z } from 'zod';
 
 export const agencyRouter = router({
@@ -30,7 +31,8 @@ export const agencyRouter = router({
       }
 
       if (category) {
-        query = query.overlaps('categories', [category]);
+        const categoriesToSearch = expandCategoryToLegacyIds(category);
+        query = query.overlaps('categories', categoriesToSearch);
       }
 
       if (service) {

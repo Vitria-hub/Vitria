@@ -6,6 +6,41 @@ Vitria is a directory platform for the Chilean market, connecting marketing, bra
 
 Preferred communication style: Simple, everyday language.
 
+# Recent Changes
+
+## Category Consolidation & Dynamic Counts (November 19, 2025)
+
+Simplified category structure and implemented real-time agency counting:
+
+- **Category Consolidation**: Reduced from 8 to 5 non-overlapping main categories to eliminate redundancy:
+  - **Marketing Digital** (consolidates Publicidad Digital + Social Media + Estrategia): SEO, SEM, social media, paid ads, analytics
+  - **Diseño y Branding** (merges Branding + Diseño Gráfico): Logo design, brand identity, graphic design, packaging
+  - **Desarrollo Web**: Website development, e-commerce, mobile apps, UX/UI
+  - **Producción de Contenido** (consolidates Contenido + Video/Fotografía): Audiovisual production, copywriting, photography, content marketing
+  - **Relaciones Públicas**: RRPP, corporate communications, crisis management, events
+  - Updated `lib/categories.ts` with comprehensive service lists for each category
+  - Removed redundant categories that caused user confusion
+
+- **Dynamic Category Counts**: Homepage category cards now display real-time agency counts instead of hardcoded values:
+  - Created `getCategoryCounts` tRPC endpoint (`server/routers/agency.ts`) that aggregates approved agencies by category
+  - Created server-side caller (`app/_trpc/serverClient.ts`) for Next.js App Router server components (public procedures only)
+  - Modified homepage (`app/page.tsx`) to async server component that fetches real category statistics
+  - Each category card dynamically shows accurate agency count (e.g., "1 agencia", "0 agencias")
+  - Category cards link to filtered agency listings (`/agencias?category=X`)
+  - Installed `server-only` package for server-side-only module imports
+  - **Legacy ID Mapping**: Created shared module (`lib/categoryMapping.ts`) that maps consolidated category IDs to legacy IDs
+    - Enables backward compatibility with existing agency data without database migration
+    - Homepage sums counts from all legacy IDs (e.g., Marketing Digital aggregates publicidad-digital + social-media + estrategia-consultoria + publicidad)
+    - Agency listing filter expands new category IDs to search all legacy IDs
+    - Ensures end-to-end functionality: homepage counts → category links → filtered listings show correct agencies
+
+- **Google Maps Review Import**: Bulk imported 25 five-star reviews to Scale Lab agency profile:
+  - Added `author_name` column to reviews table for non-user reviews
+  - Created import script (`scripts/reimport-reviews-with-dates.ts`) with realistic date distribution
+  - Reviews span October 2024 to November 2025 for natural timeline appearance
+  - Automatically updates agency avg_rating and reviews_count after import
+  - Scale Lab now displays 5.0-star rating with 25 reviews
+
 # System Architecture
 
 ## Frontend
