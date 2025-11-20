@@ -43,11 +43,21 @@ function DashboardContent() {
     { enabled: !loading && !!user && !!userAgency }
   );
 
-  const mockMetrics = [
-    { label: 'Vistas', value: 1234, icon: Eye, change: '+12%' },
-    { label: 'Clics en Perfil', value: 456, icon: MousePointerClick, change: '+8%' },
-    { label: 'Contactos', value: 89, icon: Users, change: '+15%' },
-    { label: 'Leads', value: 34, icon: TrendingUp, change: '+22%' },
+  const { data: analyticsData } = trpc.analytics.getMyAgencyAnalytics.useQuery(
+    { days: 30 },
+    { enabled: !!userAgency && userAgency.approval_status === 'approved' }
+  );
+
+  const metrics = analyticsData ? [
+    { label: 'Vistas', value: analyticsData.views, icon: Eye, change: '+12%' },
+    { label: 'Clics en Perfil', value: analyticsData.phoneClicks + analyticsData.emailClicks + analyticsData.websiteClicks, icon: MousePointerClick, change: '+8%' },
+    { label: 'Contactos', value: analyticsData.totalContacts, icon: Users, change: '+15%' },
+    { label: 'Leads', value: 0, icon: TrendingUp, change: '+22%' },
+  ] : [
+    { label: 'Vistas', value: 0, icon: Eye, change: '-' },
+    { label: 'Clics en Perfil', value: 0, icon: MousePointerClick, change: '-' },
+    { label: 'Contactos', value: 0, icon: Users, change: '-' },
+    { label: 'Leads', value: 0, icon: TrendingUp, change: '-' },
   ];
 
   if (loading || agencyLoading || clientProfileLoading) {
@@ -255,7 +265,7 @@ function DashboardContent() {
                 <div>
                   <h3 className="text-lg font-bold text-dark mb-6">Métricas (Últimos 30 días)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {mockMetrics.map((metric) => {
+                    {metrics.map((metric) => {
                       const Icon = metric.icon;
                       return (
                         <div
@@ -266,7 +276,7 @@ function DashboardContent() {
                             <Icon className="w-8 h-8 text-primary" />
                             <span className="text-sm font-semibold text-mint">{metric.change}</span>
                           </div>
-                          <p className="text-3xl font-bold text-dark mb-1">{metric.value}</p>
+                          <p className="text-3xl font-bold text-dark mb-1">{metric.value.toLocaleString()}</p>
                           <p className="text-sm text-dark/60">{metric.label}</p>
                         </div>
                       );
