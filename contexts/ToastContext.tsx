@@ -95,11 +95,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       
       {/* Toast Container */}
-      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-md w-full px-4 pointer-events-none">
+      <div className="fixed top-20 right-4 z-[99999] flex flex-col gap-2 max-w-md w-full px-4 pointer-events-none sm:top-4">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`${getToastStyles(toast.type)} border-l-4 rounded-lg shadow-lg p-4 flex items-start gap-3 animate-in slide-in-from-right duration-300 pointer-events-auto`}
+            className={`${getToastStyles(toast.type)} border-l-4 rounded-lg shadow-xl p-4 flex items-start gap-3 animate-in slide-in-from-right duration-300 pointer-events-auto`}
           >
             {getToastIcon(toast.type)}
             <p className="flex-1 text-sm font-medium leading-snug">{toast.message}</p>
