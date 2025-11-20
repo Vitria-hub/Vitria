@@ -26,7 +26,7 @@ export default function AdminAccessDenied({ isLoggedIn }: AdminAccessDeniedProps
           {isLoggedIn && (
             <Link href="/dashboard">
               <Button variant="secondary" className="w-full">
-                Ir a Mi Dashboard
+                Ir a Mi Panel
               </Button>
             </Link>
           )}

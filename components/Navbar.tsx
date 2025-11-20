@@ -4,12 +4,29 @@ import Link from 'next/link';
 import { Menu, LogOut, User, X } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Navbar() {
   const { user, userData, signOut } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Cerrar el menú al hacer click fuera
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    }
+
+    if (showUserMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showUserMenu]);
 
   return (
     <nav className="border-b bg-white sticky top-0 z-50">
@@ -28,7 +45,7 @@ export default function Navbar() {
             </Link>
             
             {user ? (
-              <div className="relative">
+              <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="flex items-center gap-2 text-dark hover:text-primary transition"
@@ -71,7 +88,7 @@ export default function Navbar() {
                       className="block px-4 py-2 text-dark hover:bg-gray-100 transition"
                       onClick={() => setShowUserMenu(false)}
                     >
-                      Dashboard
+                      Panel Profesional
                     </Link>
                     <button
                       onClick={() => {
@@ -170,7 +187,7 @@ export default function Navbar() {
                   className="block pl-7 py-2 text-dark hover:text-primary transition"
                   onClick={() => setShowMobileMenu(false)}
                 >
-                  Dashboard
+                  Panel Profesional
                 </Link>
                 <button
                   onClick={() => {

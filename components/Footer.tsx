@@ -39,7 +39,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/dashboard" className="text-gray-300 hover:text-accent transition">
-                  Dashboard
+                  Panel Profesional
                 </Link>
               </li>
             </ul>
