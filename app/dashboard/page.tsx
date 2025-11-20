@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { trpc } from '@/lib/trpc';
 import Button from '@/components/Button';
-import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X, FileText, Mail, Phone } from 'lucide-react';
+import { TrendingUp, Eye, MousePointerClick, Users, Building2, Settings, UserCircle, Briefcase, CheckCircle, X, FileText, Mail, Phone, MessageCircle } from 'lucide-react';
 
 function DashboardContent() {
   const { user, userData, loading } = useAuth();
@@ -358,7 +358,7 @@ function DashboardContent() {
                             </div>
                           </div>
 
-                          <div className="mt-4 pt-4 border-t border-gray-200">
+                          <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-3">
                             <a 
                               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${quote.client_email}&su=${encodeURIComponent(`Re: ${quote.project_name}`)}`}
                               target="_blank"
@@ -366,8 +366,19 @@ function DashboardContent() {
                               className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                             >
                               <Mail className="w-4 h-4" />
-                              Contactar Cliente
+                              Contactar por Email
                             </a>
+                            {quote.client_phone && (
+                              <a 
+                                href={`https://wa.me/${quote.client_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Vi tu solicitud de cotización para "${quote.project_name}". Me gustaría conversar contigo sobre el proyecto.`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                              >
+                                <MessageCircle className="w-4 h-4" />
+                                Hablar por WhatsApp
+                              </a>
+                            )}
                           </div>
                         </div>
                       ))}
