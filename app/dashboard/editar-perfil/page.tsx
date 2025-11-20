@@ -555,8 +555,8 @@ export default function EditarPerfilPage() {
                     <label className="block text-sm font-semibold text-dark mb-2">
                       Rango de Precios *
                     </label>
-                    <div className="grid grid-cols-3 gap-4">
-                      {(['1-3M', '3-5M', '5M+'] as const).map((range) => (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {(['Menos de 1M', '1-3M', '3-5M', '5M+'] as const).map((range) => (
                         <label
                           key={range}
                           className={`flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition ${
@@ -570,7 +570,7 @@ export default function EditarPerfilPage() {
                             name="priceRange"
                             value={range}
                             checked={formData.priceRange === range}
-                            onChange={(e) => setFormData({ ...formData, priceRange: e.target.value as '1-3M' | '3-5M' | '5M+' })}
+                            onChange={(e) => setFormData({ ...formData, priceRange: e.target.value as 'Menos de 1M' | '1-3M' | '3-5M' | '5M+' })}
                             className="sr-only"
                           />
                           <span className="text-lg font-bold text-primary mb-1">{range}</span>

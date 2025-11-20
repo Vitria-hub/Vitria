@@ -635,8 +635,9 @@ export default function CrearAgenciaPage() {
               <label className="block text-sm font-semibold text-dark mb-3">
                 Rango de Precios *
               </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
+                  { value: 'Menos de 1M', label: 'Menos de 1M', desc: 'Presupuesto mínimo CLP' },
                   { value: '1-3M', label: '1-3 Millones', desc: 'Presupuesto mínimo CLP' },
                   { value: '3-5M', label: '3-5 Millones', desc: 'Presupuesto mínimo CLP' },
                   { value: '5M+', label: '5+ Millones', desc: 'Presupuesto mínimo CLP' },
