@@ -11,7 +11,7 @@ import { MAIN_CATEGORIES } from '@/lib/categories';
 export default function ClientProfilePage() {
   const [businessName, setBusinessName] = useState('');
   const [businessInstagram, setBusinessInstagram] = useState('');
-  const [budgetRange, setBudgetRange] = useState<'$' | '$$' | '$$$' | ''>('');
+  const [budgetRange, setBudgetRange] = useState<'Menos de 1M' | '1-3M' | '3-5M' | '5M+' | ''>('');
   const [desiredCategories, setDesiredCategories] = useState<string[]>([]);
   const [aboutBusiness, setAboutBusiness] = useState('');
   const [error, setError] = useState('');
@@ -131,8 +131,8 @@ export default function ClientProfilePage() {
               <label className="block text-sm font-semibold text-dark mb-3">
                 ¿Cuánto quieres invertir? *
               </label>
-              <div className="grid grid-cols-3 gap-4">
-                {(['$', '$$', '$$$'] as const).map((range) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {(['Menos de 1M', '1-3M', '3-5M', '5M+'] as const).map((range) => (
                   <button
                     key={range}
                     type="button"
@@ -143,12 +143,8 @@ export default function ClientProfilePage() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className="text-2xl mb-1">{range}</div>
-                    <div className="text-xs">
-                      {range === '$' && 'Menos de $1M CLP'}
-                      {range === '$$' && '$1M a $3M CLP'}
-                      {range === '$$$' && '$3M a $5M CLP'}
-                    </div>
+                    <div className="text-lg font-bold mb-1">{range}</div>
+                    <div className="text-xs">Millones CLP</div>
                   </button>
                 ))}
               </div>
