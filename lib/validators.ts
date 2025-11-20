@@ -33,7 +33,7 @@ export const agencyListSchema = z.object({
   category: z.string().optional(),
   sizeMin: z.number().optional(),
   sizeMax: z.number().optional(),
-  priceRange: z.enum(['1-3M', '3-5M', '5M+']).optional(),
+  priceRange: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']).optional(),
   sort: z.enum(['rating', 'reviews', 'premium', 'recent']).default('premium'),
   page: z.number().default(1),
   limit: z.number().default(12),
@@ -90,14 +90,14 @@ export const createAgencySchema = z.object({
   // Paso 3: Detalles del Negocio
   employeesMin: z.number().min(1).optional(),
   employeesMax: z.number().min(1).optional(),
-  priceRange: z.enum(['1-3M', '3-5M', '5M+']),
+  priceRange: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']),
   industries: z.array(z.string()).optional(),
 });
 
 export const createClientProfileSchema = z.object({
   businessName: z.string().min(2, 'El nombre del negocio debe tener al menos 2 caracteres'),
   businessInstagram: z.string().optional(),
-  budgetRange: z.enum(['1-3M', '3-5M', '5M+'], {
+  budgetRange: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+'], {
     required_error: 'Selecciona un rango de presupuesto'
   }),
   desiredCategories: z.array(z.string()).min(1, 'Selecciona al menos una categoría de servicio que buscas'),
@@ -137,7 +137,7 @@ export const updateAgencySchema = z.object({
   specialties: z.array(z.string()).optional(),
   employeesMin: z.number().min(1).optional(),
   employeesMax: z.number().min(1).optional(),
-  priceRange: z.enum(['1-3M', '3-5M', '5M+']).optional(),
+  priceRange: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']).optional(),
   industries: z.array(z.string()).optional(),
 });
 
