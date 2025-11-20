@@ -102,7 +102,7 @@ A comprehensive file upload system uses Replit's Object Storage (App Storage) fo
 
 ## Price Range Standardization
 
-Price ranges have been standardized from symbolic values ($, $$, $$$) to clear monetary values (e.g., "1-3M", "3-5M", "5M+" CLP) across all forms and display components.
+Price ranges have been standardized from symbolic values ($, $$, $$$) to clear monetary values (e.g., "Menos de 1M", "1-3M", "3-5M", "5M+" CLP) across all forms and display components. Added "Menos de 1M" range to accommodate smaller agencies with lower minimum project budgets (November 20, 2025).
 
 ## Dynamic Category Counts
 
