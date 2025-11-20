@@ -4,6 +4,7 @@ import Badge from './Badge';
 import AgencyLogo from './AgencyLogo';
 import { MapPin, DollarSign, Check } from 'lucide-react';
 import { normalizeSpecialties } from '@/lib/specialties';
+import { generateAgencySummary } from '@/lib/agencySummary';
 
 interface Agency {
   id: string;
@@ -25,6 +26,7 @@ interface Agency {
 export default function AgencyCard({ agency }: { agency: Agency }) {
   const specialties = agency.specialties ?? [];
   const normalizedSpecialties = normalizeSpecialties(specialties);
+  const summary = generateAgencySummary(agency.description, agency.services);
   
   return (
     <Link
@@ -76,6 +78,10 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
             <RatingStars rating={agency.avg_rating} size="sm" showNumber />
             <span className="text-sm text-dark/60">({agency.reviews_count} reseñas)</span>
           </div>
+
+          <p className="text-sm text-dark/80 mb-3 line-clamp-2 leading-relaxed">
+            {summary}
+          </p>
 
           <div className="flex items-center gap-2 mb-3 text-sm text-dark/70">
             <MapPin className="w-4 h-4" />
