@@ -360,7 +360,9 @@ function DashboardContent() {
 
                           <div className="mt-4 pt-4 border-t border-gray-200">
                             <a 
-                              href={`mailto:${quote.client_email}?subject=Re: ${quote.project_name}`}
+                              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${quote.client_email}&su=${encodeURIComponent(`Re: ${quote.project_name}`)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                             >
                               <Mail className="w-4 h-4" />
