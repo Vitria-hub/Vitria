@@ -419,7 +419,7 @@ export const agencyRouter = router({
   getCategoryCounts: publicProcedure.query(async () => {
     const { data: agencies, error } = await db
       .from('agencies')
-      .select('categories')
+      .select('id, categories')
       .eq('approval_status', 'approved');
 
     if (error) {
@@ -429,14 +429,22 @@ export const agencyRouter = router({
       });
     }
 
-    const categoryCounts: Record<string, number> = {};
+    const categoryAgencySets: Record<string, Set<string>> = {};
     
     agencies?.forEach((agency: any) => {
       if (agency.categories && Array.isArray(agency.categories)) {
         agency.categories.forEach((category: string) => {
-          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+          if (!categoryAgencySets[category]) {
+            categoryAgencySets[category] = new Set();
+          }
+          categoryAgencySets[category].add(agency.id);
         });
       }
+    });
+
+    const categoryCounts: Record<string, number> = {};
+    Object.entries(categoryAgencySets).forEach(([category, agencySet]) => {
+      categoryCounts[category] = agencySet.size;
     });
 
     return categoryCounts;
