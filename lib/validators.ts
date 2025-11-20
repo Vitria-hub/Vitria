@@ -22,7 +22,15 @@ const optionalUrlSchema = z.preprocess(
     
     return val;
   },
-  z.string().url({ message: 'URL inválida. Ejemplos válidos: vitria.cl, www.vitria.cl, https://vitria.cl' }).optional()
+  z.string().optional().refine(
+    (val) => {
+      if (!val) return true; // Si es undefined/null, es válido (opcional)
+      // Validación más permisiva: solo verificar que tenga formato básico de URL
+      const urlPattern = /^https?:\/\/.+\..+/i;
+      return urlPattern.test(val);
+    },
+    { message: 'URL inválida. Ejemplos válidos: vitria.cl, www.vitria.cl, https://vitria.cl' }
+  )
 );
 
 export const agencyListSchema = z.object({
