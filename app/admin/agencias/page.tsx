@@ -441,7 +441,7 @@ export default function AdminAgenciesPage() {
 
                 <div>
                   <label className="text-sm font-semibold text-dark/70">Descripción</label>
-                  <p className="text-dark">{detailModal.description || 'Sin descripción'}</p>
+                  <p className="text-dark whitespace-pre-line">{detailModal.description || 'Sin descripción'}</p>
                 </div>
 
                 {detailModal.services && detailModal.services.length > 0 && (
