@@ -49,7 +49,7 @@ export default function CrearAgenciaPage() {
     specialties: [] as string[],
     employeesMin: undefined as number | undefined,
     employeesMax: undefined as number | undefined,
-    priceRange: '' as '' | '1-3M' | '3-5M' | '5M+',
+    priceRange: '' as '' | 'Menos de 1M' | '1-3M' | '3-5M' | '5M+',
     industries: [] as string[],
   });
 
@@ -83,7 +83,7 @@ export default function CrearAgenciaPage() {
     
     const submitData = {
       ...formData,
-      priceRange: formData.priceRange as '1-3M' | '3-5M' | '5M+',
+      priceRange: formData.priceRange as 'Menos de 1M' | '1-3M' | '3-5M' | '5M+',
     };
     
     createMutation.mutate(submitData);
