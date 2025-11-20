@@ -8,6 +8,27 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes
 
+## Quote Request System Bug Fixes (November 20, 2025)
+
+Critical fixes for quote request functionality:
+
+- **Quote Table Creation & RLS Setup**: Created missing `quote_requests` table in Supabase Cloud with proper RLS policies
+  - Added insert policy allowing all authenticated users to create quotes
+  - Added select/update policies for authenticated users to view their own quotes
+  - Fixed foreign key references: `client_user_id` → `users(id)`, `agency_id` → `agencies(id)`
+  
+- **QuoteRequestModal Foreign Key Fix**: Fixed critical bug in quote submission
+  - **Problem**: Used `user.id` (Supabase auth_id) instead of `userData.id` (database user ID)
+  - **Solution**: Changed line 86 in `QuoteRequestModal.tsx` to use `userData?.id` 
+  - Now correctly references `users.id` table primary key for foreign key constraint
+  
+- **Client Profile Budget Range Update**: Fixed validation errors in client profile forms
+  - Updated `app/dashboard/perfil/page.tsx` to use new budget values: "Menos de 1M", "1-3M", "3-5M", "5M+"
+  - Replaced old symbolic values ("$", "$$", "$$$") causing enum validation errors
+  - Updated TypeScript types in `lib/supabase.ts` for `client_profiles.budget_range`
+  - Changed grid from 3 columns to responsive 2/4 columns for better mobile layout
+  - Both registration flow (`/auth/registro/cliente/perfil`) and dashboard edit (`/dashboard/perfil`) now synchronized
+
 ## Quote Request UX & WhatsApp Rebranding (November 20, 2025)
 
 Mejoras en la experiencia del usuario del formulario de cotización y estandarización de terminología:

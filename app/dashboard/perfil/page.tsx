@@ -16,7 +16,7 @@ export default function ClientProfileEditPage() {
   
   const [businessName, setBusinessName] = useState('');
   const [businessInstagram, setBusinessInstagram] = useState('');
-  const [budgetRange, setBudgetRange] = useState<'$' | '$$' | '$$$' | ''>('');
+  const [budgetRange, setBudgetRange] = useState<'Menos de 1M' | '1-3M' | '3-5M' | '5M+' | ''>('');
   const [desiredCategories, setDesiredCategories] = useState<string[]>([]);
   const [aboutBusiness, setAboutBusiness] = useState('');
   const [error, setError] = useState('');
@@ -38,7 +38,7 @@ export default function ClientProfileEditPage() {
     if (existingProfile) {
       setBusinessName(existingProfile.business_name || '');
       setBusinessInstagram(existingProfile.business_instagram || '');
-      setBudgetRange(existingProfile.budget_range as '$' | '$$' | '$$$');
+      setBudgetRange(existingProfile.budget_range as 'Menos de 1M' | '1-3M' | '3-5M' | '5M+');
       setDesiredCategories(existingProfile.desired_categories || []);
       setAboutBusiness(existingProfile.about_business || '');
     } else {
@@ -50,7 +50,7 @@ export default function ClientProfileEditPage() {
     if (profile) {
       setBusinessName(profile.business_name || '');
       setBusinessInstagram(profile.business_instagram || '');
-      setBudgetRange(profile.budget_range as '$' | '$$' | '$$$');
+      setBudgetRange(profile.budget_range as 'Menos de 1M' | '1-3M' | '3-5M' | '5M+');
       setDesiredCategories(profile.desired_categories || []);
       setAboutBusiness(profile.about_business || '');
     }
@@ -240,8 +240,8 @@ export default function ClientProfileEditPage() {
               <label className="block text-sm font-semibold text-dark mb-3">
                 ¿Cuánto quieres invertir? *
               </label>
-              <div className="grid grid-cols-3 gap-4">
-                {(['$', '$$', '$$$'] as const).map((range) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {(['Menos de 1M', '1-3M', '3-5M', '5M+'] as const).map((range) => (
                   <button
                     key={range}
                     type="button"
@@ -252,12 +252,8 @@ export default function ClientProfileEditPage() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className="text-2xl mb-1">{range}</div>
-                    <div className="text-xs">
-                      {range === '$' && 'Menos de $1M CLP'}
-                      {range === '$$' && '$1M a $3M CLP'}
-                      {range === '$$$' && '$3M a $5M CLP'}
-                    </div>
+                    <div className="text-lg font-bold mb-1">{range}</div>
+                    <div className="text-xs">Millones CLP</div>
                   </button>
                 ))}
               </div>

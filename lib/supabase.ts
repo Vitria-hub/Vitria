@@ -40,7 +40,7 @@ export type Database = {
           user_id: string;
           business_name: string;
           business_instagram: string | null;
-          budget_range: '$' | '$$' | '$$$';
+          budget_range: 'Menos de 1M' | '1-3M' | '3-5M' | '5M+';
           desired_categories: string[];
           about_business: string | null;
           created_at: string;
