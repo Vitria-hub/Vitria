@@ -862,7 +862,9 @@ export const adminRouter = router({
         });
       }
 
-      const insertData = {
+      const now = new Date().toISOString();
+      
+      const insertData: any = {
         name: input.name,
         slug,
         logo_url: input.logoUrl || null,
@@ -875,14 +877,20 @@ export const adminRouter = router({
         location_city: input.city,
         location_region: input.region,
         services: input.services || [],
-        categories: input.categories,
+        categories: input.categories || [],
         specialties: input.specialties || [],
         employees_min: input.employeesMin || null,
         employees_max: input.employeesMax || null,
         price_range: input.priceRange || null,
         owner_id: input.ownerId || null,
         approval_status: input.approvalStatus,
-        approved_at: input.approvalStatus === 'approved' ? new Date().toISOString() : null,
+        approved_at: input.approvalStatus === 'approved' ? now : null,
+        is_verified: false,
+        is_premium: false,
+        avg_rating: 0,
+        reviews_count: 0,
+        created_at: now,
+        updated_at: now,
       };
 
       const { data, error } = await db
