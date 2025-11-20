@@ -429,21 +429,45 @@ export const agencyRouter = router({
       });
     }
 
-    const categoryAgencySets: Record<string, Set<string>> = {};
+    const consolidatedCategorySets: Record<string, Set<string>> = {
+      'performance-ads': new Set(),
+      'social-media': new Set(),
+      'branding-identidad': new Set(),
+      'desarrollo-web': new Set(),
+      'produccion-contenido': new Set(),
+      'relaciones-publicas': new Set(),
+    };
+
+    const legacyMapping: Record<string, string> = {
+      // Consolidated IDs map to themselves
+      'performance-ads': 'performance-ads',
+      'social-media': 'social-media',
+      'branding-identidad': 'branding-identidad',
+      'desarrollo-web': 'desarrollo-web',
+      'produccion-contenido': 'produccion-contenido',
+      'relaciones-publicas': 'relaciones-publicas',
+      // Legacy IDs map to consolidated IDs
+      'publicidad-digital': 'performance-ads',
+      'estrategia-consultoria': 'performance-ads',
+      'publicidad': 'performance-ads',
+      'contenido-redes': 'social-media',
+      'diseno-grafico': 'branding-identidad',
+      'video-fotografia': 'produccion-contenido',
+    };
     
     agencies?.forEach((agency: any) => {
       if (agency.categories && Array.isArray(agency.categories)) {
-        agency.categories.forEach((category: string) => {
-          if (!categoryAgencySets[category]) {
-            categoryAgencySets[category] = new Set();
+        agency.categories.forEach((legacyCategory: string) => {
+          const consolidatedCategory = legacyMapping[legacyCategory];
+          if (consolidatedCategory && consolidatedCategorySets[consolidatedCategory]) {
+            consolidatedCategorySets[consolidatedCategory].add(agency.id);
           }
-          categoryAgencySets[category].add(agency.id);
         });
       }
     });
 
     const categoryCounts: Record<string, number> = {};
-    Object.entries(categoryAgencySets).forEach(([category, agencySet]) => {
+    Object.entries(consolidatedCategorySets).forEach(([category, agencySet]) => {
       categoryCounts[category] = agencySet.size;
     });
 

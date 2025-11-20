@@ -462,12 +462,19 @@ export const analyticsRouter = router({
       const avgViewsPerAgency = totalAgencies ? Math.floor((platformAvgViews || 0) / totalAgencies) : 0;
       const avgContactsPerAgency = totalAgencies ? Math.floor((platformAvgContacts || 0) / totalAgencies) : 0;
 
+      const { count: quotesReceived } = await supabaseAdmin
+        .from('quote_requests')
+        .select('*', { count: 'exact', head: true })
+        .eq('agency_id', agencyId)
+        .gte('created_at', startDateISO);
+
       return {
         ...stats,
         totalContacts,
         conversionRate: parseFloat(conversionRate.toFixed(2)),
         searchAppearances: searchAppearances || 0,
         searchClicks: searchClicks || 0,
+        quotesReceived: quotesReceived || 0,
         topKeywords,
         dailyTrends,
         platformAverage: {

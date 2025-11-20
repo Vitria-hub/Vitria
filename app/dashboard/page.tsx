@@ -52,7 +52,7 @@ function DashboardContent() {
     { label: 'Vistas', value: analyticsData.views, icon: Eye, change: '+12%' },
     { label: 'Clics en Perfil', value: analyticsData.phoneClicks + analyticsData.emailClicks + analyticsData.websiteClicks, icon: MousePointerClick, change: '+8%' },
     { label: 'Contactos', value: analyticsData.totalContacts, icon: Users, change: '+15%' },
-    { label: 'Leads', value: 0, icon: TrendingUp, change: '+22%' },
+    { label: 'Leads', value: analyticsData.quotesReceived, icon: TrendingUp, change: '+22%' },
   ] : [
     { label: 'Vistas', value: 0, icon: Eye, change: '-' },
     { label: 'Clics en Perfil', value: 0, icon: MousePointerClick, change: '-' },

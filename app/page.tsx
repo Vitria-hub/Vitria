@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Star, Users, Award, TrendingUp, Megaphone, Code, Camera, FileText, ArrowRight, Search, CheckCircle, Rocket, BarChart3, Heart } from 'lucide-react';
 import { serverClient } from '@/app/_trpc/serverClient';
-import { expandCategoryToLegacyIds, sumCategoryCounts } from '@/lib/categoryMapping';
 
 export default async function Home() {
   const caller = await serverClient();
@@ -52,7 +51,7 @@ export default async function Home() {
   const categories = consolidatedCategories.map(category => ({
     name: category.name,
     icon: category.icon,
-    count: sumCategoryCounts(categoryCounts, expandCategoryToLegacyIds(category.categoryId)),
+    count: categoryCounts[category.categoryId] || 0,
     description: category.description,
     categoryId: category.categoryId,
   }));
