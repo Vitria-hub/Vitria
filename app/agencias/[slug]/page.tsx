@@ -264,7 +264,7 @@ export default function AgencyDetailPage() {
         <div className="lg:col-span-2 space-y-8">
           <section>
             <h2 className="text-2xl font-bold text-primary mb-4">Sobre la Agencia</h2>
-            <p className="text-dark/80 leading-relaxed">{agency.description}</p>
+            <p className="text-dark/80 leading-relaxed whitespace-pre-line">{agency.description}</p>
           </section>
 
           <section>
