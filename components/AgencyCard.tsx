@@ -2,7 +2,7 @@ import Link from 'next/link';
 import RatingStars from './RatingStars';
 import Badge from './Badge';
 import AgencyLogo from './AgencyLogo';
-import { MapPin, DollarSign, BadgeCheck } from 'lucide-react';
+import { MapPin, DollarSign, Check } from 'lucide-react';
 import { normalizeSpecialties } from '@/lib/specialties';
 
 interface Agency {
@@ -51,10 +51,12 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
               <h3 className="font-bold text-lg text-dark truncate">{agency.name}</h3>
               {agency.is_premium && (
-                <BadgeCheck className="w-5 h-5 text-blue-500 flex-shrink-0" fill="#3B82F6" />
+                <div className="flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center" title="Verificado Premium">
+                  <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                </div>
               )}
             </div>
             <div className="flex gap-1 flex-shrink-0">
