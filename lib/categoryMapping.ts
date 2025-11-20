@@ -1,8 +1,9 @@
 export const CATEGORY_LEGACY_MAPPING: Record<string, string[]> = {
-  'publicidad-digital': ['publicidad-digital', 'social-media', 'estrategia-consultoria', 'publicidad'],
+  'performance-ads': ['publicidad-digital', 'estrategia-consultoria', 'publicidad'],
+  'social-media': ['social-media', 'contenido-redes'],
   'branding-identidad': ['branding-identidad', 'diseno-grafico'],
   'desarrollo-web': ['desarrollo-web'],
-  'produccion-contenido': ['contenido-redes', 'video-fotografia', 'produccion-contenido'],
+  'produccion-contenido': ['video-fotografia', 'produccion-contenido'],
   'relaciones-publicas': ['relaciones-publicas'],
 };
 

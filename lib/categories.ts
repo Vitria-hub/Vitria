@@ -1,8 +1,8 @@
 export const MAIN_CATEGORIES = [
   {
-    id: 'publicidad-digital',
-    label: 'Marketing Digital',
-    description: 'SEO, SEM, Social Media y Publicidad',
+    id: 'performance-ads',
+    label: 'Performance & Ads',
+    description: 'SEO, SEM, publicidad pagada y performance',
     services: [
       'SEO (Posicionamiento Orgánico)',
       'SEM (Google Ads, Bing Ads)',
@@ -10,15 +10,36 @@ export const MAIN_CATEGORIES = [
       'TikTok Ads',
       'LinkedIn Ads',
       'Twitter/X Ads',
+      'YouTube Ads',
       'Publicidad Programática',
-      'Community Management',
-      'Gestión de Redes Sociales',
-      'Marketing de Influencers',
       'Email Marketing',
       'Marketing Automation',
       'Performance Marketing',
       'Growth Marketing',
-      'Analytics y Reporting'
+      'Analytics y Reporting',
+      'Optimización de Conversión (CRO)',
+      'Retargeting y Remarketing'
+    ]
+  },
+  {
+    id: 'social-media',
+    label: 'Social Media',
+    description: 'Gestión de redes sociales y community management',
+    services: [
+      'Community Management',
+      'Gestión de Redes Sociales',
+      'Marketing de Influencers',
+      'Estrategia de Contenido Social',
+      'Creación de Contenido para RRSS',
+      'Social Listening',
+      'Análisis de Redes Sociales',
+      'Campañas Virales',
+      'TikTok Marketing',
+      'Instagram Marketing',
+      'Facebook Marketing',
+      'LinkedIn Marketing',
+      'Twitter/X Marketing',
+      'Pinterest Marketing'
     ]
   },
   {

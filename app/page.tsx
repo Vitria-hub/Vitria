@@ -12,10 +12,16 @@ export default async function Home() {
 
   const consolidatedCategories = [
     {
-      name: 'Marketing Digital',
+      name: 'Performance & Ads',
       icon: TrendingUp,
-      description: 'SEO, SEM, Social Media, Publicidad',
-      categoryId: 'publicidad-digital',
+      description: 'SEO, SEM, publicidad pagada',
+      categoryId: 'performance-ads',
+    },
+    {
+      name: 'Social Media',
+      icon: Heart,
+      description: 'Gestión de redes sociales',
+      categoryId: 'social-media',
     },
     {
       name: 'Diseño y Branding',
@@ -232,7 +238,7 @@ export default async function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {categories.map((category) => {
               const Icon = category.icon;
               return (
