@@ -98,3 +98,6 @@ externalPort = 5173
 deploymentTarget = "autoscale"
 run = ["npm", "run", "start"]
 build = ["npm", "run", "build"]
+
+[objectStorage]
+defaultBucketID = "replit-objstore-424aa020-0f78-4e79-b137-4a0776ec2c82"
