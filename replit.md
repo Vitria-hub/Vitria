@@ -30,7 +30,7 @@ SEO is managed using `next-seo` for metadata and `next-sitemap` for `sitemap.xml
 
 ## Analytics
 
-A comprehensive analytics system tracks agency profile views, contact clicks, search queries, and quote lifecycle metrics. Frontend tracking uses custom React hooks, while backend tRPC endpoints record data. An admin dashboard provides KPIs, agency rankings, and conversion funnels, with agencies able to access their specific performance metrics, including `quotesReceived`.
+A comprehensive analytics system tracks agency profile views, contact clicks, search queries, and quote lifecycle metrics. Frontend tracking uses custom React hooks, while backend tRPC endpoints record data stored in `interaction_logs` and `quote_requests` tables. The admin dashboard (`/admin`) displays 4 critical KPIs for the MVP: Total Cotizaciones, Usuarios Nuevos, Agencias Nuevas, and Total Búsquedas (last 30 days). A Top 5 Agencias table shows the most viewed agencies with detailed metrics (views, quotes, contacts, ratings). The full analytics dashboard (`/admin/analytics`) provides comprehensive agency rankings sorted by profile views, with support for up to 100,000 records per query. Agencies can access their own performance metrics via `/mi-agencia/analytics`, including `quotesReceived`.
 
 ## Premium Management
 

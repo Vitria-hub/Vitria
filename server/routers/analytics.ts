@@ -230,65 +230,81 @@ export const analyticsRouter = router({
       startDate.setDate(startDate.getDate() - days);
       const startDateISO = startDate.toISOString();
 
-      const { data: viewStats, error: viewError } = await supabaseAdmin.rpc('get_agency_view_stats', {
-        start_date: startDateISO,
-      });
+      // Get all interactions (views and contacts) for the period
+      // Note: Using a high limit to avoid truncation. For production, consider SQL aggregation.
+      const { data: interactions, error: interactionsError } = await supabaseAdmin
+        .from('interaction_logs')
+        .select('agency_id, interaction_type')
+        .gte('created_at', startDateISO)
+        .limit(100000);
 
-      if (viewError) {
-        console.error('Error getting view stats:', viewError);
+      if (interactionsError) {
+        console.error('Error getting interactions:', interactionsError);
         return [];
       }
 
-      const { data: contactStats, error: contactError } = await supabaseAdmin.rpc('get_agency_contact_stats', {
-        start_date: startDateISO,
-      });
-
-      if (contactError) {
-        console.error('Error getting contact stats:', contactError);
-        return [];
-      }
-
-      const statsMap = new Map();
-      
-      viewStats?.forEach((row: any) => {
-        statsMap.set(row.agency_id, {
-          agencyId: row.agency_id,
-          views: row.view_count || 0,
-          contacts: 0,
-        });
-      });
-
-      contactStats?.forEach((row: any) => {
-        const existing = statsMap.get(row.agency_id) || { agencyId: row.agency_id, views: 0, contacts: 0, quotes: 0, wonQuotes: 0 };
-        existing.contacts = row.contact_count || 0;
-        statsMap.set(row.agency_id, existing);
-      });
-
+      // Get quote stats for the period
       const { data: quoteStats, error: quoteError } = await supabaseAdmin
         .from('quote_requests')
         .select('agency_id, status')
-        .gte('created_at', startDateISO);
+        .gte('created_at', startDateISO)
+        .limit(100000);
 
-      if (!quoteError && quoteStats) {
-        quoteStats.forEach((row: any) => {
-          const existing = statsMap.get(row.agency_id) || { 
-            agencyId: row.agency_id, 
-            views: 0, 
-            contacts: 0, 
-            quotes: 0, 
-            wonQuotes: 0 
-          };
-          existing.quotes = (existing.quotes || 0) + 1;
-          if (row.status === 'won') {
-            existing.wonQuotes = (existing.wonQuotes || 0) + 1;
-          }
-          statsMap.set(row.agency_id, existing);
-        });
+      if (quoteError) {
+        console.error('Error getting quote stats:', quoteError);
       }
+
+      // Process stats by agency
+      const statsMap = new Map<string, {
+        views: number;
+        contacts: number;
+        quotes: number;
+        wonQuotes: number;
+      }>();
+
+      // Count interactions (views and contacts)
+      interactions?.forEach((log) => {
+        if (!log.agency_id) return;
+        
+        const existing = statsMap.get(log.agency_id) || {
+          views: 0,
+          contacts: 0,
+          quotes: 0,
+          wonQuotes: 0,
+        };
+
+        if (log.interaction_type === 'view') {
+          existing.views++;
+        } else if (['phone_click', 'email_click', 'website_click', 'form_submit'].includes(log.interaction_type)) {
+          existing.contacts++;
+        }
+
+        statsMap.set(log.agency_id, existing);
+      });
+
+      // Count quotes
+      quoteStats?.forEach((quote) => {
+        if (!quote.agency_id) return;
+        
+        const existing = statsMap.get(quote.agency_id) || {
+          views: 0,
+          contacts: 0,
+          quotes: 0,
+          wonQuotes: 0,
+        };
+
+        existing.quotes++;
+        if (quote.status === 'won') {
+          existing.wonQuotes++;
+        }
+
+        statsMap.set(quote.agency_id, existing);
+      });
 
       const agencyIds = Array.from(statsMap.keys());
       if (agencyIds.length === 0) return [];
 
+      // Get agency details
       const { data: agencies, error: agenciesError } = await supabaseAdmin
         .from('agencies')
         .select('id, name, slug, logo_url, avg_rating, reviews_count, is_premium')
@@ -299,6 +315,7 @@ export const analyticsRouter = router({
         return [];
       }
 
+      // Build ranking with all stats
       const ranking = agencies.map((agency) => {
         const stats = statsMap.get(agency.id) || { views: 0, contacts: 0, quotes: 0, wonQuotes: 0 };
         const ctr = stats.views > 0 ? (stats.contacts / stats.views) * 100 : 0;
@@ -311,8 +328,8 @@ export const analyticsRouter = router({
           logoUrl: agency.logo_url,
           views: stats.views,
           contacts: stats.contacts,
-          quotes: stats.quotes || 0,
-          wonQuotes: stats.wonQuotes || 0,
+          quotes: stats.quotes,
+          wonQuotes: stats.wonQuotes,
           ctr: parseFloat(ctr.toFixed(2)),
           conversionRate: parseFloat(conversionRate.toFixed(2)),
           avgRating: agency.avg_rating,
@@ -321,6 +338,7 @@ export const analyticsRouter = router({
         };
       });
 
+      // Sort by views (descending) and return top N
       return ranking
         .sort((a, b) => b.views - a.views)
         .slice(0, limit);
