@@ -80,7 +80,7 @@ export default function QuoteRequestModal({
       projectDescription,
       budgetRange: budgetRange || undefined,
       serviceCategory: serviceCategory || undefined,
-      clientUserId: user?.id,
+      clientUserId: userData?.id,
     });
   };
 
