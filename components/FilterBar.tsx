@@ -6,9 +6,10 @@ import { MAIN_CATEGORIES } from '@/lib/categories';
 
 const REGIONS = ['RM', 'V', 'VIII', 'IV', 'VII', 'IX', 'X'];
 const PRICE_RANGES = [
-  { value: '$', label: '$ - Menos de $1M CLP' },
-  { value: '$$', label: '$$ - $1M a $3M CLP' },
-  { value: '$$$', label: '$$$ - $3M a $5M CLP' },
+  { value: 'Menos de 1M', label: 'Menos de 1M CLP' },
+  { value: '1-3M', label: '1-3M CLP' },
+  { value: '3-5M', label: '3-5M CLP' },
+  { value: '5M+', label: '5M+ CLP' },
 ];
 
 interface FilterBarProps {
