@@ -68,7 +68,7 @@ export default async function Home() {
       quote: "La plataforma me ayudó a comparar diferentes agencias de marketing digital. Pude ver portfolios, leer reseñas reales y tomar una decisión informada.",
       author: "Carlos Rojas",
       role: "Gerente de Marketing en RestauranteVerde",
-      image: "/stock_images/hispanic_businesswom_becfbc99.jpg"
+      image: "/stock_images/professional_hispani_520e81e1.jpg"
     },
     {
       quote: "Como pequeña empresaria, necesitaba una agencia que entendiera mi presupuesto. En Vitria encontré opciones perfectas para mi negocio.",
