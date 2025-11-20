@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { useAuth } from '@/hooks/useAuth';
 import Button from './Button';
@@ -21,16 +21,23 @@ export default function QuoteRequestModal({
   onClose,
 }: QuoteRequestModalProps) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, userData } = useAuth();
   
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
-  const [clientPhone, setClientPhone] = useState('');
+  const [clientWhatsApp, setClientWhatsApp] = useState('');
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [budgetRange, setBudgetRange] = useState('');
   const [serviceCategory, setServiceCategory] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (user && userData) {
+      setClientName(userData.full_name || '');
+      setClientEmail(user.email || '');
+    }
+  }, [user, userData]);
 
   const submitQuoteMutation = trpc.quotes.submitQuote.useMutation({
     onSuccess: () => {
@@ -47,9 +54,14 @@ export default function QuoteRequestModal({
   });
 
   const resetForm = () => {
-    setClientName('');
-    setClientEmail('');
-    setClientPhone('');
+    if (user && userData) {
+      setClientName(userData.full_name || '');
+      setClientEmail(user.email || '');
+    } else {
+      setClientName('');
+      setClientEmail('');
+    }
+    setClientWhatsApp('');
     setProjectName('');
     setProjectDescription('');
     setBudgetRange('');
@@ -63,7 +75,7 @@ export default function QuoteRequestModal({
       agencyId,
       clientName,
       clientEmail,
-      clientPhone: clientPhone || undefined,
+      clientPhone: clientWhatsApp || undefined,
       projectName,
       projectDescription,
       budgetRange: budgetRange || undefined,
@@ -152,12 +164,12 @@ export default function QuoteRequestModal({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Teléfono (opcional)
+                WhatsApp (opcional)
               </label>
               <input
                 type="tel"
-                value={clientPhone}
-                onChange={(e) => setClientPhone(e.target.value)}
+                value={clientWhatsApp}
+                onChange={(e) => setClientWhatsApp(e.target.value)}
                 placeholder="+56 9 1234 5678"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
               />
@@ -209,14 +221,11 @@ export default function QuoteRequestModal({
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
             >
               <option value="">Selecciona una categoría</option>
-              <option value="Marketing Digital">Marketing Digital</option>
-              <option value="Branding">Branding</option>
-              <option value="Diseño Gráfico">Diseño Gráfico</option>
-              <option value="Publicidad">Publicidad</option>
-              <option value="Redes Sociales">Redes Sociales</option>
+              <option value="Performance & Ads">Performance & Ads</option>
+              <option value="Social Media">Social Media</option>
+              <option value="Diseño y Branding">Diseño y Branding</option>
               <option value="Desarrollo Web">Desarrollo Web</option>
-              <option value="SEO/SEM">SEO/SEM</option>
-              <option value="Producción Audiovisual">Producción Audiovisual</option>
+              <option value="Producción de Contenido">Producción de Contenido</option>
               <option value="Relaciones Públicas">Relaciones Públicas</option>
               <option value="Otro">Otro</option>
             </select>
