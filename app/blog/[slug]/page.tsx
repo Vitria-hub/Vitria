@@ -69,19 +69,41 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
-    image: post.image,
+    image: {
+      '@type': 'ImageObject',
+      url: post.image,
+      width: 1200,
+      height: 630,
+    },
     datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
     author: {
       '@type': 'Organization',
       name: post.author,
+      url: 'https://vitria.replit.app',
     },
     publisher: {
       '@type': 'Organization',
       name: 'Vitria',
+      url: 'https://vitria.replit.app',
       logo: {
         '@type': 'ImageObject',
         url: 'https://vitria.replit.app/vitria-logo.png',
+        width: 200,
+        height: 60,
       },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://vitria.replit.app/blog/${post.slug}`,
+    },
+    keywords: post.tags.join(', '),
+    articleSection: post.category,
+    inLanguage: 'es-CL',
+    about: {
+      '@type': 'Thing',
+      name: 'Agencias de Marketing y Branding en Chile',
+      description: 'Directorio de agencias especializadas en marketing, branding, diseño y publicidad en Chile',
     },
   };
 
@@ -125,10 +147,19 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  {new Date(post.publishedAt).toLocaleDateString('es-CL', {
+                  Publicado: {new Date(post.publishedAt).toLocaleDateString('es-CL', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
+                  })}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span className="font-semibold">
+                  Actualizado: {new Date(post.publishedAt).toLocaleDateString('es-CL', {
+                    year: 'numeric',
+                    month: 'long',
                   })}
                 </span>
               </div>
