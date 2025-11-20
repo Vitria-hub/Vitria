@@ -2,7 +2,7 @@ import Link from 'next/link';
 import RatingStars from './RatingStars';
 import Badge from './Badge';
 import AgencyLogo from './AgencyLogo';
-import { MapPin, DollarSign } from 'lucide-react';
+import { MapPin, DollarSign, BadgeCheck } from 'lucide-react';
 import { normalizeSpecialties } from '@/lib/specialties';
 
 interface Agency {
@@ -29,7 +29,16 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
   return (
     <Link
       href={`/agencias/${agency.slug}`}
-      className="block rounded-lg border-2 border-gray-200 p-6 hover:border-primary hover:shadow-lg transition"
+      className={`block rounded-lg border-2 p-6 transition relative overflow-hidden ${
+        agency.is_premium 
+          ? 'border-transparent bg-gradient-to-br from-blue-50 via-white to-amber-50 hover:shadow-2xl' 
+          : 'border-gray-200 hover:border-primary hover:shadow-lg'
+      }`}
+      style={agency.is_premium ? {
+        background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #3B82F6, #F59E0B, #3B82F6) border-box',
+        borderWidth: '3px',
+        borderStyle: 'solid',
+      } : undefined}
     >
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0">
@@ -42,7 +51,12 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-bold text-lg text-dark truncate">{agency.name}</h3>
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <h3 className="font-bold text-lg text-dark truncate">{agency.name}</h3>
+              {agency.is_premium && (
+                <BadgeCheck className="w-5 h-5 text-blue-500 flex-shrink-0" fill="#3B82F6" />
+              )}
+            </div>
             <div className="flex gap-1 flex-shrink-0">
               {agency.is_premium && <Badge variant="premium">Premium</Badge>}
               {agency.is_verified && <Badge variant="verified">✓</Badge>}

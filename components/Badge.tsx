@@ -8,7 +8,7 @@ interface BadgeProps {
 
 export default function Badge({ children, variant = 'default', className }: BadgeProps) {
   const variants = {
-    premium: 'bg-mint/30 text-dark border-mint',
+    premium: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 shadow-md shadow-blue-200',
     verified: 'bg-secondary/20 text-secondary border-secondary',
     default: 'bg-gray-100 text-dark border-gray-300',
   };
@@ -16,7 +16,8 @@ export default function Badge({ children, variant = 'default', className }: Badg
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border',
+        'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold',
+        variant !== 'premium' && 'border',
         variants[variant],
         className
       )}
