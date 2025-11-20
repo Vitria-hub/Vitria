@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc';
-import { ChevronLeft, Building2 } from 'lucide-react';
+import { ChevronLeft, Building2, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { MAIN_CATEGORIES, REGIONS } from '@/lib/categories';
 import { useToast } from '@/contexts/ToastContext';
+import { ObjectUploader } from '@/components/ObjectUploader';
+import type { UploadResult } from '@uppy/core';
+import Image from 'next/image';
 
 const TEAM_SIZES = [
   { min: 1, max: 5, label: '1-5 empleados' },
@@ -42,6 +45,12 @@ export default function AdminCrearAgenciaPage() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+
+  const getUploadUrlMutation = trpc.upload.getUploadUrl.useMutation();
+  const setLogoAclMutation = trpc.upload.setLogoAcl.useMutation();
+  const setCoverAclMutation = trpc.upload.setCoverAcl.useMutation();
 
   const createMutation = trpc.admin.createAgency.useMutation({
     onSuccess: () => {
@@ -248,19 +257,134 @@ export default function AdminCrearAgenciaPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input
-                  label="URL del Logo (opcional)"
-                  value={formData.logoUrl}
-                  onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                  placeholder="https://..."
-                />
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Logo (opcional)
+                  </label>
+                  
+                  {formData.logoUrl && (
+                    <div className="mb-4 p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                          <Image
+                            src={formData.logoUrl}
+                            alt="Logo"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                          className="text-red-600 hover:text-red-700 text-sm font-semibold"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
-                <Input
-                  label="URL de Portada (opcional)"
-                  value={formData.coverUrl}
-                  onChange={(e) => setFormData({ ...formData, coverUrl: e.target.value })}
-                  placeholder="https://..."
-                />
+                  <ObjectUploader
+                    maxNumberOfFiles={1}
+                    maxFileSize={5242880}
+                    allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
+                    onGetUploadParameters={async () => {
+                      const result = await getUploadUrlMutation.mutateAsync();
+                      return {
+                        method: 'PUT' as const,
+                        url: result.uploadURL,
+                      };
+                    }}
+                    onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+                      if (result.successful && result.successful[0]) {
+                        setUploadingLogo(true);
+                        try {
+                          const uploadURL = result.successful[0].uploadURL as string;
+                          const aclResult = await setLogoAclMutation.mutateAsync({
+                            logoURL: uploadURL,
+                            agencyId: 'temp-agency-id',
+                          });
+                          setFormData({ ...formData, logoUrl: aclResult.objectPath });
+                          setUploadingLogo(false);
+                        } catch (err) {
+                          console.error('Error al configurar el logo:', err);
+                          setErrorMessage('Error al subir el logo');
+                          setUploadingLogo(false);
+                        }
+                      }
+                    }}
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    {uploadingLogo ? 'Procesando...' : 'Subir Logo'}
+                  </ObjectUploader>
+                  <p className="text-sm text-dark/60 mt-2">
+                    Recomendado: 200x200px, formato PNG con fondo transparente (máx. 5MB)
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Imagen de Portada (opcional)
+                  </label>
+                  
+                  {formData.coverUrl && (
+                    <div className="mb-4 p-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+                      <div className="relative w-full h-32 border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                        <Image
+                          src={formData.coverUrl}
+                          alt="Portada"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, coverUrl: '' })}
+                        className="text-red-600 hover:text-red-700 text-sm font-semibold mt-2"
+                      >
+                        <X className="w-4 h-4 inline mr-1" />
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
+
+                  <ObjectUploader
+                    maxNumberOfFiles={1}
+                    maxFileSize={10485760}
+                    allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
+                    onGetUploadParameters={async () => {
+                      const result = await getUploadUrlMutation.mutateAsync();
+                      return {
+                        method: 'PUT' as const,
+                        url: result.uploadURL,
+                      };
+                    }}
+                    onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+                      if (result.successful && result.successful[0]) {
+                        setUploadingCover(true);
+                        try {
+                          const uploadURL = result.successful[0].uploadURL as string;
+                          const aclResult = await setCoverAclMutation.mutateAsync({
+                            coverURL: uploadURL,
+                            agencyId: 'temp-agency-id',
+                          });
+                          setFormData({ ...formData, coverUrl: aclResult.objectPath });
+                          setUploadingCover(false);
+                        } catch (err) {
+                          console.error('Error al configurar la portada:', err);
+                          setErrorMessage('Error al subir la portada');
+                          setUploadingCover(false);
+                        }
+                      }
+                    }}
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    {uploadingCover ? 'Procesando...' : 'Subir Portada'}
+                  </ObjectUploader>
+                  <p className="text-sm text-dark/60 mt-2">
+                    Recomendado: 1200x400px, formato JPG o PNG (máx. 10MB)
+                  </p>
+                </div>
               </div>
             </div>
           </div>
