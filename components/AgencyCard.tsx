@@ -91,14 +91,14 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         </div>
       )}
 
-      <div className="flex gap-2">
-        <Link
-          href={`/agencias/${agency.slug}`}
-          className="flex-1 text-center px-4 py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition"
-        >
-          Ver agencia
-        </Link>
-        {agency.whatsapp_number && (
+      {agency.is_premium && agency.whatsapp_number ? (
+        <div className="flex gap-2">
+          <Link
+            href={`/agencias/${agency.slug}`}
+            className="flex-1 text-center px-4 py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition"
+          >
+            Ver agencia
+          </Link>
           <a
             href={`https://wa.me/${agency.whatsapp_number.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Vi tu perfil en Vitria y me gustaría saber más sobre ${agency.name}`)}`}
             target="_blank"
@@ -110,8 +110,15 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
             </svg>
             WhatsApp
           </a>
-        )}
-      </div>
+        </div>
+      ) : (
+        <Link
+          href={`/agencias/${agency.slug}`}
+          className="block w-full text-center px-4 py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition"
+        >
+          Ver agencia
+        </Link>
+      )}
     </div>
   );
 }
