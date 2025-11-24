@@ -2,8 +2,6 @@ import Link from 'next/link';
 import RatingStars from './RatingStars';
 import AgencyLogo from './AgencyLogo';
 import { Check } from 'lucide-react';
-import { normalizeSpecialties } from '@/lib/specialties';
-import { generateAgencySummary } from '@/lib/agencySummary';
 
 interface Agency {
   id: string;
@@ -23,11 +21,6 @@ interface Agency {
 }
 
 export default function AgencyCard({ agency }: { agency: Agency }) {
-  const summary = generateAgencySummary(agency.description, agency.services);
-  const specialties = agency.specialties ?? [];
-  const normalizedSpecialties = normalizeSpecialties(specialties);
-  const maxServices = 3;
-  
   return (
     <div
       className={`block rounded-lg border-2 p-5 transition relative overflow-hidden ${
@@ -81,47 +74,16 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         </div>
       )}
 
-      <p className="text-sm font-semibold text-dark mb-3 leading-snug">
-        {summary}
-      </p>
-
-      <div className="mb-3">
-        <div className="flex flex-wrap gap-1.5">
-          {agency.services.slice(0, maxServices).map((service) => (
-            <span
-              key={service}
-              className="text-xs px-2.5 py-1 bg-gray-100 text-dark/70 rounded-md"
-            >
-              {service}
-            </span>
+      <div className="mb-4">
+        <ul className="space-y-1.5 text-xs text-dark/70">
+          {agency.services.slice(0, 3).map((service, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <span className="text-primary mt-0.5">•</span>
+              <span>{service}</span>
+            </li>
           ))}
-          {agency.services.length > maxServices && (
-            <span className="text-xs px-2.5 py-1 text-primary font-medium">
-              +{agency.services.length - maxServices} servicios
-            </span>
-          )}
-        </div>
+        </ul>
       </div>
-
-      {normalizedSpecialties.length > 0 && (
-        <div className="mb-4 pb-4 border-b border-gray-100">
-          <div className="flex flex-wrap gap-1.5">
-            {normalizedSpecialties.slice(0, 2).map((specialty) => (
-              <span
-                key={specialty}
-                className="text-xs px-2 py-0.5 bg-secondary/10 text-secondary rounded border border-secondary/20"
-              >
-                {specialty}
-              </span>
-            ))}
-            {normalizedSpecialties.length > 2 && (
-              <span className="text-xs px-2 py-0.5 text-dark/50">
-                +{normalizedSpecialties.length - 2}
-              </span>
-            )}
-          </div>
-        </div>
-      )}
 
       <Link
         href={`/agencias/${agency.slug}`}
