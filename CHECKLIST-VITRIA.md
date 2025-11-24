@@ -18,6 +18,9 @@
 ```
 [ ] Columna agregada a la tabla con tipo correcto
 [ ] Default value establecido (si hay datos existentes)
+[ ] ⚠️ CRÍTICO: Cache de Supabase invalidado
+    - Ejecutar: SELECT pg_notify('pgrst', 'reload schema');
+    - Esto es OBLIGATORIO después de agregar/modificar columnas
 [ ] Schema TypeScript actualizado (lib/supabase.ts)
     - Row type
     - Insert type  
@@ -88,11 +91,12 @@
 
 ## 🔴 REGLAS DE ORO
 
-1. **Campo nuevo + datos existentes** = SIEMPRE opcional o con default
-2. **Constantes** = UN solo archivo, importadas en todos lados
-3. **Admin panel** = Si el campo existe, debe ser editable aquí
-4. **Filtros** = Si es filtrable, debe estar en backend Y frontend
-5. **Testing** = Probar con datos nuevos Y antiguos
+1. **Columna nueva en DB** = SIEMPRE ejecutar `SELECT pg_notify('pgrst', 'reload schema');` después
+2. **Campo nuevo + datos existentes** = SIEMPRE opcional o con default
+3. **Constantes** = UN solo archivo, importadas en todos lados
+4. **Admin panel** = Si el campo existe, debe ser editable aquí
+5. **Filtros** = Si es filtrable, debe estar en backend Y frontend
+6. **Testing** = Probar con datos nuevos Y antiguos
 
 ---
 
