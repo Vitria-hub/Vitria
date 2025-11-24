@@ -132,6 +132,23 @@ export const REGIONS = [
   { value: 'magallanes', label: 'Magallanes y la Antártica Chilena' },
 ] as const;
 
+export const INDUSTRIES = [
+  'Retail', 
+  'Tech/Startups', 
+  'E-commerce', 
+  'Salud', 
+  'Educación',
+  'Inmobiliaria', 
+  'Finanzas', 
+  'Alimentos y Bebidas', 
+  'Turismo',
+  'Automotriz', 
+  'Moda', 
+  'Deportes', 
+  'Entretenimiento', 
+  'ONG'
+] as const;
+
 export type CategoryId = typeof MAIN_CATEGORIES[number]['id'];
 
 export function getCategoryLabel(categoryId: string): string {

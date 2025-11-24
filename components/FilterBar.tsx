@@ -2,7 +2,7 @@
 
 import Input from './Input';
 import { Search } from 'lucide-react';
-import { MAIN_CATEGORIES } from '@/lib/categories';
+import { MAIN_CATEGORIES, INDUSTRIES } from '@/lib/categories';
 
 const REGIONS = ['RM', 'V', 'VIII', 'IV', 'VII', 'IX', 'X'];
 const PRICE_RANGES = [
@@ -31,7 +31,7 @@ export default function FilterBar({ onFilterChange, currentFilters = {} }: Filte
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <select
           value={currentFilters.category || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
@@ -41,6 +41,19 @@ export default function FilterBar({ onFilterChange, currentFilters = {} }: Filte
           {MAIN_CATEGORIES.map((category) => (
             <option key={category.id} value={category.id}>
               {category.label}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={currentFilters.industry || ''}
+          className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
+          onChange={(e) => onFilterChange({ industry: e.target.value })}
+        >
+          <option value="">Todas las industrias</option>
+          {INDUSTRIES.map((industry) => (
+            <option key={industry} value={industry}>
+              {industry}
             </option>
           ))}
         </select>

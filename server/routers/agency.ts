@@ -13,7 +13,7 @@ export const agencyRouter = router({
   list: publicProcedure
     .input(agencyListSchema)
     .query(async ({ input, ctx }) => {
-      const { q, region, city, service, category, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
+      const { q, region, city, service, category, industry, sizeMin, sizeMax, priceRange, sort, page, limit } = input;
       const offset = (page - 1) * limit;
 
       let query = db.from('agencies').select('*', { count: 'exact' }).eq('approval_status', 'approved');
@@ -37,6 +37,10 @@ export const agencyRouter = router({
 
       if (service) {
         query = query.contains('services', [service]);
+      }
+
+      if (industry) {
+        query = query.contains('industries', [industry]);
       }
 
       if (sizeMin) {
