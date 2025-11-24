@@ -7,16 +7,10 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { ChevronRight, ChevronLeft, Check, Upload, X, Image as ImageIcon } from 'lucide-react';
-import { MAIN_CATEGORIES } from '@/lib/categories';
+import { MAIN_CATEGORIES, INDUSTRIES } from '@/lib/categories';
 import { SPECIALTY_CATEGORIES } from '@/lib/specialties';
 import { uploadAgencyLogo, validateImageFile } from '@/lib/storage';
 import Image from 'next/image';
-
-const INDUSTRIES = [
-  'Retail', 'Tech/Startups', 'E-commerce', 'Salud', 'Educación',
-  'Inmobiliaria', 'Finanzas', 'Alimentos y Bebidas', 'Turismo',
-  'Automotriz', 'Moda', 'Deportes', 'Entretenimiento', 'ONG'
-];
 
 const TEAM_SIZES = [
   { min: 1, max: 5, label: '1-5 empleados (Boutique)' },
