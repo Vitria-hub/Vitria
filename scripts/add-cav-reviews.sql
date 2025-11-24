@@ -9,20 +9,21 @@
 -- 5. Haz click en "Run" (▶️)
 -- ================================================
 
--- Primero crear usuarios de prueba, luego agregar las reseñas
+-- Usar usuarios existentes para las reseñas
 DO $$
 DECLARE
   agency_uuid UUID;
-  user_uuid_1 UUID := gen_random_uuid();
-  user_uuid_2 UUID := gen_random_uuid();
-  user_uuid_3 UUID := gen_random_uuid();
-  user_uuid_4 UUID := gen_random_uuid();
-  user_uuid_5 UUID := gen_random_uuid();
-  user_uuid_6 UUID := gen_random_uuid();
-  user_uuid_7 UUID := gen_random_uuid();
-  user_uuid_8 UUID := gen_random_uuid();
-  user_uuid_9 UUID := gen_random_uuid();
-  user_uuid_10 UUID := gen_random_uuid();
+  user_ids UUID[];
+  user_uuid_1 UUID;
+  user_uuid_2 UUID;
+  user_uuid_3 UUID;
+  user_uuid_4 UUID;
+  user_uuid_5 UUID;
+  user_uuid_6 UUID;
+  user_uuid_7 UUID;
+  user_uuid_8 UUID;
+  user_uuid_9 UUID;
+  user_uuid_10 UUID;
 BEGIN
   -- Obtener ID de CAV Consulting (case-insensitive)
   SELECT id INTO agency_uuid FROM agencies WHERE slug = 'cav-consulting';
@@ -31,21 +32,27 @@ BEGIN
     RAISE EXCEPTION 'No se encontró CAV consulting. Verifica que exista una agencia con slug "cav-consulting"';
   END IF;
 
-  -- Crear usuarios de prueba en la tabla profiles (si no existen)
-  -- Estos son clientes que dejaron reseñas
-  INSERT INTO profiles (id, email, full_name, role, created_at)
-  VALUES 
-    (user_uuid_1, 'cliente1@reviews.test', 'María González', 'user', NOW()),
-    (user_uuid_2, 'cliente2@reviews.test', 'Carlos Rodríguez', 'user', NOW()),
-    (user_uuid_3, 'cliente3@reviews.test', 'Francisca Muñoz', 'user', NOW()),
-    (user_uuid_4, 'cliente4@reviews.test', 'Diego Silva', 'user', NOW()),
-    (user_uuid_5, 'cliente5@reviews.test', 'Valentina Torres', 'user', NOW()),
-    (user_uuid_6, 'cliente6@reviews.test', 'Sebastián Pérez', 'user', NOW()),
-    (user_uuid_7, 'cliente7@reviews.test', 'Isidora Fernández', 'user', NOW()),
-    (user_uuid_8, 'cliente8@reviews.test', 'Matías Álvarez', 'user', NOW()),
-    (user_uuid_9, 'cliente9@reviews.test', 'Catalina Morales', 'user', NOW()),
-    (user_uuid_10, 'cliente10@reviews.test', 'Joaquín Vargas', 'user', NOW())
-  ON CONFLICT (id) DO NOTHING;
+  -- Obtener IDs de usuarios existentes (hasta 10 usuarios)
+  SELECT ARRAY_AGG(id) INTO user_ids FROM (
+    SELECT id FROM users ORDER BY created_at DESC LIMIT 10
+  ) subquery;
+  
+  -- Verificar que hay suficientes usuarios
+  IF user_ids IS NULL OR ARRAY_LENGTH(user_ids, 1) < 10 THEN
+    RAISE EXCEPTION 'No hay suficientes usuarios en la base de datos. Se necesitan al menos 10 usuarios. Usuarios encontrados: %', COALESCE(ARRAY_LENGTH(user_ids, 1), 0);
+  END IF;
+  
+  -- Asignar los UUIDs
+  user_uuid_1 := user_ids[1];
+  user_uuid_2 := user_ids[2];
+  user_uuid_3 := user_ids[3];
+  user_uuid_4 := user_ids[4];
+  user_uuid_5 := user_ids[5];
+  user_uuid_6 := user_ids[6];
+  user_uuid_7 := user_ids[7];
+  user_uuid_8 := user_ids[8];
+  user_uuid_9 := user_ids[9];
+  user_uuid_10 := user_ids[10];
 
   -- Insertar 10 reseñas con 5 estrellas cada una, fechas variadas en 2025
   
