@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import RatingStars from './RatingStars';
-import Badge from './Badge';
 import AgencyLogo from './AgencyLogo';
-import { MapPin, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { normalizeSpecialties } from '@/lib/specialties';
 import { generateAgencySummary } from '@/lib/agencySummary';
 
@@ -42,11 +41,6 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         borderStyle: 'solid',
       } : undefined}
     >
-      <div className="absolute top-4 right-4 flex gap-1.5">
-        {agency.is_premium && <Badge variant="premium">Premium</Badge>}
-        {agency.is_verified && <Badge variant="verified">Verificada</Badge>}
-      </div>
-
       <div className="flex items-start gap-3 mb-3">
         <div className="flex-shrink-0">
           <AgencyLogo 
@@ -59,8 +53,8 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         <div className="flex-1 min-w-0 pt-1">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-bold text-lg text-dark truncate">{agency.name}</h3>
-            {agency.is_verified && (
-              <div className="flex-shrink-0 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center" title="Verificada">
+            {agency.is_premium && (
+              <div className="flex-shrink-0 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center" title="Premium">
                 <Check className="w-3 h-3 text-white" strokeWidth={3} />
               </div>
             )}
@@ -83,17 +77,12 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         {summary}
       </p>
 
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2 text-xs text-dark/60">
-          <MapPin className="w-3.5 h-3.5" />
-          <span>{agency.location_city}, {agency.location_region}</span>
+      {agency.price_range && (
+        <div className="mb-3 flex items-center gap-1.5">
+          <span className="text-sm font-semibold text-dark">Rango de precios:</span>
+          <span className="text-sm font-bold text-secondary">{agency.price_range}</span>
         </div>
-        {agency.price_range && (
-          <span className="text-xs font-semibold text-secondary px-2 py-1 bg-secondary/10 rounded">
-            {agency.price_range}
-          </span>
-        )}
-      </div>
+      )}
 
       <div className="mb-3">
         <div className="flex flex-wrap gap-1.5">
