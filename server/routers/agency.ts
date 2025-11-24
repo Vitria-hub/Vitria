@@ -117,6 +117,7 @@ export const agencyRouter = router({
             reviews_count: agency.reviews_count,
             created_at: agency.created_at,
             location_region: agency.location_region,
+            whatsapp_number: agency.whatsapp_number,
           }));
 
       return {
