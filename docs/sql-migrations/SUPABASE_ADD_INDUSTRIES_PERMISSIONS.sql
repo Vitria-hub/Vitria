@@ -1,5 +1,5 @@
 -- ================================================
--- AGREGAR PERMISOS PARA COLUMNA industries
+-- AGREGAR COLUMNA industries Y PERMISOS
 -- ================================================
 -- INSTRUCCIONES:
 -- 1. Ve a https://supabase.com/dashboard
@@ -12,14 +12,11 @@
 -- 8. ¡Listo! Ahora prueba guardar industrias en el admin panel
 -- ================================================
 
--- Verificar que la columna existe (debe devolver 1 fila)
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_schema = 'public' 
-  AND table_name = 'agencies' 
-  AND column_name = 'industries';
+-- PASO 1: Crear la columna industries (si no existe)
+ALTER TABLE public.agencies 
+ADD COLUMN IF NOT EXISTS industries TEXT[] DEFAULT '{}';
 
--- Dar permisos de lectura y escritura a todos los roles de Supabase
+-- PASO 2: Dar permisos de lectura y escritura a todos los roles de Supabase
 GRANT SELECT (industries) ON TABLE public.agencies TO anon;
 GRANT SELECT (industries) ON TABLE public.agencies TO authenticated;
 GRANT SELECT (industries) ON TABLE public.agencies TO service_role;
@@ -32,15 +29,25 @@ GRANT UPDATE (industries) ON TABLE public.agencies TO anon;
 GRANT UPDATE (industries) ON TABLE public.agencies TO authenticated;
 GRANT UPDATE (industries) ON TABLE public.agencies TO service_role;
 
--- Forzar refresh del cache de PostgREST
+-- PASO 3: Forzar refresh del cache de PostgREST
 NOTIFY pgrst, 'reload schema';
 
--- Verificar permisos (debe mostrar varias filas con grantee = anon, authenticated, service_role)
+-- PASO 4: Verificar que todo funcionó
+SELECT column_name, data_type, column_default
+FROM information_schema.columns 
+WHERE table_schema = 'public' 
+  AND table_name = 'agencies' 
+  AND column_name = 'industries';
+
+-- ✅ Debe mostrar: industries | ARRAY | '{}'::text[]
+
+-- PASO 5: Verificar permisos
 SELECT grantee, privilege_type, column_name
 FROM information_schema.column_privileges
 WHERE table_name = 'agencies' 
   AND column_name = 'industries'
 ORDER BY grantee, privilege_type;
 
--- ✅ Si ves filas con anon, authenticated, service_role → ¡Funcionó!
--- Ahora ve a Settings → API → "Reload schema" en el dashboard
+-- ✅ Debe mostrar filas con anon, authenticated, service_role
+-- 
+-- PASO FINAL: Ve a Settings → API → "Reload schema" en el dashboard de Supabase
