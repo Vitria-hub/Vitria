@@ -40,7 +40,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
       {agency.price_range && (
         <div className="absolute top-4 right-4">
           <span className="inline-block px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-semibold rounded border border-secondary/20">
-            ${agency.price_range}
+            $$: {agency.price_range}
           </span>
         </div>
       )}
