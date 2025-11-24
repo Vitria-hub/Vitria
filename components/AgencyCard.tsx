@@ -2,6 +2,7 @@ import Link from 'next/link';
 import RatingStars from './RatingStars';
 import AgencyLogo from './AgencyLogo';
 import { Check } from 'lucide-react';
+import { extractDescriptionBullets } from '@/lib/extractDescriptionBullets';
 
 interface Agency {
   id: string;
@@ -21,6 +22,8 @@ interface Agency {
 }
 
 export default function AgencyCard({ agency }: { agency: Agency }) {
+  const bullets = extractDescriptionBullets(agency.description);
+  
   return (
     <div
       className={`block rounded-lg border-2 p-5 transition relative overflow-hidden ${
@@ -37,7 +40,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
       {agency.price_range && (
         <div className="absolute top-4 right-4">
           <span className="inline-block px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-semibold rounded border border-secondary/20">
-            {agency.price_range}
+            ${agency.price_range}
           </span>
         </div>
       )}
@@ -74,16 +77,18 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         </div>
       )}
 
-      <div className="mb-4">
-        <ul className="space-y-1.5 text-xs text-dark/70">
-          {agency.services.slice(0, 3).map((service, index) => (
-            <li key={index} className="flex items-start gap-2">
-              <span className="text-primary mt-0.5">•</span>
-              <span>{service}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {bullets.length > 0 && (
+        <div className="mb-4">
+          <ul className="space-y-1.5 text-xs text-dark/70">
+            {bullets.map((bullet, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <Link
         href={`/agencias/${agency.slug}`}
