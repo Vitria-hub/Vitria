@@ -766,6 +766,7 @@ export const adminRouter = router({
       employees_max: z.number().int().min(0).nullable(),
       price_range: z.enum(['Menos de 1M', '1-3M', '3-5M', '5M+']).nullable().or(z.literal('')),
       specialties: z.array(z.string()).optional(),
+      industries: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input }) => {
       const { agencyId, ...updateData } = input;
@@ -801,6 +802,7 @@ export const adminRouter = router({
         employees_max: updateData.employees_max ?? null,
         price_range: updateData.price_range || null,
         specialties: updateData.specialties ?? [],
+        industries: updateData.industries ?? [],
         updated_at: new Date().toISOString(),
       };
 

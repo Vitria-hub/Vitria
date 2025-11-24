@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
-import { MAIN_CATEGORIES, REGIONS } from '@/lib/categories';
+import { MAIN_CATEGORIES, REGIONS, INDUSTRIES } from '@/lib/categories';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { uploadAgencyLogo, validateImageFile } from '@/lib/storage';
@@ -37,6 +37,7 @@ export default function EditAgencyPage() {
     employees_max: null as number | null,
     price_range: '',
     specialties: [] as string[],
+    industries: [] as string[],
   });
 
   const [error, setError] = useState('');
@@ -90,6 +91,7 @@ export default function EditAgencyPage() {
           employees_max: agency.employees_max ?? null,
           price_range: agency.price_range || '',
           specialties: Array.isArray(agency.specialties) ? agency.specialties : [],
+          industries: Array.isArray(agency.industries) ? agency.industries : [],
         });
       } catch (err) {
         console.error('Error setting form data:', err);
@@ -644,6 +646,44 @@ export default function EditAgencyPage() {
               />
               <p className="text-sm text-dark/60 mt-1">
                 Tecnologías, plataformas o habilidades específicas (por ejemplo: React, Shopify, Google Analytics, Adobe Creative Suite)
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-gray-200 pt-8">
+            <h2 className="text-2xl font-bold text-dark mb-6">Industrias / Nichos</h2>
+
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-3">
+                Selecciona las industrias en las que la agencia tiene experiencia
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {INDUSTRIES.map((industry) => (
+                  <label
+                    key={industry}
+                    className={`flex items-center gap-2 px-4 py-3 border-2 rounded-lg cursor-pointer transition ${
+                      formData.industries.includes(industry)
+                        ? 'border-primary bg-primary/5 text-primary'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.industries.includes(industry)}
+                      onChange={() =>
+                        setFormData({
+                          ...formData,
+                          industries: toggleArrayItem(formData.industries, industry),
+                        })
+                      }
+                      className="hidden"
+                    />
+                    <span className="text-sm font-medium">{industry}</span>
+                  </label>
+                ))}
+              </div>
+              <p className="text-sm text-dark/60 mt-3">
+                Estas industrias aparecerán en los filtros del explorador para que los clientes encuentren agencias especializadas en su sector
               </p>
             </div>
           </div>

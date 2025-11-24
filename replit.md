@@ -36,7 +36,7 @@ A comprehensive analytics system tracks agency profile views, contact clicks, se
 
 ## Premium Management
 
-Premium agency status is manually managed by administrators, offering benefits like direct contact information display (email, phone, website) via a "Ver más formas de contacto" toggle. Non-premium agencies use the platform's quote request system for lead generation. An admin panel allows full management of agency profiles and premium status.
+Premium agency status is manually managed by administrators, offering benefits like direct contact information display (email, phone, website) via a "Ver más formas de contacto" toggle. Non-premium agencies use the platform's quote request system for lead generation. An admin panel (`/admin/agencias/[id]/editar`) allows full management of agency profiles and premium status, including the ability to edit industries/niches, services, categories, and all agency information.
 
 ## File Upload System
 
