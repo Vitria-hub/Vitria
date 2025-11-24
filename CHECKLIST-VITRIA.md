@@ -109,6 +109,34 @@
 
 ---
 
+## ⚠️ ARQUITECTURA DE BASE DE DATOS
+
+**CRÍTICO**: Este proyecto usa **DOS bases de datos separadas**:
+
+### 1. Neon PostgreSQL (desarrollo - Replit)
+- Base de datos local para desarrollo
+- Accesible vía `execute_sql_tool`
+- Puede estar **vacía o desincronizada**
+- ❌ **NO usar para cambios de schema en producción**
+- Solo para testing local
+
+### 2. Supabase PostgreSQL (producción)
+- Base de datos **real** con datos de usuarios
+- La aplicación se conecta aquí (`.env.local`)
+- ✅ **TODOS los cambios de schema van aquí**
+- Ejecutar SQL en Dashboard de Supabase → SQL Editor
+- Requiere permisos de columna + refresh de cache
+
+### 🎯 REGLA DE ORO:
+```
+execute_sql_tool → Neon (vacía, solo pruebas)
+Cambios reales → Supabase Dashboard SQL Editor
+```
+
+**NUNCA confundir estas dos bases de datos**. Los cambios en Neon NO afectan la aplicación.
+
+---
+
 ## ⚡ QUICK REFERENCE
 
 **Campo simple** (ej: "descripción_corta")
