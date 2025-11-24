@@ -166,6 +166,13 @@ export default function CrearAgenciaPage() {
     scrollToTop();
   }, [currentStep]);
 
+  // Limpiar el error de logo cuando el usuario ingresa el nombre
+  useEffect(() => {
+    if (formData.name && logoError === 'Primero ingresa el nombre de la agencia') {
+      setLogoError('');
+    }
+  }, [formData.name]);
+
   const toggleArrayItem = (array: string[], item: string) => {
     return array.includes(item)
       ? array.filter((i) => i !== item)
