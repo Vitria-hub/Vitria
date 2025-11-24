@@ -68,6 +68,7 @@ export type Database = {
           services: string[];
           categories: string[];
           specialties: string[];
+          industries: string[];
           facebook_url: string | null;
           instagram_url: string | null;
           linkedin_url: string | null;
@@ -106,6 +107,7 @@ export type Database = {
           services?: string[];
           categories?: string[];
           specialties?: string[];
+          industries?: string[];
           facebook_url?: string | null;
           instagram_url?: string | null;
           linkedin_url?: string | null;
@@ -144,6 +146,7 @@ export type Database = {
           services?: string[];
           categories?: string[];
           specialties?: string[];
+          industries?: string[];
           facebook_url?: string | null;
           instagram_url?: string | null;
           linkedin_url?: string | null;
