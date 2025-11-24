@@ -19,10 +19,10 @@
 [ ] Columna agregada a la tabla con tipo correcto
 [ ] Default value establecido (si hay datos existentes)
 [ ] ⚠️ CRÍTICO: Cache de PostgREST (Supabase Cloud)
-    - Opción 1: Esperar ~5 min para auto-refresh
-    - Opción 2: Crear función RPC para bypass cache:
-      CREATE FUNCTION update_[tabla]_[campo](...) para columnas nuevas
-    - Si usas RPC: actualizar endpoint para llamar la función RPC
+    - Ve al Dashboard de Supabase
+    - Settings → API → "Reload schema" o "Reset API cache"
+    - Espera 30-60 segundos
+    - Si no tienes acceso: espera 5-10 minutos (auto-refresh)
 [ ] Schema TypeScript actualizado (lib/supabase.ts)
     - Row type
     - Insert type  
@@ -93,12 +93,13 @@
 
 ## 🔴 REGLAS DE ORO
 
-1. **Columna nueva en DB** = SIEMPRE ejecutar `SELECT pg_notify('pgrst', 'reload schema');` después
+1. **Columna nueva en Supabase** = SIEMPRE refrescar cache en Dashboard después
 2. **Campo nuevo + datos existentes** = SIEMPRE opcional o con default
 3. **Constantes** = UN solo archivo, importadas en todos lados
 4. **Admin panel** = Si el campo existe, debe ser editable aquí
 5. **Filtros** = Si es filtrable, debe estar en backend Y frontend
-6. **Testing** = Probar con datos nuevos Y antiguos
+6. **Testing** = Probar crear/editar/filtrar ANTES de entregar
+7. **Workflow** = Reiniciar DESPUÉS de cambios en backend
 
 ---
 

@@ -802,6 +802,7 @@ export const adminRouter = router({
         employees_max: updateData.employees_max ?? null,
         price_range: updateData.price_range || null,
         specialties: updateData.specialties ?? [],
+        industries: updateData.industries ?? [],
         updated_at: new Date().toISOString(),
       };
 
@@ -825,29 +826,6 @@ export const adminRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: error.message || 'Error al actualizar la agencia',
         });
-      }
-
-      // Update industries separately using direct SQL to bypass PostgREST cache issue
-      if (updateData.industries !== undefined) {
-        console.log('[Admin updateAgency] Updating industries via direct SQL:', updateData.industries);
-        
-        try {
-          const { error: updateError } = await supabaseAdmin
-            .from('agencies')
-            .update({ 
-              industries: updateData.industries || [],
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', agencyId);
-          
-          if (updateError) {
-            console.error('[Admin updateAgency] Error updating industries:', updateError);
-          } else {
-            console.log('[Admin updateAgency] Industries updated successfully');
-          }
-        } catch (err) {
-          console.error('[Admin updateAgency] Exception updating industries:', err);
-        }
       }
 
       console.log('[Admin updateAgency] Update successful');
