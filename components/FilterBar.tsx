@@ -31,20 +31,7 @@ export default function FilterBar({ onFilterChange, currentFilters = {} }: Filte
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <select
-          value={currentFilters.region || ''}
-          className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
-          onChange={(e) => onFilterChange({ region: e.target.value })}
-        >
-          <option value="">Todas las regiones</option>
-          {REGIONS.map((region) => (
-            <option key={region} value={region}>
-              Región {region}
-            </option>
-          ))}
-        </select>
-
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <select
           value={currentFilters.category || ''}
           className="px-4 py-2 border-2 border-gray-200 rounded-md focus:border-primary focus:outline-none"
