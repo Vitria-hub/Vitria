@@ -18,11 +18,16 @@
 ```
 [ ] Columna agregada a la tabla con tipo correcto
 [ ] Default value establecido (si hay datos existentes)
+[ ] ⚠️ CRÍTICO: Permisos de columna en Supabase
+    - Crear archivo en docs/sql-migrations/SUPABASE_ADD_[CAMPO]_PERMISSIONS.sql
+    - Incluir GRANT SELECT/INSERT/UPDATE para anon, authenticated, service_role
+    - Usuario debe ejecutarlo en Supabase SQL Editor
+    - Verificar con information_schema.column_privileges
 [ ] ⚠️ CRÍTICO: Cache de PostgREST (Supabase Cloud)
+    - DESPUÉS de ejecutar los permisos
     - Ve al Dashboard de Supabase
-    - Settings → API → "Reload schema" o "Reset API cache"
-    - Espera 30-60 segundos
-    - Si no tienes acceso: espera 5-10 minutos (auto-refresh)
+    - Settings → API → "Reload schema"
+    - Espera 30-60 segundos para que tome efecto
 [ ] Schema TypeScript actualizado (lib/supabase.ts)
     - Row type
     - Insert type  
@@ -93,13 +98,14 @@
 
 ## 🔴 REGLAS DE ORO
 
-1. **Columna nueva en Supabase** = SIEMPRE refrescar cache en Dashboard después
-2. **Campo nuevo + datos existentes** = SIEMPRE opcional o con default
-3. **Constantes** = UN solo archivo, importadas en todos lados
-4. **Admin panel** = Si el campo existe, debe ser editable aquí
-5. **Filtros** = Si es filtrable, debe estar en backend Y frontend
-6. **Testing** = Probar crear/editar/filtrar ANTES de entregar
-7. **Workflow** = Reiniciar DESPUÉS de cambios en backend
+1. **Columna nueva en Supabase** = SIEMPRE crear script de permisos SQL + refrescar cache
+2. **Permisos de columna** = GRANT SELECT/INSERT/UPDATE a anon, authenticated, service_role
+3. **Campo nuevo + datos existentes** = SIEMPRE opcional o con default
+4. **Constantes** = UN solo archivo, importadas en todos lados
+5. **Admin panel** = Si el campo existe, debe ser editable aquí
+6. **Filtros** = Si es filtrable, debe estar en backend Y frontend
+7. **Testing** = Probar crear/editar/filtrar DESPUÉS de ejecutar permisos SQL
+8. **Workflow** = Reiniciar DESPUÉS de cambios en backend
 
 ---
 
