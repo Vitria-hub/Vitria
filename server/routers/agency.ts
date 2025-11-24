@@ -39,9 +39,9 @@ export const agencyRouter = router({
         query = query.contains('services', [service]);
       }
 
-      if (industry) {
-        query = query.contains('industries', [industry]);
-      }
+      // Skip industry filter in SQL query due to PostgREST cache issue
+      // We'll filter manually after fetching data
+      const shouldFilterByIndustry = !!industry;
 
       if (sizeMin) {
         query = query.gte('employees_min', sizeMin);
@@ -70,13 +70,30 @@ export const agencyRouter = router({
           break;
       }
 
-      query = query.range(offset, offset + limit - 1);
+      // Fetch more results if filtering by industry client-side
+      const fetchLimit = shouldFilterByIndustry ? limit * 3 : limit;
+      const fetchOffset = shouldFilterByIndustry ? 0 : offset;
+      
+      query = query.range(fetchOffset, fetchOffset + fetchLimit - 1);
 
       const { data, error, count } = await query;
 
       if (error) throw error;
 
-      const freshAgencies = await enforcePremiumFreshness(data || []);
+      // Filter by industry manually (client-side filtering to bypass PostgREST cache)
+      let filteredData = data || [];
+      if (shouldFilterByIndustry && industry) {
+        filteredData = filteredData.filter((agency: any) => 
+          Array.isArray(agency.industries) && agency.industries.includes(industry)
+        );
+      }
+
+      // Apply pagination after filtering if needed
+      const paginatedData = shouldFilterByIndustry 
+        ? filteredData.slice(offset, offset + limit)
+        : filteredData;
+
+      const freshAgencies = await enforcePremiumFreshness(paginatedData);
 
       // Custom sorting: Scale Lab always first, then premium, then regular agencies
       const sortedAgencies = [...freshAgencies].sort((a: any, b: any) => {
@@ -124,11 +141,14 @@ export const agencyRouter = router({
             whatsapp_number: agency.whatsapp_number,
           }));
 
+      // Adjust total count if filtering by industry manually
+      const adjustedTotal = shouldFilterByIndustry ? filteredData.length : (count || 0);
+
       return {
         agencies: filteredAgencies,
-        total: count || 0,
+        total: adjustedTotal,
         page,
-        totalPages: Math.ceil((count || 0) / limit),
+        totalPages: Math.ceil(adjustedTotal / limit),
       };
     }),
 

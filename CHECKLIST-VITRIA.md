@@ -18,9 +18,11 @@
 ```
 [ ] Columna agregada a la tabla con tipo correcto
 [ ] Default value establecido (si hay datos existentes)
-[ ] ⚠️ CRÍTICO: Cache de Supabase invalidado
-    - Ejecutar: SELECT pg_notify('pgrst', 'reload schema');
-    - Esto es OBLIGATORIO después de agregar/modificar columnas
+[ ] ⚠️ CRÍTICO: Cache de PostgREST (Supabase Cloud)
+    - Opción 1: Esperar ~5 min para auto-refresh
+    - Opción 2: Crear función RPC para bypass cache:
+      CREATE FUNCTION update_[tabla]_[campo](...) para columnas nuevas
+    - Si usas RPC: actualizar endpoint para llamar la función RPC
 [ ] Schema TypeScript actualizado (lib/supabase.ts)
     - Row type
     - Insert type  
