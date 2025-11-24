@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, LogOut, User, X, Loader2 } from 'lucide-react';
+import { Menu, LogOut, LogIn, User, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect, useRef } from 'react';
@@ -205,14 +205,15 @@ export default function Navbar() {
               <div className="space-y-3 pt-2 border-t">
                 <Link 
                   href="/auth/login" 
-                  className="block text-dark hover:text-primary transition py-2"
+                  className="flex items-center gap-2 text-dark hover:text-primary transition py-2"
                   onClick={() => setShowMobileMenu(false)}
                 >
-                  Iniciar Sesión
+                  <LogIn className="w-5 h-5" />
+                  <span className="font-medium">Iniciar Sesión</span>
                 </Link>
                 <Link
                   href="/auth/registro"
-                  className="block bg-accent text-dark px-4 py-2 rounded-md font-semibold hover:bg-primary hover:text-white transition text-center"
+                  className="block bg-accent text-dark px-4 py-2.5 rounded-md font-semibold hover:bg-primary hover:text-white transition text-center min-h-[44px] flex items-center justify-center"
                   onClick={() => setShowMobileMenu(false)}
                 >
                   Registrarse
