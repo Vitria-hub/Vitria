@@ -13,7 +13,7 @@ export function extractDescriptionBullets(description: string | null): string[] 
     return bulletLines
       .map(line => line.replace(/^[•*\-·]\s*/, '').trim())
       .filter(line => line.length > 0)
-      .slice(0, 3);
+      .slice(0, 6);
   }
 
   const sentences = description
@@ -21,5 +21,5 @@ export function extractDescriptionBullets(description: string | null): string[] 
     .map(s => s.trim())
     .filter(s => s.length > 0 && s.length < 150);
 
-  return sentences.slice(0, 3);
+  return sentences.slice(0, 6);
 }
