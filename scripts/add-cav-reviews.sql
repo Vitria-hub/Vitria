@@ -9,50 +9,47 @@
 -- 5. Haz click en "Run" (▶️)
 -- ================================================
 
--- Usar usuarios existentes para las reseñas
+-- PASO 1: Crear usuarios ficticios para las reseñas
+-- PASO 2: Usar esos usuarios para crear las reseñas de CAV Consulting
+
 DO $$
 DECLARE
   agency_uuid UUID;
-  user_ids UUID[];
-  user_uuid_1 UUID;
-  user_uuid_2 UUID;
-  user_uuid_3 UUID;
-  user_uuid_4 UUID;
-  user_uuid_5 UUID;
-  user_uuid_6 UUID;
-  user_uuid_7 UUID;
-  user_uuid_8 UUID;
-  user_uuid_9 UUID;
-  user_uuid_10 UUID;
+  user_uuid_1 UUID := gen_random_uuid();
+  user_uuid_2 UUID := gen_random_uuid();
+  user_uuid_3 UUID := gen_random_uuid();
+  user_uuid_4 UUID := gen_random_uuid();
+  user_uuid_5 UUID := gen_random_uuid();
+  user_uuid_6 UUID := gen_random_uuid();
+  user_uuid_7 UUID := gen_random_uuid();
+  user_uuid_8 UUID := gen_random_uuid();
+  user_uuid_9 UUID := gen_random_uuid();
+  user_uuid_10 UUID := gen_random_uuid();
 BEGIN
-  -- Obtener ID de CAV Consulting (case-insensitive)
+  -- Obtener ID de CAV Consulting
   SELECT id INTO agency_uuid FROM agencies WHERE slug = 'cav-consulting';
   
   IF agency_uuid IS NULL THEN
     RAISE EXCEPTION 'No se encontró CAV consulting. Verifica que exista una agencia con slug "cav-consulting"';
   END IF;
 
-  -- Obtener IDs de usuarios existentes (hasta 10 usuarios)
-  SELECT ARRAY_AGG(id) INTO user_ids FROM (
-    SELECT id FROM users ORDER BY created_at DESC LIMIT 10
-  ) subquery;
-  
-  -- Verificar que hay suficientes usuarios
-  IF user_ids IS NULL OR ARRAY_LENGTH(user_ids, 1) < 10 THEN
-    RAISE EXCEPTION 'No hay suficientes usuarios en la base de datos. Se necesitan al menos 10 usuarios. Usuarios encontrados: %', COALESCE(ARRAY_LENGTH(user_ids, 1), 0);
-  END IF;
-  
-  -- Asignar los UUIDs
-  user_uuid_1 := user_ids[1];
-  user_uuid_2 := user_ids[2];
-  user_uuid_3 := user_ids[3];
-  user_uuid_4 := user_ids[4];
-  user_uuid_5 := user_ids[5];
-  user_uuid_6 := user_ids[6];
-  user_uuid_7 := user_ids[7];
-  user_uuid_8 := user_ids[8];
-  user_uuid_9 := user_ids[9];
-  user_uuid_10 := user_ids[10];
+  -- PASO 1: Crear 10 usuarios ficticios (identificables por email @test.vitria.cl)
+  -- Estos usuarios son claramente de prueba y pueden ser limpiados fácilmente
+  INSERT INTO users (id, email, full_name, role, created_at)
+  VALUES 
+    (user_uuid_1, 'test-reviewer-1@test.vitria.cl', 'María González Torres', 'user', '2025-01-10 09:00:00'),
+    (user_uuid_2, 'test-reviewer-2@test.vitria.cl', 'Carlos Rodríguez Pérez', 'user', '2025-02-01 10:00:00'),
+    (user_uuid_3, 'test-reviewer-3@test.vitria.cl', 'Francisca Muñoz Silva', 'user', '2025-03-15 11:00:00'),
+    (user_uuid_4, 'test-reviewer-4@test.vitria.cl', 'Diego Silva Álvarez', 'user', '2025-04-05 12:00:00'),
+    (user_uuid_5, 'test-reviewer-5@test.vitria.cl', 'Valentina Torres Morales', 'user', '2025-05-12 13:00:00'),
+    (user_uuid_6, 'test-reviewer-6@test.vitria.cl', 'Sebastián Pérez Castro', 'user', '2025-06-01 14:00:00'),
+    (user_uuid_7, 'test-reviewer-7@test.vitria.cl', 'Isidora Fernández Rojas', 'user', '2025-07-08 15:00:00'),
+    (user_uuid_8, 'test-reviewer-8@test.vitria.cl', 'Matías Álvarez Vargas', 'user', '2025-08-15 16:00:00'),
+    (user_uuid_9, 'test-reviewer-9@test.vitria.cl', 'Catalina Morales Soto', 'user', '2025-09-10 17:00:00'),
+    (user_uuid_10, 'test-reviewer-10@test.vitria.cl', 'Joaquín Vargas Herrera', 'user', '2025-10-01 18:00:00')
+  ON CONFLICT (email) DO NOTHING;
+
+  RAISE NOTICE '✅ Paso 1: Usuarios ficticios creados (emails: test-reviewer-*@test.vitria.cl)';
 
   -- Insertar 10 reseñas con 5 estrellas cada una, fechas variadas en 2025
   
