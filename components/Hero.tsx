@@ -3,28 +3,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from './Button';
-import { Search, MapPin } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MAIN_CATEGORIES } from '@/lib/categories';
 
 export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
-
-  const regions = [
-    { value: '', label: 'En todo Chile' },
-    { value: 'RM', label: 'Región Metropolitana' },
-    { value: 'V', label: 'Valparaíso' },
-    { value: 'VIII', label: 'Biobío (Concepción)' },
-    { value: 'IV', label: 'Coquimbo' },
-    { value: 'VI', label: 'O\'Higgins' },
-    { value: 'VII', label: 'Maule' },
-    { value: 'IX', label: 'Araucanía' },
-    { value: 'X', label: 'Los Lagos' },
-  ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,9 +20,6 @@ export default function Hero() {
     const params = new URLSearchParams();
     if (selectedCategory) {
       params.set('category', selectedCategory);
-    }
-    if (selectedRegion) {
-      params.set('region', selectedRegion);
     }
     
     const queryString = params.toString();
@@ -62,47 +46,25 @@ export default function Hero() {
             Marketing, publicidad, diseño, audiovisual, desarrollo web y más. Conectamos negocios con agencias especializadas en todo Chile.
           </p>
 
-          <form onSubmit={handleSearch} className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <form onSubmit={handleSearch} className="bg-white rounded-2xl p-6 shadow-2xl max-w-2xl mx-auto mb-12">
+            <div className="mb-4">
+              <label className="block text-left text-sm font-semibold text-dark mb-2">
+                ¿Qué necesitas?
+              </label>
               <div className="relative">
-                <label className="block text-left text-sm font-semibold text-dark mb-2">
-                  ¿Qué necesitas?
-                </label>
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 rounded-lg text-dark bg-gray-50 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition appearance-none cursor-pointer"
-                  >
-                    <option value="">Todas las categorías</option>
-                    {MAIN_CATEGORIES.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="relative">
-                <label className="block text-left text-sm font-semibold text-dark mb-2">
-                  ¿Dónde?
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <select
-                    value={selectedRegion}
-                    onChange={(e) => setSelectedRegion(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 rounded-lg text-dark bg-gray-50 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition appearance-none cursor-pointer"
-                  >
-                    {regions.map((region) => (
-                      <option key={region.value} value={region.value}>
-                        {region.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 rounded-lg text-dark bg-gray-50 border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition appearance-none cursor-pointer"
+                >
+                  <option value="">Todas las categorías</option>
+                  {MAIN_CATEGORIES.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
