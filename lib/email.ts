@@ -77,8 +77,8 @@ export async function sendAgencyReviewEmail(agencyData: AgencyData) {
             .label { font-weight: bold; color: #1B5568; }
             .button-container { text-align: center; margin: 30px 0; }
             .button { display: inline-block; padding: 12px 30px; margin: 0 10px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-            .approve { background-color: #10B981; color: white; }
-            .reject { background-color: #EF4444; color: white; }
+            .approve { background-color: #10B981; color: white !important; }
+            .reject { background-color: #EF4444; color: white !important; }
             .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
           </style>
         </head>
@@ -130,7 +130,7 @@ export async function sendAgencyReviewEmail(agencyData: AgencyData) {
               </div>
               
               <div class="button-container">
-                <a href="${reviewUrl}" class="button approve" style="background-color: #1B5568;">Revisar Agencia</a>
+                <a href="${reviewUrl}" class="button approve" style="background-color: #1B5568; color: white !important;">Revisar Agencia</a>
               </div>
               
               <p style="text-align: center; color: #666; font-size: 14px;">
@@ -246,7 +246,7 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
             .header { background-color: #10B981; color: white; padding: 30px; text-align: center; }
             .content { background-color: #f9f9f9; padding: 30px; }
             .success-box { background-color: #D1FAE5; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0; }
-            .button { display: inline-block; padding: 15px 30px; background-color: #1B5568; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+            .button { display: inline-block; padding: 15px 30px; background-color: #1B5568; color: white !important; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
             .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
           </style>
         </head>
