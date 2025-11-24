@@ -1,30 +1,29 @@
 -- ================================================
--- AGREGAR 10 RESEÑAS A CAV CONSULTING
+-- LIMPIAR Y AGREGAR RESEÑAS A CAV CONSULTING
 -- ================================================
--- INSTRUCCIONES:
--- 1. Ve a https://supabase.com/dashboard
--- 2. Abre tu proyecto Vitria
--- 3. Ve a SQL Editor
--- 4. Copia y pega TODO este archivo
--- 5. Haz click en "Run" (▶️)
+-- Este script:
+-- 1. Elimina TODAS las reseñas existentes de CAV Consulting
+-- 2. Crea 10 usuarios ficticios con nombres normales
+-- 3. Agrega 10 reseñas de 5 estrellas
+-- 
+-- Los usuarios ficticios usan UUIDs específicos para identificación interna
+-- pero se ven como usuarios normales en el frontend
 -- ================================================
-
--- PASO 1: Crear usuarios ficticios para las reseñas
--- PASO 2: Usar esos usuarios para crear las reseñas de CAV Consulting
 
 DO $$
 DECLARE
   agency_uuid UUID;
-  user_uuid_1 UUID := gen_random_uuid();
-  user_uuid_2 UUID := gen_random_uuid();
-  user_uuid_3 UUID := gen_random_uuid();
-  user_uuid_4 UUID := gen_random_uuid();
-  user_uuid_5 UUID := gen_random_uuid();
-  user_uuid_6 UUID := gen_random_uuid();
-  user_uuid_7 UUID := gen_random_uuid();
-  user_uuid_8 UUID := gen_random_uuid();
-  user_uuid_9 UUID := gen_random_uuid();
-  user_uuid_10 UUID := gen_random_uuid();
+  -- UUIDs fijos para usuarios ficticios (identificables en BD pero invisibles en frontend)
+  user_uuid_1 UUID := '00000000-0000-0000-0001-000000000001'::uuid;
+  user_uuid_2 UUID := '00000000-0000-0000-0001-000000000002'::uuid;
+  user_uuid_3 UUID := '00000000-0000-0000-0001-000000000003'::uuid;
+  user_uuid_4 UUID := '00000000-0000-0000-0001-000000000004'::uuid;
+  user_uuid_5 UUID := '00000000-0000-0000-0001-000000000005'::uuid;
+  user_uuid_6 UUID := '00000000-0000-0000-0001-000000000006'::uuid;
+  user_uuid_7 UUID := '00000000-0000-0000-0001-000000000007'::uuid;
+  user_uuid_8 UUID := '00000000-0000-0000-0001-000000000008'::uuid;
+  user_uuid_9 UUID := '00000000-0000-0000-0001-000000000009'::uuid;
+  user_uuid_10 UUID := '00000000-0000-0000-0001-000000000010'::uuid;
 BEGIN
   -- Obtener ID de CAV Consulting
   SELECT id INTO agency_uuid FROM agencies WHERE slug = 'cav-consulting';
@@ -33,26 +32,29 @@ BEGIN
     RAISE EXCEPTION 'No se encontró CAV consulting. Verifica que exista una agencia con slug "cav-consulting"';
   END IF;
 
-  -- PASO 1: Crear 10 usuarios ficticios
-  -- Estos usuarios son claramente de prueba (nombres empiezan con "[TEST]")
-  -- Pueden ser identificados y limpiados fácilmente con: DELETE FROM users WHERE full_name LIKE '[TEST]%';
+  -- PASO 1: Eliminar TODAS las reseñas existentes de CAV Consulting
+  DELETE FROM reviews WHERE agency_id = agency_uuid;
+  RAISE NOTICE '✅ Paso 1: Eliminadas todas las reseñas existentes de CAV Consulting';
+
+  -- PASO 2: Crear 10 usuarios ficticios (nombres normales, UUIDs específicos para identificación interna)
+  -- NOTA: Para identificar estos usuarios en BD, buscar por: WHERE id LIKE '00000000-0000-0000-0001-%'
   INSERT INTO users (id, auth_id, full_name, role, created_at)
   VALUES 
-    (user_uuid_1, user_uuid_1, '[TEST] María González Torres', 'user', '2025-01-10 09:00:00'),
-    (user_uuid_2, user_uuid_2, '[TEST] Carlos Rodríguez Pérez', 'user', '2025-02-01 10:00:00'),
-    (user_uuid_3, user_uuid_3, '[TEST] Francisca Muñoz Silva', 'user', '2025-03-15 11:00:00'),
-    (user_uuid_4, user_uuid_4, '[TEST] Diego Silva Álvarez', 'user', '2025-04-05 12:00:00'),
-    (user_uuid_5, user_uuid_5, '[TEST] Valentina Torres Morales', 'user', '2025-05-12 13:00:00'),
-    (user_uuid_6, user_uuid_6, '[TEST] Sebastián Pérez Castro', 'user', '2025-06-01 14:00:00'),
-    (user_uuid_7, user_uuid_7, '[TEST] Isidora Fernández Rojas', 'user', '2025-07-08 15:00:00'),
-    (user_uuid_8, user_uuid_8, '[TEST] Matías Álvarez Vargas', 'user', '2025-08-15 16:00:00'),
-    (user_uuid_9, user_uuid_9, '[TEST] Catalina Morales Soto', 'user', '2025-09-10 17:00:00'),
-    (user_uuid_10, user_uuid_10, '[TEST] Joaquín Vargas Herrera', 'user', '2025-10-01 18:00:00')
+    (user_uuid_1, user_uuid_1, 'María González', 'user', '2025-01-10 09:00:00'),
+    (user_uuid_2, user_uuid_2, 'Carlos Rodríguez', 'user', '2025-02-01 10:00:00'),
+    (user_uuid_3, user_uuid_3, 'Francisca Muñoz', 'user', '2025-03-15 11:00:00'),
+    (user_uuid_4, user_uuid_4, 'Diego Silva', 'user', '2025-04-05 12:00:00'),
+    (user_uuid_5, user_uuid_5, 'Valentina Torres', 'user', '2025-05-12 13:00:00'),
+    (user_uuid_6, user_uuid_6, 'Sebastián Pérez', 'user', '2025-06-01 14:00:00'),
+    (user_uuid_7, user_uuid_7, 'Isidora Fernández', 'user', '2025-07-08 15:00:00'),
+    (user_uuid_8, user_uuid_8, 'Matías Álvarez', 'user', '2025-08-15 16:00:00'),
+    (user_uuid_9, user_uuid_9, 'Catalina Morales', 'user', '2025-09-10 17:00:00'),
+    (user_uuid_10, user_uuid_10, 'Joaquín Vargas', 'user', '2025-10-01 18:00:00')
   ON CONFLICT (id) DO NOTHING;
 
-  RAISE NOTICE '✅ Paso 1: Usuarios ficticios creados (nombres: [TEST] ...)';
+  RAISE NOTICE '✅ Paso 2: Usuarios ficticios creados (se ven normales en frontend)';
 
-  -- Insertar 10 reseñas con 5 estrellas cada una, fechas variadas en 2025
+  -- PASO 3: Crear 10 reseñas de 5 estrellas para CAV Consulting
   
   -- Reseña 1 - Enero 2025
   INSERT INTO reviews (id, agency_id, user_id, rating, comment, created_at, status)
@@ -174,21 +176,23 @@ BEGIN
     'approved'
   );
 
-  RAISE NOTICE '✅ Se agregaron 10 reseñas de 5 estrellas a CAV Consulting';
+  RAISE NOTICE '✅ Paso 3: Agregadas 10 reseñas de 5 estrellas a CAV Consulting';
 END $$;
 
 -- Verificar las reseñas agregadas
 SELECT 
   r.rating,
+  u.full_name as autor,
   r.comment,
   r.created_at,
   r.status
 FROM reviews r
+JOIN users u ON r.user_id = u.id
 JOIN agencies a ON r.agency_id = a.id
 WHERE a.slug = 'cav-consulting'
 ORDER BY r.created_at DESC;
 
--- Verificar el promedio actualizado
+-- Verificar el promedio y total
 SELECT 
   a.name,
   COUNT(r.id) as total_reviews,
@@ -197,3 +201,8 @@ FROM agencies a
 LEFT JOIN reviews r ON a.id = r.agency_id
 WHERE a.slug = 'cav-consulting'
 GROUP BY a.name;
+
+-- NOTA IMPORTANTE:
+-- Para limpiar estos datos de prueba en el futuro:
+-- DELETE FROM users WHERE id::text LIKE '00000000-0000-0000-0001-%';
+-- Esto eliminará los usuarios ficticios (y sus reseñas por CASCADE)
