@@ -241,13 +241,8 @@ function AgenciasContent() {
       ) : data?.agencies && data.agencies.length > 0 ? (
         <>
           <div className="flex items-center justify-between mt-8 mb-4">
-            <div className="flex items-center gap-2 text-dark/60">
-              <span>Mostrando {data.agencies.length} de {data.total} agencias</span>
-              {data.agencies.some((a: any) => a.is_premium) && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs font-semibold rounded">
-                  Premium
-                </span>
-              )}
+            <div className="text-dark/60">
+              Mostrando {data.agencies.length} de {data.total} agencias
             </div>
             {hasActiveFilters && (
               <button

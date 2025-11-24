@@ -41,6 +41,14 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         borderStyle: 'solid',
       } : undefined}
     >
+      {agency.price_range && (
+        <div className="absolute top-4 right-4">
+          <span className="inline-block px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-semibold rounded border border-secondary/20">
+            {agency.price_range}
+          </span>
+        </div>
+      )}
+
       <div className="flex items-start gap-3 mb-3">
         <div className="flex-shrink-0">
           <AgencyLogo 
@@ -76,13 +84,6 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
       <p className="text-sm font-semibold text-dark mb-3 leading-snug">
         {summary}
       </p>
-
-      {agency.price_range && (
-        <div className="mb-3 flex items-center gap-1.5">
-          <span className="text-sm font-semibold text-dark">Rango de precios:</span>
-          <span className="text-sm font-bold text-secondary">{agency.price_range}</span>
-        </div>
-      )}
 
       <div className="mb-3">
         <div className="flex flex-wrap gap-1.5">
