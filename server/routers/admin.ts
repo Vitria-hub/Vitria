@@ -806,6 +806,12 @@ export const adminRouter = router({
         updated_at: new Date().toISOString(),
       };
 
+      console.log('[Admin updateAgency] Attempting update with data:', {
+        agencyId,
+        hasIndustries: !!cleanedData.industries,
+        industriesCount: cleanedData.industries?.length || 0,
+      });
+
       const { data, error } = await db
         .from('agencies')
         .update(cleanedData as any)
@@ -814,12 +820,15 @@ export const adminRouter = router({
         .single();
 
       if (error) {
+        console.error('[Admin updateAgency] Supabase error:', error);
+        console.error('[Admin updateAgency] Error details:', JSON.stringify(error, null, 2));
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: error.message || 'Error al actualizar la agencia',
         });
       }
 
+      console.log('[Admin updateAgency] Update successful');
       return data;
     }),
 
