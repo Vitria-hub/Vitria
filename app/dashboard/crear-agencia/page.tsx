@@ -166,12 +166,6 @@ export default function CrearAgenciaPage() {
     scrollToTop();
   }, [currentStep]);
 
-  // Limpiar el error de logo cuando el usuario ingresa el nombre
-  useEffect(() => {
-    if (formData.name && logoError === 'Primero ingresa el nombre de la agencia') {
-      setLogoError('');
-    }
-  }, [formData.name]);
 
   const toggleArrayItem = (array: string[], item: string) => {
     return array.includes(item)
@@ -190,11 +184,6 @@ export default function CrearAgenciaPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!formData.name) {
-      setLogoError('Primero ingresa el nombre de la agencia');
-      return;
-    }
-
     const validation = validateImageFile(file);
     if (!validation.valid) {
       setLogoError(validation.error || 'Archivo inválido');
@@ -205,7 +194,10 @@ export default function CrearAgenciaPage() {
     setUploadingLogo(true);
 
     try {
-      const agencySlug = formData.name.toLowerCase().replace(/\s+/g, '-');
+      // Usar el nombre si existe, sino usar un slug temporal
+      const agencySlug = formData.name 
+        ? formData.name.toLowerCase().replace(/\s+/g, '-')
+        : `temp-logo-${Date.now()}`;
       const logoUrl = await uploadAgencyLogo(file, agencySlug);
       setFormData(prev => ({ ...prev, logo_url: logoUrl }));
     } catch (error: any) {
@@ -332,18 +324,12 @@ export default function CrearAgenciaPage() {
                     type="button"
                     variant="secondary"
                     onClick={() => logoInputRef.current?.click()}
-                    disabled={uploadingLogo || !formData.name}
+                    disabled={uploadingLogo}
                     className="w-full"
                   >
                     <Upload className="w-5 h-5 mr-2" />
                     {uploadingLogo ? 'Subiendo logo...' : 'Seleccionar Logo'}
                   </Button>
-                  
-                  {!formData.name && (
-                    <p className="text-xs text-orange-600 mt-2">
-                      Primero ingresa el nombre de la agencia
-                    </p>
-                  )}
                 </div>
               )}
               
