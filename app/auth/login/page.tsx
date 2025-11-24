@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn, signInWithGoogle } from '@/lib/auth';
 import { createClient } from '@/utils/supabase/client';
@@ -16,7 +16,10 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const toast = useToast();
+  
+  const returnUrl = searchParams.get('returnUrl') || '/dashboard';
 
   useEffect(() => {
     const checkSession = async () => {
@@ -89,7 +92,7 @@ export default function LoginPage() {
         if (userData?.role === 'admin') {
           router.push('/admin');
         } else {
-          router.push('/dashboard');
+          router.push(decodeURIComponent(returnUrl));
         }
         router.refresh();
       }
@@ -192,7 +195,10 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center text-sm text-dark/60">
             ¿No tienes cuenta?{' '}
-            <Link href="/auth/registro" className="text-primary font-semibold hover:underline">
+            <Link 
+              href={`/auth/registro${returnUrl && returnUrl !== '/dashboard' ? `?returnUrl=${returnUrl}` : ''}`}
+              className="text-primary font-semibold hover:underline"
+            >
               Regístrate aquí
             </Link>
           </div>
