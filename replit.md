@@ -45,6 +45,7 @@ A comprehensive file upload system uses Replit's Object Storage (App Storage) fo
 ## Key Features
 
 -   **Category System**: Expanded to 6 balanced categories (Performance & Ads, Social Media, Diseño y Branding, Desarrollo Web, Producción de Contenido, Relaciones Públicas) with dynamic counts on the homepage and consistent service listing. Legacy category mapping ensures backward compatibility.
+-   **Industry/Niche Filtering (Nov 2024)**: Added industry-based search filtering to help clients find agencies specialized in specific sectors (E-commerce, Inmobiliaria, Automotriz, Salud, Educación, Tech/Startups, Retail, Finanzas, Alimentos y Bebidas, Turismo, Moda, Deportes, Entretenimiento, ONG). Industries are stored in the `industries` field of the `agencies` table and filterable via the main agency explorer through a dedicated "Todas las industrias" dropdown selector. The INDUSTRIES constant is centralized in `lib/categories.ts` for consistent usage across creation forms and filtering.
 -   **Quote Request System**: Enhanced with foreign key fixes, pre-filled fields for authenticated users, consistent budget ranges, and improved agency contact options (Email and WhatsApp with pre-filled messages).
 -   **Terminology Standardization**: Systematic change from "Teléfono" to "WhatsApp" across the platform to reflect regional preferences.
 -   **Price Range Standardization**: Standardized monetary values (e.g., "Menos de 1M", "1-3M", "3-5M", "5M+" CLP) across all forms and displays.
