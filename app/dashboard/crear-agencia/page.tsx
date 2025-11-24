@@ -9,8 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { ChevronRight, ChevronLeft, Check, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { MAIN_CATEGORIES } from '@/lib/categories';
 import { SPECIALTY_CATEGORIES } from '@/lib/specialties';
-import { ObjectUploader } from '@/components/ObjectUploader';
-import type { UploadResult } from '@uppy/core';
+import { uploadAgencyLogo, validateImageFile } from '@/lib/storage';
 import Image from 'next/image';
 
 const INDUSTRIES = [
@@ -34,6 +33,7 @@ export default function CrearAgenciaPage() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [logoError, setLogoError] = useState('');
   const formContainerRef = useRef<HTMLDivElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -52,9 +52,6 @@ export default function CrearAgenciaPage() {
     priceRange: '' as '' | 'Menos de 1M' | '1-3M' | '3-5M' | '5M+',
     industries: [] as string[],
   });
-
-  const getUploadUrlMutation = trpc.upload.getUploadUrl.useMutation();
-  const setLogoAclMutation = trpc.upload.setLogoAcl.useMutation();
 
   const createMutation = trpc.agency.create.useMutation({
     onSuccess: (data) => {
@@ -177,6 +174,39 @@ export default function CrearAgenciaPage() {
 
   const handleRemoveLogo = () => {
     setFormData(prev => ({ ...prev, logo_url: '' }));
+    if (logoInputRef.current) {
+      logoInputRef.current.value = '';
+    }
+  };
+
+  const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!formData.name) {
+      setLogoError('Primero ingresa el nombre de la agencia');
+      return;
+    }
+
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setLogoError(validation.error || 'Archivo inválido');
+      return;
+    }
+
+    setLogoError('');
+    setUploadingLogo(true);
+
+    try {
+      const agencySlug = formData.name.toLowerCase().replace(/\s+/g, '-');
+      const logoUrl = await uploadAgencyLogo(file, agencySlug);
+      setFormData(prev => ({ ...prev, logo_url: logoUrl }));
+    } catch (error: any) {
+      console.error('Error uploading logo:', error);
+      setLogoError(error.message || 'Error al subir el logo. Por favor intenta de nuevo.');
+    } finally {
+      setUploadingLogo(false);
+    }
   };
 
   return (
@@ -283,47 +313,25 @@ export default function CrearAgenciaPage() {
                 </div>
               ) : (
                 <div>
-                  <ObjectUploader
-                    maxNumberOfFiles={1}
-                    maxFileSize={5242880}
-                    allowedFileTypes={['image/png', 'image/jpeg', 'image/jpg', 'image/webp']}
-                    onGetUploadParameters={async () => {
-                      if (!formData.name) {
-                        setLogoError('Primero ingresa el nombre de la agencia');
-                        throw new Error('Primero ingresa el nombre de la agencia');
-                      }
-                      const result = await getUploadUrlMutation.mutateAsync();
-                      return {
-                        method: 'PUT' as const,
-                        url: result.uploadURL,
-                      };
-                    }}
-                    onComplete={async (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
-                      if (result.successful && result.successful[0]) {
-                        setUploadingLogo(true);
-                        setLogoError('');
-                        try {
-                          const uploadURL = result.successful[0].uploadURL as string;
-                          const aclResult = await setLogoAclMutation.mutateAsync({
-                            logoURL: uploadURL,
-                            agencyId: 'temp-id',
-                          });
-                          setFormData(prev => ({ ...prev, logo_url: aclResult.objectPath }));
-                          setUploadingLogo(false);
-                        } catch (err) {
-                          console.error('Error al configurar el logo:', err);
-                          setLogoError('Error al subir el logo');
-                          setUploadingLogo(false);
-                        }
-                      }
-                    }}
-                    buttonClassName="w-full"
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                  
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={uploadingLogo || !formData.name}
+                    className="w-full"
                   >
-                    <div className="flex items-center justify-center gap-2">
-                      <Upload className="w-5 h-5" />
-                      <span>{uploadingLogo ? 'Procesando...' : 'Seleccionar Logo'}</span>
-                    </div>
-                  </ObjectUploader>
+                    <Upload className="w-5 h-5 mr-2" />
+                    {uploadingLogo ? 'Subiendo logo...' : 'Seleccionar Logo'}
+                  </Button>
+                  
                   {!formData.name && (
                     <p className="text-xs text-orange-600 mt-2">
                       Primero ingresa el nombre de la agencia
