@@ -27,7 +27,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
   
   return (
     <div
-      className={`block rounded-lg border-2 p-5 transition relative overflow-hidden ${
+      className={`flex flex-col rounded-lg border-2 p-5 transition relative overflow-hidden ${
         agency.is_premium 
           ? 'border-transparent bg-gradient-to-br from-blue-50 via-white to-amber-50 hover:shadow-2xl' 
           : 'border-gray-200 hover:border-gray-300 hover:shadow-lg'
@@ -79,7 +79,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
       )}
 
       {bullets.length > 0 && (
-        <div className="mb-4">
+        <div className="mb-4 flex-grow">
           <ul className="space-y-1.5 text-xs text-dark/70">
             {bullets.map((bullet, index) => (
               <li key={index} className="flex items-start gap-2">
@@ -91,6 +91,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
         </div>
       )}
 
+      <div className="mt-auto">
       {agency.is_premium && agency.whatsapp_number ? (
         <div className="flex gap-2">
           <Link
@@ -119,6 +120,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
           Ver agencia
         </Link>
       )}
+      </div>
     </div>
   );
 }
