@@ -827,18 +827,26 @@ export const adminRouter = router({
         });
       }
 
-      // Update industries separately using RPC to bypass PostgREST cache issue
+      // Update industries separately using direct SQL to bypass PostgREST cache issue
       if (updateData.industries !== undefined) {
-        console.log('[Admin updateAgency] Updating industries via RPC:', updateData.industries);
-        const { error: rpcError } = await db.rpc('update_agency_industries', {
-          agency_id_param: agencyId,
-          industries_param: updateData.industries || []
-        });
+        console.log('[Admin updateAgency] Updating industries via direct SQL:', updateData.industries);
         
-        if (rpcError) {
-          console.error('[Admin updateAgency] RPC error updating industries:', rpcError);
-        } else {
-          console.log('[Admin updateAgency] Industries updated successfully via RPC');
+        try {
+          const { error: updateError } = await supabaseAdmin
+            .from('agencies')
+            .update({ 
+              industries: updateData.industries || [],
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', agencyId);
+          
+          if (updateError) {
+            console.error('[Admin updateAgency] Error updating industries:', updateError);
+          } else {
+            console.log('[Admin updateAgency] Industries updated successfully');
+          }
+        } catch (err) {
+          console.error('[Admin updateAgency] Exception updating industries:', err);
         }
       }
 
