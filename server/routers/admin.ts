@@ -802,14 +802,13 @@ export const adminRouter = router({
         employees_max: updateData.employees_max ?? null,
         price_range: updateData.price_range || null,
         specialties: updateData.specialties ?? [],
-        industries: updateData.industries ?? [],
         updated_at: new Date().toISOString(),
       };
 
       console.log('[Admin updateAgency] Attempting update with data:', {
         agencyId,
-        hasIndustries: !!cleanedData.industries,
-        industriesCount: cleanedData.industries?.length || 0,
+        hasIndustries: !!updateData.industries,
+        industriesCount: updateData.industries?.length || 0,
       });
 
       const { data, error } = await db
@@ -826,6 +825,21 @@ export const adminRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: error.message || 'Error al actualizar la agencia',
         });
+      }
+
+      // Update industries separately using RPC to bypass PostgREST cache issue
+      if (updateData.industries !== undefined) {
+        console.log('[Admin updateAgency] Updating industries via RPC:', updateData.industries);
+        const { error: rpcError } = await db.rpc('update_agency_industries', {
+          agency_id_param: agencyId,
+          industries_param: updateData.industries || []
+        });
+        
+        if (rpcError) {
+          console.error('[Admin updateAgency] RPC error updating industries:', rpcError);
+        } else {
+          console.log('[Admin updateAgency] Industries updated successfully via RPC');
+        }
       }
 
       console.log('[Admin updateAgency] Update successful');
