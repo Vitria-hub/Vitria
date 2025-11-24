@@ -2,6 +2,12 @@
 
 Vitria is a directory platform for the Chilean market, connecting marketing, branding, and advertising agencies with potential clients. Its purpose is to become the leading agency directory in Chile by offering advanced search, review management, premium listings, integrated payments, detailed analytics, and SEO-optimized content, thereby fostering the local marketing community.
 
+# Recent Changes
+
+## November 24, 2025
+- **Mobile-First AgencyCard Redesign**: Complete responsive overhaul with minimum 12px typography, 44px touch targets, stacked buttons on mobile (side-by-side on desktop), responsive padding (p-3 → sm:p-4 → md:p-5), and optimized spacing for mobile users
+- **Navbar Login Enhancement**: Added LogIn icon to "Iniciar Sesión" button in both mobile and desktop views for better visual hierarchy and user recognition
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.

@@ -106,8 +106,9 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/auth/login" className="text-dark hover:text-primary transition">
-                  Iniciar Sesión
+                <Link href="/auth/login" className="flex items-center gap-2 text-dark hover:text-primary transition">
+                  <LogIn className="w-5 h-5" />
+                  <span className="font-medium">Iniciar Sesión</span>
                 </Link>
                 <Link
                   href="/auth/registro"
