@@ -24,11 +24,11 @@ DECLARE
   user_uuid_9 UUID := gen_random_uuid();
   user_uuid_10 UUID := gen_random_uuid();
 BEGIN
-  -- Obtener ID de CAV Consulting
-  SELECT id INTO agency_uuid FROM agencies WHERE name = 'CAV consulting';
+  -- Obtener ID de CAV Consulting (case-insensitive)
+  SELECT id INTO agency_uuid FROM agencies WHERE slug = 'cav-consulting';
   
   IF agency_uuid IS NULL THEN
-    RAISE EXCEPTION 'No se encontró CAV consulting';
+    RAISE EXCEPTION 'No se encontró CAV consulting. Verifica que exista una agencia con slug "cav-consulting"';
   END IF;
 
   -- Insertar 10 reseñas con 5 estrellas cada una, fechas variadas en 2025
@@ -164,7 +164,7 @@ SELECT
   r.status
 FROM reviews r
 JOIN agencies a ON r.agency_id = a.id
-WHERE a.name = 'CAV consulting'
+WHERE a.slug = 'cav-consulting'
 ORDER BY r.created_at DESC;
 
 -- Verificar el promedio actualizado
@@ -174,5 +174,5 @@ SELECT
   AVG(r.rating)::numeric(3,2) as avg_rating
 FROM agencies a
 LEFT JOIN reviews r ON a.id = r.agency_id
-WHERE a.name = 'CAV consulting'
+WHERE a.slug = 'cav-consulting'
 GROUP BY a.name;
