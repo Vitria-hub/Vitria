@@ -51,11 +51,11 @@ export async function signInWithGoogle(options?: {
   redirectPath?: string;
 }) {
   const supabase = createClient();
-  const role = options?.role || 'user';
-  const allowedRoles = ['user', 'agency'];
-  const safeRole = allowedRoles.includes(role) ? role : 'user';
-
-  if (typeof window !== 'undefined') {
+  const role = options?.role;
+  
+  if (typeof window !== 'undefined' && role) {
+    const allowedRoles = ['user', 'agency'];
+    const safeRole = allowedRoles.includes(role) ? role : 'user';
     const isSecure = window.location.protocol === 'https:';
     const secureFlag = isSecure ? '; Secure' : '';
     document.cookie = `pending_oauth_role=${safeRole}; path=/; max-age=600; SameSite=Lax${secureFlag}`;

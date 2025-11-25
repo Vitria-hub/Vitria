@@ -154,7 +154,7 @@ export default function LoginModal({
           <p className="text-sm text-dark/60">
             ¿No tienes una cuenta?{' '}
             <Link
-              href="/auth/registro/cliente"
+              href="/auth/registro"
               className="text-primary font-semibold hover:underline"
               onClick={onClose}
             >

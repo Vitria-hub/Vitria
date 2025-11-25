@@ -34,8 +34,24 @@ export default function SeleccionarTipoPage() {
       let dbUser;
 
       if (existingUser) {
-        console.log('Existing user found, using database role:', existingUser.role);
-        dbUser = existingUser;
+        console.log('Existing user found with role:', existingUser.role);
+        
+        if (existingUser.role !== role) {
+          console.log('Updating user role from', existingUser.role, 'to', role);
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({ role })
+            .eq('id', existingUser.id);
+          
+          if (updateError) {
+            console.error('Error updating role:', updateError);
+            throw new Error('Error al actualizar el tipo de cuenta');
+          }
+          
+          dbUser = { ...existingUser, role };
+        } else {
+          dbUser = existingUser;
+        }
       } else {
         console.log('Creating new user with selected role:', role);
         const response = await fetch('/api/auth/create-user', {

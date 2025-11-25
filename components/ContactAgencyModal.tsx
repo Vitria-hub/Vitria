@@ -52,7 +52,7 @@ export default function ContactAgencyModal({
     }
 
     if (!clientProfile) {
-      router.push('/auth/registro/cliente');
+      router.push('/dashboard/cliente/perfil');
       return;
     }
 
@@ -133,7 +133,7 @@ export default function ContactAgencyModal({
           </div>
 
           <Button
-            onClick={() => router.push('/auth/registro/cliente')}
+            onClick={() => router.push('/dashboard/cliente/perfil')}
             variant="accent"
             className="w-full"
           >
