@@ -205,25 +205,29 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
               background: radial-gradient(circle, rgba(245,211,94,0.15) 0%, transparent 70%);
               border-radius: 50%;
             }
-            .logo-badge {
-              background: white;
-              width: 90px;
-              height: 90px;
-              border-radius: 20px;
-              margin: 0 auto 25px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            .logo-container {
+              text-align: center;
+              margin-bottom: 25px;
               position: relative;
               z-index: 1;
+            }
+            .logo-table {
+              margin: 0 auto;
+              background: white;
+              border-radius: 20px;
+              padding: 15px;
+              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+            .logo-cell {
+              width: 27px;
+              height: 27px;
+              border-radius: 6px;
             }
             .hero-title { 
               color: white; 
               font-size: 36px;
               font-weight: 800;
               margin-bottom: 12px;
-              letter-spacing: -0.5px;
               position: relative;
               z-index: 1;
             }
@@ -235,11 +239,11 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
               z-index: 1;
             }
             .accent-bar {
-              height: 8px;
+              height: 6px;
               background: linear-gradient(90deg, #F5D35E 0%, #fde047 100%);
             }
             .content { 
-              padding: 45px 40px;
+              padding: 40px;
               background: white;
             }
             .greeting {
@@ -258,57 +262,38 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
             }
             .highlight-box {
               background: linear-gradient(135deg, #F5D35E 0%, #fbbf24 100%);
-              padding: 30px;
-              border-radius: 16px;
-              margin: 30px 0;
-              box-shadow: 0 4px 20px rgba(245,211,94,0.3);
-              border: 3px solid #fff;
+              padding: 25px 30px;
+              border-radius: 12px;
+              margin: 25px 0;
+              text-align: center;
             }
             .highlight-box h2 {
               color: #1B5568;
-              font-size: 22px;
+              font-size: 20px;
               margin-bottom: 12px;
               font-weight: 800;
-              text-align: center;
             }
             .highlight-box p {
               color: #1f2937;
               font-size: 15px;
               line-height: 1.7;
-              text-align: center;
             }
             .steps-section {
-              margin: 35px 0;
+              margin: 30px 0;
             }
             .section-title {
               color: #1B5568;
-              font-size: 20px;
+              font-size: 18px;
               margin-bottom: 20px;
               font-weight: 700;
               text-align: center;
             }
             .step-item {
-              display: flex;
-              align-items: start;
-              margin-bottom: 18px;
-              padding: 15px 20px;
               background: #f8fafc;
-              border-radius: 12px;
               border-left: 4px solid #1B5568;
-            }
-            .step-number {
-              background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
-              color: #F5D35E;
-              width: 32px;
-              height: 32px;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 700;
-              font-size: 14px;
-              margin-right: 15px;
-              flex-shrink: 0;
+              padding: 15px 20px;
+              margin-bottom: 15px;
+              border-radius: 8px;
             }
             .step-text {
               color: #4a5568;
@@ -318,7 +303,7 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
             .info-box {
               background: #f0f9ff;
               border-left: 4px solid #1B5568;
-              padding: 20px;
+              padding: 18px 20px;
               border-radius: 8px;
               margin: 25px 0;
             }
@@ -328,8 +313,8 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
               margin: 0;
             }
             .signature {
-              margin-top: 35px;
-              padding-top: 25px;
+              margin-top: 30px;
+              padding-top: 20px;
               border-top: 1px solid #e2e8f0;
               text-align: center;
             }
@@ -350,7 +335,7 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
             }
             .footer-text {
               color: rgba(255,255,255,0.8);
-              font-size: 13px;
+              font-size: 14px;
               margin-bottom: 15px;
             }
             .footer-links {
@@ -361,35 +346,36 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
               margin: 0 10px;
               color: #F5D35E !important;
               text-decoration: none;
-              font-size: 13px;
+              font-size: 14px;
               font-weight: 600;
             }
             .copyright {
               color: rgba(255,255,255,0.5);
-              font-size: 11px;
+              font-size: 12px;
               margin-top: 15px;
-              padding-top: 15px;
-              border-top: 1px solid rgba(255,255,255,0.1);
             }
             @media only screen and (max-width: 600px) {
               body { padding: 0; }
-              .hero-banner { padding: 35px 20px; }
+              .hero-banner { padding: 35px 25px; }
               .hero-title { font-size: 28px; }
-              .content { padding: 30px 20px; }
-              .highlight-box { padding: 20px; }
+              .content { padding: 30px 25px; }
             }
           </style>
         </head>
         <body>
           <div class="email-wrapper">
             <div class="hero-banner">
-              <div class="logo-badge">
-                <svg width="60" height="60" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#1B5568"/>
-                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
-                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
-                  <rect x="65" y="65" width="45" height="45" rx="12" fill="#F5D35E"/>
-                </svg>
+              <div class="logo-container">
+                <table class="logo-table" cellpadding="0" cellspacing="3" border="0">
+                  <tr>
+                    <td class="logo-cell" style="background-color: #1B5568;"></td>
+                    <td class="logo-cell" style="background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td class="logo-cell" style="background-color: #64D5C3;"></td>
+                    <td class="logo-cell" style="background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
               </div>
               <h1 class="hero-title">¡Gracias por registrarte!</h1>
               <p class="hero-subtitle">Tu agencia está en proceso de revisión</p>
@@ -413,18 +399,15 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
                 <h3 class="section-title">¿Qué sigue?</h3>
                 
                 <div class="step-item">
-                  <div class="step-number">1</div>
-                  <div class="step-text">Revisaremos la información de tu agencia</div>
+                  <div class="step-text"><strong>1.</strong> Revisaremos la información de tu agencia</div>
                 </div>
                 
                 <div class="step-item">
-                  <div class="step-number">2</div>
-                  <div class="step-text">Te notificaremos por email cuando tu agencia sea aprobada</div>
+                  <div class="step-text"><strong>2.</strong> Te notificaremos por email cuando tu agencia sea aprobada</div>
                 </div>
                 
                 <div class="step-item">
-                  <div class="step-number">3</div>
-                  <div class="step-text">Una vez aprobada, tu agencia será visible para todos los usuarios de Vitria</div>
+                  <div class="step-text"><strong>3.</strong> Una vez aprobada, tu agencia será visible para todos los usuarios de Vitria</div>
                 </div>
               </div>
               
@@ -433,19 +416,23 @@ export async function sendAgencyWaitlistEmail(agencyName: string, ownerEmail: st
               </div>
               
               <div class="signature">
-                <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                <p style="margin-top: 15px;">Saludos,<br><strong>El equipo de Vitria</strong></p>
+                <p>Si tienes alguna pregunta, no dudes en contactarnos. 💙</p>
+                <p style="margin-top: 15px;"><strong style="color: #1B5568;">— El equipo de Vitria</strong></p>
               </div>
             </div>
             
             <div class="footer">
               <div class="footer-logo">
-                <svg width="40" height="40" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#F5D35E"/>
-                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
-                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
-                  <rect x="65" y="65" width="45" height="45" rx="12" fill="white"/>
-                </svg>
+                <table cellpadding="0" cellspacing="2" border="0" style="margin: 0 auto;">
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #1B5568;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #64D5C3;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
               </div>
               <p class="footer-text">Conectamos agencias con clientes en Chile</p>
               <div class="footer-links">
@@ -521,25 +508,29 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
               background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
               border-radius: 50%;
             }
-            .logo-badge {
-              background: white;
-              width: 90px;
-              height: 90px;
-              border-radius: 20px;
-              margin: 0 auto 25px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            .logo-container {
+              text-align: center;
+              margin-bottom: 25px;
               position: relative;
               z-index: 1;
+            }
+            .logo-table {
+              margin: 0 auto;
+              background: white;
+              border-radius: 20px;
+              padding: 15px;
+              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+            .logo-cell {
+              width: 27px;
+              height: 27px;
+              border-radius: 6px;
             }
             .hero-title { 
               color: white; 
               font-size: 36px;
               font-weight: 800;
               margin-bottom: 12px;
-              letter-spacing: -0.5px;
               position: relative;
               z-index: 1;
             }
@@ -551,11 +542,11 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
               z-index: 1;
             }
             .accent-bar {
-              height: 8px;
+              height: 6px;
               background: linear-gradient(90deg, #F5D35E 0%, #fde047 100%);
             }
             .content { 
-              padding: 45px 40px;
+              padding: 40px;
               background: white;
             }
             .greeting {
@@ -567,44 +558,39 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
             }
             .success-box {
               background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
-              padding: 30px;
-              border-radius: 16px;
-              margin: 30px 0;
+              padding: 25px 30px;
+              border-radius: 12px;
+              margin: 25px 0;
               border-left: 5px solid #10B981;
-              box-shadow: 0 4px 15px rgba(16,185,129,0.15);
+              text-align: center;
             }
             .success-box h2 {
               color: #065F46;
-              font-size: 22px;
+              font-size: 20px;
               margin-bottom: 12px;
               font-weight: 800;
             }
             .success-box p {
               color: #047857;
-              font-size: 16px;
+              font-size: 15px;
               line-height: 1.7;
             }
             .features-section {
-              margin: 35px 0;
+              margin: 30px 0;
             }
             .section-title {
               color: #1B5568;
-              font-size: 20px;
+              font-size: 18px;
               margin-bottom: 20px;
               font-weight: 700;
               text-align: center;
             }
             .feature-item {
-              display: flex;
-              align-items: start;
-              margin-bottom: 15px;
-              padding: 12px 0;
-            }
-            .feature-icon {
-              color: #10B981;
-              font-size: 20px;
-              margin-right: 15px;
-              flex-shrink: 0;
+              background: #f8fafc;
+              border-left: 4px solid #10B981;
+              padding: 15px 20px;
+              margin-bottom: 12px;
+              border-radius: 8px;
             }
             .feature-text {
               color: #4a5568;
@@ -613,10 +599,7 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
             }
             .cta-section {
               text-align: center;
-              margin: 40px 0;
-              padding: 35px 30px;
-              background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-              border-radius: 16px;
+              margin: 35px 0 25px;
             }
             .cta-text {
               color: #1B5568;
@@ -626,18 +609,18 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
             }
             .button-primary {
               display: inline-block;
-              padding: 18px 45px;
+              padding: 16px 40px;
               background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
               color: #ffffff !important;
               text-decoration: none;
               border-radius: 12px;
               font-weight: 700;
-              font-size: 17px;
+              font-size: 16px;
               box-shadow: 0 6px 20px rgba(27,85,104,0.35);
             }
             .signature {
-              margin-top: 35px;
-              padding-top: 25px;
+              margin-top: 30px;
+              padding-top: 20px;
               border-top: 1px solid #e2e8f0;
               text-align: center;
             }
@@ -658,7 +641,7 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
             }
             .footer-text {
               color: rgba(255,255,255,0.8);
-              font-size: 13px;
+              font-size: 14px;
               margin-bottom: 15px;
             }
             .footer-links {
@@ -669,36 +652,37 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
               margin: 0 10px;
               color: #F5D35E !important;
               text-decoration: none;
-              font-size: 13px;
+              font-size: 14px;
               font-weight: 600;
             }
             .copyright {
               color: rgba(255,255,255,0.5);
-              font-size: 11px;
+              font-size: 12px;
               margin-top: 15px;
-              padding-top: 15px;
-              border-top: 1px solid rgba(255,255,255,0.1);
             }
             @media only screen and (max-width: 600px) {
               body { padding: 0; }
-              .hero-banner { padding: 35px 20px; }
+              .hero-banner { padding: 35px 25px; }
               .hero-title { font-size: 28px; }
-              .content { padding: 30px 20px; }
-              .success-box { padding: 20px; }
-              .button-primary { padding: 16px 35px; font-size: 16px; }
+              .content { padding: 30px 25px; }
+              .button-primary { padding: 14px 35px; }
             }
           </style>
         </head>
         <body>
           <div class="email-wrapper">
             <div class="hero-banner">
-              <div class="logo-badge">
-                <svg width="60" height="60" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#1B5568"/>
-                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
-                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
-                  <rect x="65" y="65" width="45" height="45" rx="12" fill="#F5D35E"/>
-                </svg>
+              <div class="logo-container">
+                <table class="logo-table" cellpadding="0" cellspacing="3" border="0">
+                  <tr>
+                    <td class="logo-cell" style="background-color: #1B5568;"></td>
+                    <td class="logo-cell" style="background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td class="logo-cell" style="background-color: #64D5C3;"></td>
+                    <td class="logo-cell" style="background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
               </div>
               <h1 class="hero-title">🎉 ¡Felicitaciones!</h1>
               <p class="hero-subtitle">Tu agencia ya está en vivo</p>
@@ -718,23 +702,19 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
                 <h3 class="section-title">¿Qué puedes hacer ahora?</h3>
                 
                 <div class="feature-item">
-                  <span class="feature-icon">🔍</span>
-                  <span class="feature-text">Tu agencia aparecerá en los resultados de búsqueda</span>
+                  <div class="feature-text">🔍 Tu agencia aparecerá en los resultados de búsqueda</div>
                 </div>
                 
                 <div class="feature-item">
-                  <span class="feature-icon">👀</span>
-                  <span class="feature-text">Los clientes potenciales podrán ver tu perfil completo</span>
+                  <div class="feature-text">👀 Los clientes potenciales podrán ver tu perfil completo</div>
                 </div>
                 
                 <div class="feature-item">
-                  <span class="feature-icon">📩</span>
-                  <span class="feature-text">Comenzarás a recibir contactos interesados en tus servicios</span>
+                  <div class="feature-text">📩 Comenzarás a recibir contactos interesados en tus servicios</div>
                 </div>
                 
                 <div class="feature-item">
-                  <span class="feature-icon">✏️</span>
-                  <span class="feature-text">Puedes actualizar tu perfil en cualquier momento</span>
+                  <div class="feature-text">✏️ Puedes actualizar tu perfil en cualquier momento</div>
                 </div>
               </div>
               
@@ -744,19 +724,23 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
               </div>
               
               <div class="signature">
-                <p>Te deseamos mucho éxito en Vitria. Si tienes alguna pregunta o necesitas ayuda, estamos aquí para apoyarte.</p>
-                <p style="margin-top: 15px;">Saludos,<br><strong>El equipo de Vitria</strong></p>
+                <p>Te deseamos mucho éxito en Vitria. 💙</p>
+                <p style="margin-top: 15px;"><strong style="color: #1B5568;">— El equipo de Vitria</strong></p>
               </div>
             </div>
             
             <div class="footer">
               <div class="footer-logo">
-                <svg width="40" height="40" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#F5D35E"/>
-                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
-                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
-                  <rect x="65" y="65" width="45" height="45" rx="12" fill="white"/>
-                </svg>
+                <table cellpadding="0" cellspacing="2" border="0" style="margin: 0 auto;">
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #1B5568;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #64D5C3;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
               </div>
               <p class="footer-text">Conectamos agencias con clientes en Chile</p>
               <div class="footer-links">
@@ -777,12 +761,10 @@ export async function sendAgencyApprovalEmail(agencyName: string, ownerEmail: st
   }
 }
 
-export async function sendWelcomeEmail(userEmail: string, userName: string, userRole: 'user' | 'agency') {
+export async function sendWelcomeEmail(userEmail: string, userName: string) {
   const baseUrl = getBaseUrl();
   const exploreUrl = `${baseUrl}/agencias`;
-  const dashboardUrl = `${baseUrl}/dashboard`;
   
-  const isAgency = userRole === 'agency';
   const displayName = userName && userName.trim() ? userName : 'Amigo';
   
   try {
@@ -795,15 +777,15 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
         email: userEmail,
         name: displayName
       }],
-      subject: isAgency ? '🚀 ¡Bienvenido a Vitria! Conecta con clientes en Chile' : '✨ ¡Bienvenido a Vitria! Encuentra tu agencia ideal',
+      subject: '✨ ¡Bienvenido a Vitria! La comunidad de agencias de Chile',
       htmlContent: `
         <!DOCTYPE html>
         <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
           <style>
+            @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap');
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
               font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -826,405 +808,235 @@ export async function sendWelcomeEmail(userEmail: string, userName: string, user
               position: relative;
               overflow: hidden;
             }
-            .hero-banner::before {
-              content: '';
-              position: absolute;
-              top: -50%;
-              right: -10%;
-              width: 300px;
-              height: 300px;
-              background: radial-gradient(circle, rgba(245,211,94,0.15) 0%, transparent 70%);
-              border-radius: 50%;
-            }
-            .hero-banner::after {
-              content: '';
-              position: absolute;
-              bottom: -30%;
-              left: -10%;
-              width: 250px;
-              height: 250px;
-              background: radial-gradient(circle, rgba(245,211,94,0.1) 0%, transparent 70%);
-              border-radius: 50%;
-            }
-            .logo-badge {
-              background: white;
-              width: 90px;
-              height: 90px;
-              border-radius: 20px;
-              margin: 0 auto 25px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            .logo-container {
+              text-align: center;
+              margin-bottom: 25px;
               position: relative;
               z-index: 1;
             }
+            .logo-table {
+              margin: 0 auto;
+              background: white;
+              border-radius: 20px;
+              padding: 15px;
+              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+            .logo-cell {
+              width: 27px;
+              height: 27px;
+              border-radius: 6px;
+            }
             .hero-title { 
               color: white; 
-              font-size: 42px;
+              font-size: 36px;
               font-weight: 800;
               margin-bottom: 12px;
-              letter-spacing: -0.5px;
               position: relative;
               z-index: 1;
             }
             .hero-subtitle {
               color: #F5D35E;
-              font-size: 19px;
+              font-size: 18px;
               font-weight: 600;
               position: relative;
               z-index: 1;
-              text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .accent-bar {
-              height: 8px;
+              height: 6px;
               background: linear-gradient(90deg, #F5D35E 0%, #fde047 100%);
             }
             .content { 
-              padding: 45px 40px;
+              padding: 40px;
               background: white;
             }
-            .welcome-message {
-              text-align: center;
-              margin-bottom: 40px;
-            }
             .greeting {
-              font-size: 28px;
+              font-size: 24px;
               color: #1B5568;
               font-weight: 700;
+              margin-bottom: 20px;
+              text-align: center;
+            }
+            .mission-box {
+              background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+              border-left: 5px solid #F5D35E;
+              padding: 30px;
+              border-radius: 12px;
+              margin: 25px 0;
+            }
+            .mission-title {
+              color: #1B5568;
+              font-size: 20px;
+              font-weight: 800;
               margin-bottom: 15px;
             }
-            .intro-text {
-              font-size: 17px;
+            .mission-text {
               color: #4a5568;
-              line-height: 1.7;
-              max-width: 500px;
-              margin: 0 auto;
-            }
-            .highlight-box {
-              background: linear-gradient(135deg, #F5D35E 0%, #fbbf24 100%);
-              padding: 35px;
-              border-radius: 16px;
-              margin: 40px 0;
-              box-shadow: 0 4px 20px rgba(245,211,94,0.3);
-              border: 3px solid #fff;
-              outline: 2px solid #F5D35E;
-            }
-            .highlight-box h2 {
-              color: #1B5568;
-              font-size: 24px;
-              margin-bottom: 18px;
-              font-weight: 800;
-              text-align: center;
-            }
-            .highlight-box p {
-              color: #1f2937;
               font-size: 16px;
               line-height: 1.8;
-              text-align: center;
             }
-            .features-grid {
-              margin: 45px 0;
-            }
-            .section-title {
+            .mission-text strong {
               color: #1B5568;
-              font-size: 26px;
-              margin-bottom: 30px;
-              font-weight: 800;
+            }
+            .community-highlight {
+              background: linear-gradient(135deg, #F5D35E 0%, #fbbf24 100%);
+              padding: 25px 30px;
+              border-radius: 12px;
+              margin: 30px 0;
               text-align: center;
             }
-            .feature-card {
-              background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-              border-left: 5px solid #F5D35E;
-              padding: 25px;
-              margin-bottom: 20px;
-              border-radius: 12px;
-              box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-              transition: all 0.3s ease;
-            }
-            .feature-card-inner {
-              display: flex;
-              align-items: start;
-            }
-            .feature-icon {
-              background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
-              color: #F5D35E;
-              width: 50px;
-              height: 50px;
-              border-radius: 12px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              margin-right: 20px;
-              flex-shrink: 0;
-              font-size: 24px;
-              box-shadow: 0 4px 12px rgba(27,85,104,0.25);
-            }
-            .feature-content h3 {
+            .community-text {
               color: #1B5568;
               font-size: 18px;
-              margin-bottom: 8px;
               font-weight: 700;
-            }
-            .feature-content p {
-              color: #4a5568;
-              font-size: 15px;
               line-height: 1.6;
             }
             .cta-section {
               text-align: center;
-              margin: 50px 0 40px;
-              padding: 40px 30px;
-              background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-              border-radius: 16px;
-            }
-            .cta-text {
-              color: #1B5568;
-              font-size: 20px;
-              font-weight: 700;
-              margin-bottom: 25px;
+              margin: 35px 0 25px;
             }
             .button-primary {
               display: inline-block;
-              padding: 18px 45px;
+              padding: 16px 40px;
               background: linear-gradient(135deg, #1B5568 0%, #134551 100%);
               color: #ffffff !important;
               text-decoration: none;
               border-radius: 12px;
               font-weight: 700;
-              font-size: 17px;
-              box-shadow: 0 6px 20px rgba(27,85,104,0.35);
-              margin: 8px;
-              transition: all 0.3s ease;
-            }
-            .button-secondary {
-              display: inline-block;
-              padding: 16px 40px;
-              background: white;
-              color: #1B5568 !important;
-              text-decoration: none;
-              border-radius: 12px;
-              font-weight: 700;
               font-size: 16px;
-              border: 3px solid #1B5568;
-              margin: 8px;
-              transition: all 0.3s ease;
+              box-shadow: 0 6px 20px rgba(27,85,104,0.35);
+            }
+            .closing-text {
+              color: #4a5568;
+              font-size: 15px;
+              line-height: 1.7;
+              margin: 30px 0 20px;
+              text-align: center;
+            }
+            .signature {
+              color: #1B5568;
+              font-weight: 700;
+              text-align: center;
+              font-size: 16px;
             }
             .footer {
               background: #1B5568;
-              padding: 35px 40px;
+              padding: 30px 40px;
               text-align: center;
             }
-            .footer-title {
-              color: #F5D35E;
-              font-size: 18px;
-              font-weight: 700;
+            .footer-logo {
               margin-bottom: 15px;
             }
             .footer-text {
               color: rgba(255,255,255,0.8);
               font-size: 14px;
-              margin-bottom: 20px;
-              line-height: 1.6;
+              margin-bottom: 15px;
             }
             .footer-links {
-              margin: 20px 0;
+              margin: 15px 0;
             }
             .footer-link {
               display: inline-block;
-              margin: 0 12px;
+              margin: 0 10px;
               color: #F5D35E !important;
               text-decoration: none;
               font-size: 14px;
               font-weight: 600;
             }
             .copyright {
-              color: rgba(255,255,255,0.6);
+              color: rgba(255,255,255,0.5);
               font-size: 12px;
-              margin-top: 20px;
-              padding-top: 20px;
-              border-top: 1px solid rgba(255,255,255,0.1);
+              margin-top: 15px;
             }
             @media only screen and (max-width: 600px) {
               body { padding: 0; }
-              .hero-banner { padding: 40px 25px; }
-              .hero-title { font-size: 32px; }
-              .hero-subtitle { font-size: 16px; }
-              .content { padding: 35px 25px; }
-              .greeting { font-size: 24px; }
-              .intro-text { font-size: 16px; }
-              .highlight-box { padding: 25px; }
-              .button-primary { padding: 16px 35px; font-size: 16px; }
-              .button-secondary { padding: 14px 30px; font-size: 15px; }
+              .hero-banner { padding: 35px 25px; }
+              .hero-title { font-size: 28px; }
+              .content { padding: 30px 25px; }
+              .mission-box { padding: 20px; }
+              .button-primary { padding: 14px 35px; }
             }
           </style>
         </head>
         <body>
           <div class="email-wrapper">
             <div class="hero-banner">
-              <div class="logo-badge">
-                <svg width="60" height="60" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="10" y="10" width="45" height="45" rx="12" fill="#1B5568"/>
-                  <rect x="65" y="10" width="45" height="45" rx="12" fill="#6F9CEB"/>
-                  <rect x="10" y="65" width="45" height="45" rx="12" fill="#64D5C3"/>
-                  <rect x="65" y="65" width="45" height="45" rx="12" fill="#F5D35E"/>
-                </svg>
+              <div class="logo-container">
+                <table class="logo-table" cellpadding="0" cellspacing="3" border="0">
+                  <tr>
+                    <td class="logo-cell" style="background-color: #1B5568;"></td>
+                    <td class="logo-cell" style="background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td class="logo-cell" style="background-color: #64D5C3;"></td>
+                    <td class="logo-cell" style="background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
               </div>
               <h1 class="hero-title">¡Bienvenido a Vitria!</h1>
-              <p class="hero-subtitle">${isAgency ? 'Tu plataforma para conectar con clientes en Chile' : 'Encuentra la agencia perfecta para tu proyecto'}</p>
+              <p class="hero-subtitle">La comunidad de agencias de Chile 🇨🇱</p>
             </div>
             
             <div class="accent-bar"></div>
             
             <div class="content">
-              <div class="welcome-message">
-                <div class="greeting">Hola ${displayName} 👋</div>
+              <div class="greeting">Hola ${displayName} 👋</div>
               
-              <p class="intro-text">
-                ${isAgency 
-                  ? 'Estamos emocionados de tenerte en Vitria. Acabas de unirte al directorio de agencias más completo de Chile.'
-                  : 'Ahora tienes acceso al directorio más completo de agencias de marketing, branding y publicidad en Chile.'
-                }
-              </p>
-              </div>
-              
-              <div class="highlight-box">
-                <h2>💡 Nuestra Misión</h2>
-                <p>
-                  Vitria nace con un propósito claro: <strong>fortalecer el ecosistema de marketing y publicidad en Chile</strong>. 
-                  Conectamos talento creativo con oportunidades reales.
+              <div class="mission-box">
+                <div class="mission-title">💡 ¿Por qué nació Vitria?</div>
+                <p class="mission-text">
+                  <strong>A las agencias les cuesta encontrar clientes cualificados. A los clientes les cuesta encontrar agencias confiables.</strong>
+                </p>
+                <p class="mission-text" style="margin-top: 15px;">
+                  Creamos esta plataforma para ser ese puente: un espacio donde todas las agencias chilenas —grandes, pequeñas, especializadas o multidisciplinarias— puedan <strong>mostrar su trabajo real y conectar con quienes realmente necesitan sus servicios</strong>.
                 </p>
               </div>
               
-              <div class="features-grid">
-                <h2 class="section-title">
-                  ${isAgency ? '🎯 ¿Qué puedes hacer en Vitria?' : '✨ ¿Por qué elegir Vitria?'}
-                </h2>
-                
-                ${isAgency ? `
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-content">
-                      <h3>Visibilidad Instantánea</h3>
-                      <p>Tu agencia será visible para cientos de clientes potenciales cada día.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-content">
-                      <h3>Analytics Detallado</h3>
-                      <p>Métricas en tiempo real sobre visitas y el interés de clientes.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">⭐</div>
-                    <div class="feature-content">
-                      <h3>Reputación Verificada</h3>
-                      <p>Construye tu reputación con reseñas de clientes reales.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">🚀</div>
-                    <div class="feature-content">
-                      <h3>Crecimiento Sostenible</h3>
-                      <p>Recibe contactos calificados que realmente necesitan tus servicios.</p>
-                    </div>
-                  </div>
-                </div>
-                ` : `
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">🔍</div>
-                    <div class="feature-content">
-                      <h3>Búsqueda Especializada</h3>
-                      <p>Filtra por categoría, ubicación y servicios para encontrar la agencia ideal.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">✨</div>
-                    <div class="feature-content">
-                      <h3>Agencias Verificadas</h3>
-                      <p>Todas las agencias están cuidadosamente verificadas para garantizar calidad.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">💬</div>
-                    <div class="feature-content">
-                      <h3>Reseñas Reales</h3>
-                      <p>Lee experiencias de otros clientes para tomar decisiones informadas.</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="feature-card">
-                  <div class="feature-card-inner">
-                    <div class="feature-icon">🎨</div>
-                    <div class="feature-content">
-                      <h3>Portafolios Completos</h3>
-                      <p>Explora trabajos anteriores y conoce el estilo de cada agencia.</p>
-                    </div>
-                  </div>
-                </div>
-                `}
+              <div class="community-highlight">
+                <p class="community-text">
+                  Creamos Comunidad, No Solo Listados ❤️
+                </p>
               </div>
+              
+              <p class="mission-text" style="text-align: center;">
+                Nuestro objetivo es construir una <strong>comunidad donde todos crecemos juntos</strong>: agencias que encuentran oportunidades, clientes que toman decisiones con información transparente, y un ecosistema más fuerte para todos.
+              </p>
               
               <div class="cta-section">
-                <p class="cta-text">
-                  ${isAgency 
-                    ? '🚀 ¿Listo para comenzar?'
-                    : '🎯 ¿Listo para encontrar tu agencia ideal?'
-                  }
-                </p>
-                <a href="${dashboardUrl}" class="button-primary">
-                  ${isAgency ? 'Ir a Mi Panel' : 'Ver Mi Dashboard'}
-                </a>
-                <br>
-                <a href="${exploreUrl}" class="button-secondary">
+                <a href="${exploreUrl}" class="button-primary">
                   Explorar Agencias
                 </a>
               </div>
               
-              <p style="color: #4a5568; font-size: 15px; line-height: 1.7; margin: 35px 0 25px 0; text-align: center;">
+              <p class="closing-text">
                 Si tienes alguna pregunta, estamos aquí para ayudarte. 💙
               </p>
               
-              <p style="color: #1B5568; font-weight: 700; text-align: center; font-size: 16px;">
-                ¡Bienvenido a la comunidad Vitria!<br>
+              <p class="signature">
+                ¡Bienvenido a la comunidad!<br>
                 <span style="color: #4a5568; font-weight: 400; font-size: 14px;">— El equipo de Vitria</span>
               </p>
             </div>
             
             <div class="footer">
-              <p class="footer-title">Vitria</p>
-              <p class="footer-text">
-                El directorio de agencias líder en Chile
-              </p>
+              <div class="footer-logo">
+                <table cellpadding="0" cellspacing="2" border="0" style="margin: 0 auto;">
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #1B5568;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #6F9CEB;"></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #64D5C3;"></td>
+                    <td style="width: 18px; height: 18px; border-radius: 4px; background-color: #F5D35E;"></td>
+                  </tr>
+                </table>
+              </div>
+              <p class="footer-text">Conectamos agencias con clientes en Chile</p>
               <div class="footer-links">
-                <a href="${baseUrl}" class="footer-link">Visitar Vitria</a>
-                <span style="color: #cbd5e0;">•</span>
-                <a href="${baseUrl}/blog" class="footer-link">Blog</a>
-                <span style="color: #cbd5e0;">•</span>
+                <a href="${baseUrl}" class="footer-link">Inicio</a>
+                <span style="color: rgba(255,255,255,0.4);">•</span>
                 <a href="${baseUrl}/agencias" class="footer-link">Agencias</a>
               </div>
-              <p style="color: #a0aec0; font-size: 12px; margin-top: 15px;">
-                © ${new Date().getFullYear()} Vitria. Todos los derechos reservados.
-              </p>
+              <p class="copyright">© ${new Date().getFullYear()} Vitria. Todos los derechos reservados.</p>
             </div>
           </div>
         </body>

@@ -4,6 +4,10 @@ Vitria is a directory platform for the Chilean market, connecting marketing, bra
 
 # Recent Changes
 
+## November 25, 2025
+- **Secure Welcome Email System**: Complete implementation of branded welcome emails sent after session establishment. All user creation now requires valid session validation. Email flow: (1) Universal welcome email inspired by homepage "Creamos Comunidad" text, (2) Agency waitlist email when profile created, (3) Admin approval email when agency approved. Uses table-based logo layouts for email client compatibility.
+- **Authentication Flow Security Enhancement**: Moved user record creation from immediate signup to post-session verification. The `/api/auth/create-user` endpoint now requires session validation (sessionUserId === auth_id) for all operations, preventing unauthorized user creation and email triggering.
+
 ## November 24, 2025
 - **Mobile-First AgencyCard Redesign**: Complete responsive overhaul with minimum 12px typography, 44px touch targets, stacked buttons on mobile (side-by-side on desktop), responsive padding (p-3 → sm:p-4 → md:p-5), and optimized spacing for mobile users
 - **Navbar Login Enhancement**: Added LogIn icon to "Iniciar Sesión" button in both mobile and desktop views for better visual hierarchy and user recognition

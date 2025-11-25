@@ -116,7 +116,7 @@ export default function RegisterPage() {
       }
 
       toast.success('¡Cuenta creada exitosamente!');
-      router.push('/auth/seleccionar-tipo');
+      router.push('/auth/verificar-sesion?role=user');
     } catch (err: any) {
       console.error('Registration error:', err);
       if (err.message?.includes('User already registered')) {

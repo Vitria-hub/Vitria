@@ -9,29 +9,12 @@ export async function signUp(email: string, password: string, fullName: string, 
       emailRedirectTo: undefined,
       data: {
         full_name: fullName,
+        intended_role: role,
       }
     }
   });
 
   if (authError) throw authError;
-
-  if (authData.user) {
-    const response = await fetch('/api/auth/create-user', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        auth_id: authData.user.id,
-        full_name: fullName,
-        role,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error creating user profile');
-    }
-  }
-
   return authData;
 }
 

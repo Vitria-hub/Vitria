@@ -52,6 +52,19 @@ export default function SeleccionarTipoPage() {
         } else {
           dbUser = existingUser;
         }
+        
+        if (!existingUser.welcome_email_sent) {
+          fetch('/api/auth/create-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              auth_id: session.user.id,
+              full_name: existingUser.full_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'Usuario',
+              role: existingUser.role,
+              send_welcome_email: true,
+            }),
+          }).catch(console.error);
+        }
       } else {
         console.log('Creating new user with selected role:', role);
         const response = await fetch('/api/auth/create-user', {
@@ -64,6 +77,7 @@ export default function SeleccionarTipoPage() {
                       session.user.email?.split('@')[0] || 
                       'Usuario',
             role,
+            send_welcome_email: true,
           }),
         });
 

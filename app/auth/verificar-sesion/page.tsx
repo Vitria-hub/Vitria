@@ -43,6 +43,25 @@ function VerificarSesionContent() {
 
         if (existingUser) {
           console.log('Existing user found with role:', existingUser.role);
+          
+          if (!existingUser.welcome_email_sent) {
+            console.log('Existing user has not received welcome email - triggering via create-user endpoint');
+            try {
+              await fetch('/api/auth/create-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  auth_id: user.id,
+                  full_name: existingUser.full_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario',
+                  role: existingUser.role,
+                  send_welcome_email: true,
+                }),
+              });
+            } catch (emailError) {
+              console.error('Error triggering welcome email for existing user:', emailError);
+            }
+          }
+          
           dbUser = existingUser;
         } else {
           console.log('New user - checking for role parameter');
@@ -64,6 +83,7 @@ function VerificarSesionContent() {
               auth_id: user.id,
               full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Usuario',
               role: intendedRole,
+              send_welcome_email: true,
             }),
           });
 
