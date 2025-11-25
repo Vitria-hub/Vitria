@@ -5,7 +5,6 @@ import RatingStars from './RatingStars';
 import AgencyLogo from './AgencyLogo';
 import { Check } from 'lucide-react';
 import { extractDescriptionBullets } from '@/lib/extractDescriptionBullets';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
 interface Agency {
@@ -28,30 +27,15 @@ interface Agency {
 
 export default function AgencyCard({ agency }: { agency: Agency }) {
   const bullets = extractDescriptionBullets(agency.description);
-  const { user } = useAuth();
   const router = useRouter();
 
-  const handleProtectedAction = (e: React.MouseEvent, action: () => void) => {
-    if (!user) {
-      e.preventDefault();
-      const currentPath = encodeURIComponent(`/agencias/${agency.slug}`);
-      router.push(`/auth/login?returnUrl=${currentPath}`);
-    } else {
-      action();
-    }
+  const handleViewAgency = () => {
+    router.push(`/agencias/${agency.slug}`);
   };
 
-  const handleViewAgency = (e: React.MouseEvent) => {
-    handleProtectedAction(e, () => {
-      router.push(`/agencias/${agency.slug}`);
-    });
-  };
-
-  const handleWhatsApp = (e: React.MouseEvent) => {
-    handleProtectedAction(e, () => {
-      const whatsappUrl = `https://wa.me/${agency.whatsapp_number?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Vi tu perfil en Vitria y me gustaría saber más sobre ${agency.name}`)}`;
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-    });
+  const handleWhatsApp = () => {
+    const whatsappUrl = `https://wa.me/${agency.whatsapp_number?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Vi tu perfil en Vitria y me gustaría saber más sobre ${agency.name}`)}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
   
   return (
