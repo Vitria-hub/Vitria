@@ -19,7 +19,17 @@ export function extractDescriptionBullets(description: string | null): string[] 
   const sentences = description
     .split(/(?<=[.!?])\s+/)
     .map(s => s.trim())
-    .filter(s => s.length > 0 && s.length < 150);
+    .filter(s => s.length > 0);
 
-  return sentences.slice(0, 6);
+  const shortSentences = sentences.filter(s => s.length < 150);
+  
+  if (shortSentences.length > 0) {
+    return shortSentences.slice(0, 6);
+  }
+
+  const truncatedSentences = sentences
+    .slice(0, 3)
+    .map(s => s.length > 120 ? s.substring(0, 117) + '...' : s);
+
+  return truncatedSentences;
 }
