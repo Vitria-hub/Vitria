@@ -5,385 +5,206 @@ export default function PrivacidadPage() {
       
       <div className="prose prose-lg max-w-none text-dark/80 space-y-6">
         <p className="text-sm text-dark/60">
-          Última actualización: 18 de noviembre de 2025
+          Versión actualizada conforme a la Ley N° 19.628 y preparación para Ley N° 21.719
+        </p>
+        <p className="text-sm text-dark/60">
+          Fecha de última actualización: 26 de noviembre de 2025
         </p>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">1. Información General</h2>
           <p>
-            Vitria ("nosotros", "nuestro" o "la plataforma") se compromete a proteger la privacidad de todos los usuarios de nuestra plataforma de directorio de agencias de marketing en Chile. Esta Política de Privacidad describe cómo recopilamos, usamos, almacenamos y protegemos tu información personal de acuerdo con la Ley N° 21.719 sobre Protección de Datos Personales de Chile.
+            Vitria ("nosotros", "nuestro" o "la plataforma") se compromete a proteger la privacidad de todos los usuarios de nuestra plataforma. Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos tu información personal, en cumplimiento de la Ley N° 19.628 sobre Protección de la Vida Privada actualmente vigente en Chile, y adoptando anticipadamente los estándares de la Ley N° 21.719.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">2. Responsable del Tratamiento de Datos</h2>
           <p>
-            El responsable del tratamiento de tus datos personales es Vitria, una plataforma de directorio operando en Chile.
+            El responsable del banco de datos es Vitria.
           </p>
-          <p className="mt-4">
-            <strong>Contacto para Consultas de Privacidad:</strong>
-          </p>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">Contacto para Consultas de Privacidad:</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Email: privacidad@vitria.cl (consultas sobre protección de datos)</li>
-            <li>Formulario de contacto disponible en la plataforma</li>
-            <li>Tiempo de respuesta: Máximo 30 días hábiles según Ley 21.719</li>
+            <li><strong>Email:</strong> privacidad@vitria.cl</li>
+            <li><strong>Canal:</strong> Formulario de contacto disponible en la plataforma.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">3. Datos que Recopilamos</h2>
-          <p>Recopilamos los siguientes tipos de información:</p>
+          <p>
+            Recopilamos los siguientes tipos de información, definidos como "Datos Personales" según el Art. 2 letra f) de la Ley N° 19.628:
+          </p>
           
           <h3 className="text-xl font-semibold text-dark mt-6 mb-3">3.1 Información de Cuenta</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Nombre completo</li>
-            <li>Dirección de correo electrónico</li>
-            <li>Contraseña (encriptada)</li>
-            <li>Tipo de cuenta (cliente o agencia)</li>
+            <li>Nombre completo.</li>
+            <li>Dirección de correo electrónico.</li>
+            <li>Contraseña (almacenada de forma encriptada).</li>
+            <li>Tipo de cuenta (cliente o agencia).</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">3.2 Información de Agencias</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Nombre de la agencia</li>
-            <li>Descripción de servicios</li>
-            <li>Ubicación (ciudad y región)</li>
-            <li>Información de contacto (email, WhatsApp, sitio web)</li>
-            <li>Servicios ofrecidos y especialidades técnicas</li>
-            <li>Portafolio de trabajos</li>
-            <li>Redes sociales</li>
-          </ul>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">3.2 Información de Agencias (Datos Comerciales)</h3>
+          <p>
+            Nombre de la agencia, descripción, ubicación, contacto (email, WhatsApp, web), portafolio y redes sociales.
+          </p>
+          <p className="mt-2 text-sm text-dark/70 italic">
+            Nota: Conforme al Art. 4 de la Ley 19.628, los datos de personas jurídicas o datos comerciales de acceso público tienen un régimen de tratamiento diferenciado.
+          </p>
 
           <h3 className="text-xl font-semibold text-dark mt-6 mb-3">3.3 Información de Interacción</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Solicitudes de cotización enviadas y recibidas</li>
-            <li>Reseñas y calificaciones</li>
-            <li>Búsquedas realizadas en la plataforma</li>
-            <li>Visualizaciones de perfiles de agencias</li>
-            <li>Clics en información de contacto</li>
-          </ul>
+          <p>
+            Solicitudes de cotización, reseñas, búsquedas y métricas de uso.
+          </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">4. Finalidad del Tratamiento</h2>
-          <p>Utilizamos tu información personal para los siguientes propósitos:</p>
+          <p>
+            De conformidad con el principio de finalidad (Art. 9 Ley 19.628), utilizamos tus datos exclusivamente para:
+          </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Crear y gestionar tu cuenta en la plataforma</li>
-            <li>Facilitar la conexión entre clientes y agencias de marketing</li>
-            <li>Procesar y gestionar solicitudes de cotización</li>
-            <li>Mostrar información de agencias en el directorio público</li>
-            <li>Permitir la publicación y gestión de reseñas</li>
-            <li>Generar analíticas para agencias sobre el rendimiento de sus perfiles</li>
-            <li>Mejorar nuestros servicios y experiencia de usuario</li>
-            <li>Enviar comunicaciones relacionadas con el servicio (notificaciones de cotizaciones, mensajes del sistema)</li>
-            <li>Cumplir con obligaciones legales</li>
+            <li>Gestionar tu cuenta y la relación contractual.</li>
+            <li>Facilitar la conexión comercial entre Clientes y Agencias (cotizaciones).</li>
+            <li>Publicar el directorio de agencias.</li>
+            <li>Gestionar reseñas y calidad del servicio.</li>
+            <li>Cumplimiento de obligaciones legales y tributarias.</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">5. Base Legal para el Tratamiento</h2>
-          <p>El tratamiento de tus datos personales se basa en:</p>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">5. Base Legal y Consentimiento</h2>
+          <p>
+            El tratamiento de tus datos personales se fundamenta principalmente en tu consentimiento expreso, libre e informado (Art. 4 Ley 19.628), el cual otorgas al registrarte y aceptar esta política.
+          </p>
+          <p className="mt-4">
+            Adicionalmente, tratamos datos bajo las siguientes bases (en preparación a la Ley 21.719):
+          </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Consentimiento:</strong> Al registrarte y aceptar esta política, consientes el tratamiento de tus datos</li>
-            <li><strong>Ejecución de contrato:</strong> Para proporcionar los servicios de la plataforma</li>
-            <li><strong>Interés legítimo:</strong> Para mejorar nuestros servicios y prevenir fraudes</li>
-            <li><strong>Obligación legal:</strong> Cuando sea requerido por la legislación chilena</li>
+            <li><strong>Ejecución del contrato:</strong> Para prestar el servicio solicitado.</li>
+            <li><strong>Interés legítimo:</strong> Para seguridad y mejora del servicio.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">6. Compartición de Información</h2>
-          <p>Tu información personal puede ser compartida con:</p>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.1 Información Pública</h3>
           <p>
-            La información de perfiles de agencias (nombre, descripción, ubicación, servicios, portafolio, reseñas) es visible públicamente en nuestro directorio. Esta es una característica esencial de nuestro servicio.
+            Vitria no cede ni comunica tus datos a terceros sin tu consentimiento, salvo:
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.2 Solicitudes de Cotización</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.1 Funcionalidad del Servicio</h3>
           <p>
-            Cuando un cliente envía una solicitud de cotización, compartimos su nombre y correo electrónico con la agencia seleccionada para facilitar la comunicación.
+            Al solicitar una cotización, autorizas expresamente a Vitria a comunicar tus datos de contacto a la Agencia seleccionada para que esta pueda responder a tu solicitud.
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.3 Proveedores de Servicios</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.2 Información Pública</h3>
           <p>
-            Utilizamos proveedores externos para servicios como:
+            Los datos que voluntariamente incluyas en tu perfil público de Agencia serán accesibles a cualquier usuario de internet.
           </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Almacenamiento de bases de datos (Supabase)</li>
-            <li>Envío de correos electrónicos transaccionales (Brevo)</li>
-            <li>Almacenamiento de archivos (imágenes, logos)</li>
-          </ul>
-          <p className="mt-2">
-            Estos proveedores tienen acceso limitado a tu información solo para cumplir con sus funciones.
+
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">6.3 Proveedores de Servicios (Encargados del Tratamiento)</h3>
+          <p>
+            Compartimos datos con proveedores tecnológicos (ej. Supabase, Brevo) que actúan como "Encargados del Tratamiento" bajo nuestras instrucciones, exclusivamente para prestar el servicio y con prohibición de uso propio.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">7. Seguridad de Datos</h2>
           <p>
-            Implementamos medidas técnicas y organizativas apropiadas para proteger tus datos personales:
+            Cumplimos con la obligación de seguridad (Art. 11 Ley 19.628), implementando medidas como encriptación, HTTPS y control de accesos para proteger tus datos contra pérdida, acceso no autorizado o alteración.
           </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Encriptación de contraseñas</li>
-            <li>Conexiones seguras HTTPS</li>
-            <li>Control de acceso basado en roles</li>
-            <li>Almacenamiento en servidores seguros</li>
-            <li>Monitoreo regular de vulnerabilidades</li>
-          </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">8. Tus Derechos (ARCO-P)</h2>
-          <p>De acuerdo con la Ley 21.719, tienes los siguientes derechos:</p>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.1 Derecho de Acceso</h3>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">8. Tus Derechos (ARCO)</h2>
           <p>
-            Puedes solicitar información sobre qué datos personales procesamos, para qué fines, quién los recibe y cuánto tiempo los conservamos.
+            Conforme a la Ley N° 19.628 (Arts. 12 y siguientes), tienes derecho a:
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.2 Derecho de Rectificación</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.1 Acceso e Información</h3>
           <p>
-            Puedes solicitar la corrección de datos inexactos, incompletos o desactualizados. La mayoría de tus datos puedes actualizarlos directamente desde tu perfil.
+            Solicitar información sobre los datos relativos a tu persona, su procedencia y destinatario, el propósito del almacenamiento y la individualización de las personas u organismos a los cuales tus datos son transmitidos regularmente.
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.3 Derecho de Cancelación (Supresión)</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.2 Rectificación</h3>
           <p>
-            Puedes solicitar la eliminación de tus datos cuando: (a) ya no sean necesarios, (b) retires tu consentimiento, (c) te opongas al tratamiento, o (d) se hayan tratado ilícitamente. Algunas excepciones aplican por obligaciones legales.
+            Solicitar la modificación de tus datos personales cuando sean erróneos, inexactos, equívocos o incompletos.
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.4 Derecho de Oposición</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.3 Cancelación (Eliminación)</h3>
           <p>
-            Puedes oponerte al tratamiento de tus datos basado en interés legítimo, incluyendo perfilamiento y decisiones automatizadas.
+            Exigir la eliminación de tus datos cuando su almacenamiento carezca de fundamento legal o cuando hayan caducado, o cuando los hayas proporcionado voluntariamente y no desees continuar figurando en el registro.
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.5 Derecho de Portabilidad</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.4 Bloqueo</h3>
           <p>
-            Puedes recibir tus datos en formato estructurado, de uso común y lectura mecánica (CSV/JSON), y transmitirlos a otro responsable.
+            Solicitar la suspensión temporal de cualquier operación de tratamiento de tus datos.
           </p>
 
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.6 Cómo Ejercer tus Derechos</h3>
+          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.5 Procedimiento para Ejercer Derechos</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Email: privacidad@vitria.cl</li>
-            <li>Formulario de contacto en la plataforma</li>
-            <li>Debes identificarte para verificar tu identidad</li>
-            <li>Plazo de respuesta: 30 días hábiles (prorrogable 30 días más si es necesario)</li>
-            <li>La respuesta será gratuita</li>
+            <li><strong>Canal:</strong> Email a privacidad@vitria.cl.</li>
+            <li><strong>Plazo de Respuesta:</strong> Vitria responderá a la brevedad posible. Si bien la Ley 19.628 establece un plazo de 2 días hábiles para pronunciarse, nos comprometemos a gestionar tu solicitud de fondo en un plazo máximo de 10 días hábiles.</li>
+            <li><strong>Gratuidad:</strong> El ejercicio de estos derechos es gratuito.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">9. Retención de Datos</h2>
-          <p>Conservamos tus datos personales según los siguientes criterios:</p>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">9.1 Períodos de Retención</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Datos de cuenta activa:</strong> Mientras tu cuenta esté activa o sea necesario para proporcionar servicios</li>
-            <li><strong>Datos de cuenta eliminada:</strong> 30 días en archivo de respaldo, luego eliminación permanente</li>
-            <li><strong>Solicitudes de cotización:</strong> 2 años desde la última interacción (para análisis y métricas)</li>
-            <li><strong>Reseñas publicadas:</strong> Indefinidamente mientras la agencia esté activa (información pública de interés general)</li>
-            <li><strong>Datos de facturación/pago:</strong> 6 años (requisito legal tributario chileno)</li>
-            <li><strong>Logs de seguridad:</strong> 12 meses</li>
-            <li><strong>Cookies de sesión:</strong> Al cerrar navegador o logout</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">9.2 Eliminación de Cuenta</h3>
-          <p>
-            Al eliminar tu cuenta, procedemos a:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Eliminar o anonimizar tu información personal identificable</li>
-            <li>Conservar datos agregados/anonimizados para estadísticas</li>
-            <li>Mantener información requerida por ley (registros contables, fiscales)</li>
-            <li>Las reseñas publicadas se mantienen pero se anonimizan (se muestra como "Usuario eliminado")</li>
+            <li>Conservamos tus datos mientras tu cuenta esté activa.</li>
+            <li><strong>Datos Tributarios:</strong> Se conservan por 6 años según Código Tributario.</li>
+            <li><strong>Eliminación:</strong> Al cerrar tu cuenta, tus datos personales serán eliminados o anonimizados, salvo aquellos que debamos conservar por obligación legal.</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">10. Cookies y Tecnologías Similares</h2>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">10.1 Cookies que Utilizamos</h3>
-          <p>Utilizamos las siguientes tecnologías:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Cookies esenciales:</strong> Necesarias para el funcionamiento (autenticación, sesión de usuario, preferencias básicas). No requieren consentimiento.</li>
-            <li><strong>Cookies de funcionalidad:</strong> Mejoran experiencia (idioma, región). Basadas en tu consentimiento.</li>
-            <li><strong>Local Storage:</strong> Para almacenar preferencias de interfaz localmente en tu dispositivo.</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">10.2 Lo que NO Hacemos</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>No utilizamos cookies de publicidad o marketing de terceros</li>
-            <li>No implementamos seguimiento entre sitios (cross-site tracking)</li>
-            <li>No vendemos datos de cookies a terceros</li>
-            <li>No utilizamos herramientas de analytics de terceros que recopilen datos personales</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">10.3 Control de Cookies</h3>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">10. Cookies</h2>
           <p>
-            Puedes controlar cookies desde tu navegador. Eliminar cookies esenciales puede afectar la funcionalidad de la plataforma (ejemplo: cerrar sesión automáticamente).
+            Utilizamos cookies esenciales para el funcionamiento técnico (sesión) y cookies de funcionalidad. No utilizamos cookies de terceros para venta de datos. Puedes gestionar las cookies desde tu navegador.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-primary mt-8 mb-4">11. Transferencias Internacionales</h2>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">11.1 Proveedores Internacionales</h3>
           <p>
-            Utilizamos proveedores de servicios que pueden almacenar o procesar datos fuera de Chile:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Supabase (Estados Unidos):</strong> Almacenamiento de base de datos y archivos</li>
-            <li><strong>Brevo (Francia/UE):</strong> Envío de correos electrónicos transaccionales</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">11.2 Salvaguardias Implementadas</h3>
-          <p>Para transferencias internacionales, nos aseguramos de:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Utilizar proveedores con certificaciones de seguridad reconocidas (SOC 2, ISO 27001)</li>
-            <li>Implementar cláusulas contractuales estándar de protección de datos</li>
-            <li>Verificar que los proveedores cumplan con estándares equivalentes a la Ley 21.719</li>
-            <li>Limitar la transferencia al mínimo necesario para el servicio</li>
-            <li>Encriptar datos en tránsito y en reposo</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">11.3 Tu Consentimiento</h3>
-          <p>
-            Al aceptar esta política, consientes expresamente la transferencia internacional de tus datos bajo las salvaguardias descritas.
+            Utilizamos servicios de infraestructura en la nube (ej. servidores en EE.UU. o Europa). Al aceptar esta política, autorizas expresamente (Art. 4 Ley 19.628) la transferencia internacional de tus datos a estos proveedores, quienes cuentan con estándares de seguridad de nivel empresarial.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">12. Notificación de Brechas de Seguridad</h2>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">12.1 Nuestro Compromiso</h3>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">12. Notificación de Brechas</h2>
           <p>
-            En caso de una brecha de seguridad que comprometa tus datos personales, cumpliremos con las obligaciones de la Ley 21.719:
-          </p>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">12.2 Notificación a Autoridades</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Notificaremos a la Agencia de Protección de Datos Personales (APDP) sin demora injustificada</li>
-            <li>Proporcionaremos detalles del incidente, datos afectados y medidas correctivas</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">12.3 Notificación a Usuarios Afectados</h3>
-          <p>
-            Te notificaremos directamente cuando:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Exista un riesgo probable para tus derechos y libertades</li>
-            <li>Datos sensibles hayan sido comprometidos</li>
-            <li>Se requiera que tomes medidas protectoras (ejemplo: cambiar contraseña)</li>
-          </ul>
-          <p className="mt-2">
-            La notificación incluirá: naturaleza de la brecha, datos afectados, consecuencias probables, medidas adoptadas y recomendaciones.
+            En caso de vulneración de seguridad que afecte tus derechos, te notificaremos al correo registrado, indicando las medidas adoptadas, anticipándonos al estándar de la futura Ley 21.719.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">13. Decisiones Automatizadas y Perfilamiento</h2>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">13.1 Uso Limitado</h3>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">13. Reclamaciones y Resolución de Conflictos</h2>
           <p>
-            Vitria <strong>NO utiliza</strong> sistemas de toma de decisiones completamente automatizadas que produzcan efectos jurídicos o te afecten significativamente.
-          </p>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">13.2 Procesamiento de Datos</h3>
-          <p>
-            Realizamos análisis básicos no automatizados para:
+            Si consideras que hemos infringido tus derechos:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Mostrar agencias relevantes según búsqueda/filtros (decisión del usuario)</li>
-            <li>Generar estadísticas agregadas de uso de la plataforma</li>
-            <li>Calcular métricas de rendimiento para agencias (vistas, clics)</li>
+            <li><strong>Contacto Directo:</strong> Escríbenos a privacidad@vitria.cl para solucionar el problema.</li>
+            <li><strong>Vía Judicial:</strong> Si no obtienes respuesta satisfactoria, la ley vigente (Art. 16 Ley 19.628) te faculta para recurrir al Juez de Letras en lo Civil de tu domicilio o del domicilio del responsable.</li>
+            <li><strong>SERNAC:</strong> En tu calidad de consumidor, también puedes acudir al Servicio Nacional del Consumidor.</li>
           </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">13.3 Tu Derecho</h3>
-          <p>
-            Tienes derecho a no ser objeto de decisiones basadas únicamente en tratamiento automatizado, incluida la elaboración de perfiles. Si implementáramos tales sistemas en el futuro, te informaríamos y permitiríamos solicitar intervención humana.
+          <p className="mt-4 text-sm text-dark/70 italic">
+            Nota: La Agencia de Protección de Datos Personales (APDP) entrará en funciones fiscalizadoras en diciembre de 2026. Hasta esa fecha, la competencia corresponde a los Tribunales Ordinarios de Justicia.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">14. Reclamaciones y Resolución de Conflictos</h2>
-          
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">14.1 Contacto Directo</h3>
+          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">14. Cambios a esta Política</h2>
           <p>
-            Si tienes una queja sobre cómo tratamos tus datos personales, primero contáctanos:
+            Podemos actualizar esta política. Te notificaremos de cambios sustanciales vía email o aviso en la plataforma. El uso continuado tras la notificación implica aceptación.
           </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Email: privacidad@vitria.cl</li>
-            <li>Formulario de contacto en la plataforma</li>
-            <li>Responderemos en máximo 30 días hábiles</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">14.2 Autoridad de Control</h3>
-          <p>
-            Si no estás satisfecho con nuestra respuesta, tienes derecho a presentar una reclamación ante:
-          </p>
-          <p className="mt-2">
-            <strong>Agencia de Protección de Datos Personales (APDP)</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Organismo autónomo fiscalizador de la Ley 21.719</li>
-            <li>Operacional desde diciembre de 2026</li>
-            <li>Podrá investigar, sancionar y resolver reclamaciones</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-dark mt-6 mb-3">14.3 Resolución Amistosa</h3>
-          <p>
-            Nos comprometemos a resolver cualquier disputa de manera transparente y colaborativa, priorizando tus derechos y la protección de tus datos personales.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">15. Menores de Edad</h2>
-          <p>
-            Nuestros servicios no están dirigidos a menores de 18 años. No recopilamos intencionalmente información personal de menores. Si descubrimos que hemos recopilado datos de un menor sin consentimiento parental, eliminaremos esa información inmediatamente.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">16. Cambios a esta Política</h2>
-          <p>
-            Podemos actualizar esta Política de Privacidad ocasionalmente para reflejar cambios en nuestras prácticas, legislación o servicios.
-          </p>
-          <p className="mt-4">
-            <strong>Te notificaremos sobre cambios significativos mediante:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Aviso destacado en la plataforma</li>
-            <li>Correo electrónico a tu cuenta registrada</li>
-            <li>Solicitud de nuevo consentimiento si es requerido por ley</li>
-          </ul>
-          <p className="mt-2">
-            Cambios menores entrarán en vigor al publicarse. El uso continuado de la plataforma después de cambios constituye aceptación.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-primary mt-8 mb-4">17. Información de Contacto</h2>
-          <p>
-            Para cualquier consulta, ejercicio de derechos o reclamación relacionada con esta Política de Privacidad:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Email de Privacidad:</strong> privacidad@vitria.cl</li>
-            <li><strong>Soporte General:</strong> Formulario de contacto en la plataforma</li>
-            <li><strong>Plazo de respuesta:</strong> 30 días hábiles (extensible 30 días adicionales en casos complejos)</li>
-          </ul>
-          <p className="mt-4">
-            Cuando nos contactes para ejercer tus derechos, incluye:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Identificación válida (para verificar identidad)</li>
-            <li>Descripción clara del derecho que deseas ejercer</li>
-            <li>Dirección de correo electrónico asociada a tu cuenta</li>
-          </ul>
         </section>
 
         <div className="bg-lilac/10 p-6 rounded-lg mt-8">
           <p className="text-sm text-dark/70">
-            Esta política cumple con la Ley N° 21.719 sobre Protección de Datos Personales de Chile. 
-            La Agencia de Protección de Datos Personales (APDP) será el organismo fiscalizador una vez entre en vigencia plena en diciembre de 2026.
+            Esta política cumple con la Ley N° 19.628 sobre Protección de la Vida Privada y adopta anticipadamente los estándares de la Ley N° 21.719. 
+            La Agencia de Protección de Datos Personales (APDP) será el organismo fiscalizador una vez entre en funciones en diciembre de 2026.
           </p>
         </div>
       </div>
