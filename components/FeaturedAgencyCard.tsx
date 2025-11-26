@@ -59,9 +59,7 @@ export default function FeaturedAgencyCard({ agency }: FeaturedAgencyCardProps) 
     <article className={`group flex flex-col h-full rounded-xl transition-all duration-300 ${
       agency.is_premium 
         ? 'bg-gradient-to-br from-amber-50/50 via-white to-blue-50/50 border-2 border-amber-200/50 hover:border-amber-300 hover:shadow-xl' 
-        : isHighRated
-          ? 'bg-white border-2 border-green-200 hover:border-green-300 hover:shadow-xl'
-          : 'bg-white border-2 border-gray-200 hover:border-primary/30 hover:shadow-lg'
+        : 'bg-white border-2 border-gray-200 hover:border-primary/30 hover:shadow-lg'
     }`}>
       <div className="p-4 md:p-5 flex-grow flex flex-col">
         <div className="flex items-start gap-3 mb-3">

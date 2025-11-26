@@ -71,13 +71,6 @@ export default function AgencyCardEnhanced({ agency, showRecommendedBadge = true
         borderColor: 'transparent',
       };
     }
-    if (isHighRated) {
-      return {
-        borderWidth: '2px',
-        borderStyle: 'solid' as const,
-        borderColor: '#22c55e',
-      };
-    }
     return undefined;
   };
   
@@ -86,16 +79,11 @@ export default function AgencyCardEnhanced({ agency, showRecommendedBadge = true
       className={`group flex flex-col h-full rounded-xl transition-all duration-300 relative overflow-hidden ${
         agency.is_premium 
           ? 'bg-gradient-to-br from-blue-50/50 via-white to-amber-50/50 hover:shadow-xl' 
-          : isHighRated
-          ? 'bg-gradient-to-br from-green-50/30 via-white to-white hover:shadow-lg border-green-500'
           : 'border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg'
       }`}
       style={getBorderStyle()}
     >
       <div className="p-4 sm:p-5 flex flex-col h-full">
-        {isHighRated && !agency.is_premium && (
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-green-500 to-green-400" />
-        )}
         
         <div className="flex items-start gap-3 sm:gap-4 mb-3">
           <div className="flex-shrink-0">
