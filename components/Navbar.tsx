@@ -34,7 +34,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center">
-            <Image src="/vitria-logo.png" alt="Vitria" width={120} height={40} className="object-contain h-auto" />
+            <Image src="/vitria-logo.png" alt="Vitria" width={120} height={40} style={{ width: 'auto', height: 'auto' }} className="object-contain max-h-10" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

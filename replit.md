@@ -4,6 +4,23 @@ Vitria is a directory platform for the Chilean market, connecting marketing, bra
 
 # Recent Changes
 
+## November 26, 2025
+- **Enhanced FilterBar UX (FilterBarEnhanced.tsx)**: Complete redesign of the agency explorer filters with:
+  - Separated "Ordenar por" section with pill-style buttons (Destacadas, Mejor valoradas, Más reseñas, Más recientes)
+  - Icons in all dropdowns (Tag for Categoría, Building2 for Industria, DollarSign for Precio)
+  - Active filter chips with close buttons showing label:value format
+  - Sticky filter bar when scrolling (after 200px)
+  - Mobile-first responsive design with side modal for filters
+  - "Limpiar todos" button for clearing all filters
+- **Enhanced AgencyCard UX (AgencyCardEnhanced.tsx)**: Improved agency cards with:
+  - Collapsible bullets showing first 3 with "Ver más/Ver menos" toggle
+  - High-rating badge (Top) for agencies with 4.5+ rating and 5+ reviews
+  - Green border accent for high-rated non-premium agencies
+  - Conditional "Recomendado para ti" badge (hidden when all cards are premium)
+  - Clear action buttons: "Ver perfil" and "Contactar" (WhatsApp for premium)
+  - Better mobile typography and touch targets (48px minimum)
+- **CSS Animations**: Added custom animations for filter chips and modal transitions (fade-in, slide-in-from-left, slide-in-from-right)
+
 ## November 25, 2025
 - **Secure Welcome Email System**: Complete implementation of branded welcome emails sent after session establishment. All user creation now requires valid session validation. Email flow: (1) Universal welcome email inspired by homepage "Creamos Comunidad" text, (2) Agency waitlist email when profile created, (3) Admin approval email when agency approved. Uses table-based logo layouts for email client compatibility.
 - **Authentication Flow Security Enhancement**: Moved user record creation from immediate signup to post-session verification. The `/api/auth/create-user` endpoint now requires session validation (sessionUserId === auth_id) for all operations, preventing unauthorized user creation and email triggering.
