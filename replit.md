@@ -5,6 +5,17 @@ Vitria is a directory platform for the Chilean market, connecting marketing, bra
 # Recent Changes
 
 ## November 26, 2025
+
+### Phase 2: Homepage Redesign
+- **HeroEnhanced.tsx**: New hero section with gradient background, "El directorio #1 de agencias en Chile" badge, high-contrast yellow CTA button, category dropdown with search icon, and sticky mobile CTA bar that appears after 400px scroll with safe-area padding
+- **SectionWrapper.tsx**: Reusable section container with 5 background variants (white, light, gradient, primary, accent), optional decorative isotipo placement, and consistent vertical spacing
+- **SectionHeader.tsx**: Reusable header component with eyebrow badge, icon, title, subtitle for consistent visual hierarchy across sections
+- **CategoryCarousel.tsx**: Horizontal scroll carousel with CSS scroll-snap for mobile swipe (fade edges, "Desliza para ver más" indicator), responsive grid for desktop, icons mapped internally by categoryId to avoid serialization issues
+- **FeaturedAgencyCard.tsx**: Compact agency cards with 2-3 collapsible bullets ("Ver más" toggle), rating badges (Top, Premium, Verified), WhatsApp icon for premium agencies, aligned CTAs using flexbox
+- **TestimonialsEnhanced.tsx**: Enhanced testimonials with quote icons, 5-star ratings, emphasized first sentence styling, mobile carousel with dot indicators
+- **Homepage Integration (app/page.tsx)**: Full redesign with alternating section backgrounds for visual differentiation, integrated all new components, added "¿Por qué Vitria?" benefits section, "¿Cómo Funciona?" 3-step process, and "Creamos Comunidad" message
+
+### Phase 1: Agency Explorer Redesign
 - **Enhanced FilterBar UX (FilterBarEnhanced.tsx)**: Complete redesign of the agency explorer filters with:
   - Separated "Ordenar por" section with pill-style buttons (Destacadas, Mejor valoradas, Más reseñas, Más recientes)
   - Icons in all dropdowns (Tag for Categoría, Building2 for Industria, DollarSign for Precio)

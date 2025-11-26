@@ -73,13 +73,13 @@ export default function CarouselSponsored() {
       
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-6 sm:-top-10 right-6 sm:right-12 w-20 sm:w-28 md:w-32 h-20 sm:h-28 md:h-32 opacity-15">
-          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          <Image src="/vitria-isotipo.png" alt="" fill sizes="128px" className="object-contain" />
         </div>
         <div className="absolute bottom-8 sm:bottom-10 left-6 sm:left-12 w-16 sm:w-24 h-16 sm:h-24 opacity-10">
-          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          <Image src="/vitria-isotipo.png" alt="" fill sizes="96px" className="object-contain" />
         </div>
         <div className="absolute top-1/2 -translate-y-1/2 sm:-translate-y-1/3 left-1/2 sm:left-auto sm:right-24 w-24 sm:w-32 h-24 sm:h-32 opacity-10 rotate-12 hidden sm:block">
-          <Image src="/vitria-isotipo.png" alt="" fill className="object-contain" />
+          <Image src="/vitria-isotipo.png" alt="" fill sizes="128px" className="object-contain" />
         </div>
       </div>
       

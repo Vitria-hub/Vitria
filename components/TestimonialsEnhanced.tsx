@@ -115,6 +115,7 @@ export default function TestimonialsEnhanced({ testimonials }: TestimonialsEnhan
                     src={testimonial.image}
                     alt={testimonial.author}
                     fill
+                    sizes="56px"
                     className="object-cover"
                   />
                 </div>
