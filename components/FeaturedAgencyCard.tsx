@@ -172,7 +172,7 @@ export default function FeaturedAgencyCard({ agency }: FeaturedAgencyCardProps) 
             Ver perfil
           </button>
           
-          {agency.is_premium && agency.whatsapp && (
+          {agency.whatsapp && (
             <button
               onClick={handleWhatsApp}
               className="flex items-center justify-center gap-1.5 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 rounded-lg transition text-sm min-h-[44px]"

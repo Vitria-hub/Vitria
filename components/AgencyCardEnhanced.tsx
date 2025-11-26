@@ -192,7 +192,7 @@ export default function AgencyCardEnhanced({ agency, showRecommendedBadge = true
         </div>
 
         <div className="mt-auto pt-2">
-          {agency.is_premium && agency.whatsapp_number ? (
+          {agency.whatsapp_number ? (
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={handleViewAgency}
