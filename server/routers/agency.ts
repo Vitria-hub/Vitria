@@ -173,28 +173,33 @@ export const agencyRouter = router({
         }
       }
 
-      // Filter information for unauthenticated users - only show basic public info
-      const isAuthenticated = !!ctx.userId;
-      
-      if (!isAuthenticated) {
-        return {
-          id: data.id,
-          name: data.name,
-          slug: data.slug,
-          description: data.description,
-          logo_url: data.logo_url,
-          cover_url: data.cover_url,
-          categories: data.categories,
-          services: data.services,
-          is_premium: data.is_premium,
-          avg_rating: data.avg_rating,
-          reviews_count: data.reviews_count,
-          created_at: data.created_at,
-          location_region: data.location_region,
-        };
-      }
-
-      return data;
+      // Return public agency data - include all user-visible fields, exclude internal/sensitive data
+      return {
+        id: data.id,
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        logo_url: data.logo_url,
+        cover_url: data.cover_url,
+        categories: data.categories,
+        services: data.services,
+        specialties: data.specialties,
+        industries: data.industries,
+        is_premium: data.is_premium,
+        is_verified: data.is_verified,
+        avg_rating: data.avg_rating,
+        reviews_count: data.reviews_count,
+        location_city: data.location_city,
+        location_region: data.location_region,
+        phone: data.phone,
+        whatsapp_number: data.whatsapp_number,
+        email: data.email,
+        website: data.website,
+        employees_min: data.employees_min,
+        employees_max: data.employees_max,
+        price_range: data.price_range,
+        created_at: data.created_at,
+      };
     }),
 
   myAgency: protectedProcedure
