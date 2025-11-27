@@ -20,13 +20,15 @@ export default function SectionHeader({
   actions,
   className = '',
 }: SectionHeaderProps) {
-  const alignClasses = align === 'center' ? 'text-center' : 'text-left';
+  const alignClasses = align === 'center' 
+    ? 'text-left md:text-center' 
+    : 'text-left';
 
   return (
     <div className={`mb-10 md:mb-12 ${alignClasses} ${className}`}>
       {eyebrow && (
         <div className={`inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-1.5 mb-4 ${
-          align === 'center' ? 'mx-auto' : ''
+          align === 'center' ? 'md:mx-auto' : ''
         }`}>
           {Icon && <Icon className="w-4 h-4 text-primary" />}
           <span className="text-sm font-semibold text-primary">{eyebrow}</span>
@@ -39,14 +41,14 @@ export default function SectionHeader({
       
       {subtitle && (
         <p className={`text-base sm:text-lg text-dark/70 leading-relaxed ${
-          align === 'center' ? 'max-w-2xl mx-auto' : 'max-w-3xl'
+          align === 'center' ? 'max-w-2xl md:mx-auto' : 'max-w-3xl'
         }`}>
           {subtitle}
         </p>
       )}
       
       {actions && (
-        <div className={`mt-6 ${align === 'center' ? 'flex justify-center' : ''}`}>
+        <div className={`mt-6 ${align === 'center' ? 'md:flex md:justify-center' : ''}`}>
           {actions}
         </div>
       )}
