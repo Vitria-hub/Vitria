@@ -89,7 +89,7 @@ export default function TerminosPage() {
 
           <h3 className="text-xl font-semibold text-dark mt-6 mb-3">7.2 Procedimiento</h3>
           <p>
-            Para ejercer este derecho, el Usuario deberá contactar a soporte@vitria.cl. Vitria realizará la devolución de las sumas abonadas, sin retención de gastos, a la mayor brevedad posible y en un plazo máximo de 45 días siguientes a la comunicación del retracto.
+            Para ejercer este derecho, el Usuario deberá contactar a contacto@vitria.cl. Vitria realizará la devolución de las sumas abonadas, sin retención de gastos, a la mayor brevedad posible y en un plazo máximo de 45 días siguientes a la comunicación del retracto.
           </p>
         </section>
 

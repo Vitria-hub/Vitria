@@ -25,7 +25,7 @@ export default function PrivacidadPage() {
           </p>
           <h3 className="text-xl font-semibold text-dark mt-6 mb-3">Contacto para Consultas de Privacidad:</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Email:</strong> privacidad@vitria.cl</li>
+            <li><strong>Email:</strong> contacto@vitria.cl</li>
             <li><strong>Canal:</strong> Formulario de contacto disponible en la plataforma.</li>
           </ul>
         </section>
@@ -143,7 +143,7 @@ export default function PrivacidadPage() {
 
           <h3 className="text-xl font-semibold text-dark mt-6 mb-3">8.5 Procedimiento para Ejercer Derechos</h3>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Canal:</strong> Email a privacidad@vitria.cl.</li>
+            <li><strong>Canal:</strong> Email a contacto@vitria.cl.</li>
             <li><strong>Plazo de Respuesta:</strong> Vitria responderá a la brevedad posible. Si bien la Ley 19.628 establece un plazo de 2 días hábiles para pronunciarse, nos comprometemos a gestionar tu solicitud de fondo en un plazo máximo de 10 días hábiles.</li>
             <li><strong>Gratuidad:</strong> El ejercicio de estos derechos es gratuito.</li>
           </ul>
@@ -185,7 +185,7 @@ export default function PrivacidadPage() {
             Si consideras que hemos infringido tus derechos:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Contacto Directo:</strong> Escríbenos a privacidad@vitria.cl para solucionar el problema.</li>
+            <li><strong>Contacto Directo:</strong> Escríbenos a contacto@vitria.cl para solucionar el problema.</li>
             <li><strong>Vía Judicial:</strong> Si no obtienes respuesta satisfactoria, la ley vigente (Art. 16 Ley 19.628) te faculta para recurrir al Juez de Letras en lo Civil de tu domicilio o del domicilio del responsable.</li>
             <li><strong>SERNAC:</strong> En tu calidad de consumidor, también puedes acudir al Servicio Nacional del Consumidor.</li>
           </ul>
