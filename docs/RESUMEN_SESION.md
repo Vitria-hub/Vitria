@@ -119,8 +119,8 @@ Agencia Destacada
 ---
 
 ## 🔑 **Credenciales Admin**
-- Email: `contacto@scalelab.cl`
-- Password: `Scalelab2026`
+- Email: `contacto@vitria.cl`
+- Password: `Vitria2026`
 - Acceso: Login → Auto-redirect a `/admin`
 
 ---

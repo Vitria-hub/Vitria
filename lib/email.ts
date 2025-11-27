@@ -44,7 +44,7 @@ function getBaseUrl(): string {
 }
 
 function getAdminEmail(): string {
-  return process.env.ADMIN_EMAIL || 'contacto@scalelab.cl';
+  return process.env.ADMIN_EMAIL || 'contacto@vitria.cl';
 }
 
 export async function sendAgencyReviewEmail(agencyData: AgencyData) {

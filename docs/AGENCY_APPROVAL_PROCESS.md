@@ -10,7 +10,7 @@ All newly created agencies on Vitria must go through a manual approval process b
 When a user creates a new agency:
 - Agency is created with `approval_status: 'pending'`
 - Two emails are automatically sent:
-  - **Admin notification** to contacto@scalelab.cl with agency details
+  - **Admin notification** to contacto@vitria.cl with agency details
   - **Waitlist confirmation** to the agency owner
 
 ### 2. Admin Review
@@ -38,7 +38,7 @@ reviewed_by UUID REFERENCES users(id)
 ### Email Templates (via Brevo)
 
 1. **Review Notification** (`sendAgencyReviewEmail`)
-   - Recipient: contacto@scalelab.cl
+   - Recipient: contacto@vitria.cl
    - Contains: All agency details, owner info, approve/reject buttons
    
 2. **Waitlist Confirmation** (`sendAgencyWaitlistEmail`)
@@ -83,7 +83,7 @@ reviewed_by UUID REFERENCES users(id)
 - [ ] Verify you receive waitlist confirmation email
 - [ ] Verify agency is NOT visible in public listings
 - [ ] Verify agency IS visible in your dashboard
-- [ ] Verify admin email sent to contacto@scalelab.cl
+- [ ] Verify admin email sent to contacto@vitria.cl
 
 #### 2. Admin Approval
 - [ ] Log in as admin user
@@ -157,6 +157,6 @@ Email templates are in `lib/email.ts`:
    ```
 
 ### Post-Deployment
-- Monitor admin email (contacto@scalelab.cl) for review notifications
+- Monitor admin email (contacto@vitria.cl) for review notifications
 - Set up admin review process/schedule
 - Track approval/rejection metrics in admin dashboard

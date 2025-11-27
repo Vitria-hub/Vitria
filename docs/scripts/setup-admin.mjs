@@ -31,8 +31,8 @@ async function setupDatabase() {
   // 1. Crear usuario admin en auth.users
   console.log('👤 Creando usuario administrador...');
   
-  const adminEmail = 'contacto@scalelab.cl';
-  const adminPassword = 'Scalelab2026';
+  const adminEmail = 'contacto@vitria.cl';
+  const adminPassword = 'Vitria2026';
   
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
     email: adminEmail,
@@ -65,7 +65,7 @@ async function setupDatabase() {
     .from('users')
     .upsert({
       auth_id: authUserId,
-      full_name: 'Administrador ScaleLab',
+      full_name: 'Administrador Vitria',
       role: 'admin'
     }, {
       onConflict: 'auth_id'

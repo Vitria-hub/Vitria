@@ -205,7 +205,7 @@ async function seedAnalyticsData() {
 
   // Mostrar credenciales
   console.log('\n🔑 Usuarios de prueba creados:');
-  console.log('Admin: contacto@scalelab.cl / Scalelab2026 (usar credenciales de Supabase Auth)');
+  console.log('Admin: contacto@vitria.cl / Vitria2026 (usar credenciales de Supabase Auth)');
   console.log(`\nAgencia 1: ${testUsers[1].full_name} (ID: ${testUsers[1].id})`);
   console.log(`Agencia 2: ${testUsers[2].full_name} (ID: ${testUsers[2].id})`);
   

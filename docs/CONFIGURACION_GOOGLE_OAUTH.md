@@ -23,10 +23,10 @@
 2. Seleccionar: **External**
 3. Completar:
    - **App name**: Vitria
-   - **User support email**: contacto@scalelab.cl
+   - **User support email**: contacto@vitria.cl
    - **App logo**: (opcional, logo de Vitria)
-   - **Authorized domains**: tu-dominio.com (cuando publiques)
-   - **Developer contact**: contacto@scalelab.cl
+   - **Authorized domains**: vitria.cl (cuando publiques)
+   - **Developer contact**: contacto@vitria.cl
 4. Click en **Save and Continue**
 5. En "Scopes", agregar:
    - `.../auth/userinfo.email`
