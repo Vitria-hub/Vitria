@@ -261,6 +261,22 @@ export default function AgencyDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:hidden order-first">
+          <section className="bg-white border-2 border-gray-200 rounded-lg p-6 mb-6">
+            <h3 className="font-bold text-lg text-primary mb-4">Información Adicional</h3>
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="font-semibold text-dark">Rango de Precios</dt>
+                <dd className="text-dark/70 mt-1">{agency.price_range || 'No especificado'}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-dark">Categorías</dt>
+                <dd className="text-dark/70 mt-1">{agency.categories.join(', ')}</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+
         <div className="lg:col-span-2 space-y-8">
           <section>
             <h2 className="text-2xl font-bold text-primary mb-4">Sobre la Agencia</h2>
@@ -338,24 +354,13 @@ export default function AgencyDetailPage() {
           </section>
         </div>
 
-        <div>
+        <div className="hidden lg:block">
           <section className="bg-white border-2 border-gray-200 rounded-lg p-6 sticky top-20">
             <h3 className="font-bold text-lg text-primary mb-4">Información Adicional</h3>
             <dl className="space-y-3 text-sm">
               <div>
                 <dt className="font-semibold text-dark">Rango de Precios</dt>
-                {user ? (
-                  <dd className="text-dark/70 mt-1">{agency.price_range || 'No especificado'}</dd>
-                ) : (
-                  <dd className="text-dark/70 mt-1">
-                    <button 
-                      onClick={() => router.push('/auth/login?redirect=' + encodeURIComponent(window.location.pathname))}
-                      className="text-primary hover:underline"
-                    >
-                      🔒 Inicia sesión para ver
-                    </button>
-                  </dd>
-                )}
+                <dd className="text-dark/70 mt-1">{agency.price_range || 'No especificado'}</dd>
               </div>
               <div>
                 <dt className="font-semibold text-dark">Categorías</dt>
