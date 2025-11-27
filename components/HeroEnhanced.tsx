@@ -50,7 +50,7 @@ export default function HeroEnhanced() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <Sparkles className="w-4 h-4 text-accent" />
               <span className="text-sm font-medium">El directorio #1 de agencias en Chile</span>
@@ -61,12 +61,12 @@ export default function HeroEnhanced() {
               <span className="block text-accent">para tu negocio</span>
             </h1>
             
-            <p className="text-base sm:text-lg md:text-xl mb-8 md:mb-10 opacity-95 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl mb-8 md:mb-10 opacity-95 max-w-3xl md:mx-auto leading-relaxed">
               Marketing, publicidad, diseño, desarrollo web y más. 
               Conectamos negocios con agencias especializadas en todo Chile.
             </p>
 
-            <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl max-w-2xl mx-auto mb-8">
+            <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl max-w-2xl md:mx-auto mb-8">
               <div className="mb-4">
                 <label className="block text-left text-sm font-semibold text-dark mb-2">
                   ¿Qué tipo de agencia necesitas?
