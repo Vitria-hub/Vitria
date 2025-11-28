@@ -234,9 +234,9 @@ export default function FilterBarEnhanced({
   return (
     <>
       <div 
-        className={`bg-white transition-all duration-300 ${
+        className={`bg-white ${
           isSticky 
-            ? 'sticky top-16 z-40 shadow-lg border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4' 
+            ? 'sticky top-[65px] z-40 shadow-lg border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4' 
             : 'p-5 rounded-xl border-2 border-gray-200'
         }`}
       >
