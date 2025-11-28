@@ -366,13 +366,12 @@ export default function EditAgencyPage() {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Región *
+                  Región (opcional)
                 </label>
                 <select
                   value={formData.location_region}
                   onChange={(e) => setFormData({ ...formData, location_region: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary appearance-none"
-                  required
                 >
                   <option value="">Selecciona una región</option>
                   {REGIONS.map((region) => (

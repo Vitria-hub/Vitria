@@ -22,6 +22,7 @@ interface Agency {
   is_premium: boolean;
   is_verified: boolean;
   price_range: string | null;
+  phone: string | null;
   whatsapp_number: string | null;
 }
 
@@ -34,7 +35,10 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
   };
 
   const handleWhatsApp = () => {
-    const whatsappUrl = `https://wa.me/${agency.whatsapp_number?.replace(/\D/g, '')}?text=${encodeURIComponent(`Hola! Vi tu perfil en Vitria y me gustaría saber más sobre ${agency.name}`)}`;
+    const phoneToUse = agency.whatsapp_number || agency.phone;
+    const cleanedPhone = phoneToUse?.replace(/\D/g, '');
+    if (!cleanedPhone) return;
+    const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(`Hola! Vi tu perfil en Vitria y me gustaría saber más sobre ${agency.name}`)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
   
@@ -105,7 +109,7 @@ export default function AgencyCard({ agency }: { agency: Agency }) {
       )}
 
       <div className="mt-auto">
-      {agency.is_premium && agency.whatsapp_number ? (
+      {(agency.phone || agency.whatsapp_number) ? (
         <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={handleViewAgency}
