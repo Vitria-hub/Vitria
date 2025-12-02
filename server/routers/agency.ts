@@ -275,6 +275,7 @@ export const agencyRouter = router({
             website: input.website || null,
             email: input.email || null,
             phone: input.phone || null,
+            whatsapp_number: input.whatsappNumber || input.phone || null,
             location_city: input.city || null,
             location_region: input.region || null,
             services: input.services || [],
