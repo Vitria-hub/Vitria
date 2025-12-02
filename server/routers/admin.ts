@@ -790,7 +790,7 @@ export const adminRouter = router({
         description: updateData.description,
         email: updateData.email,
         phone: updateData.phone,
-        whatsapp_number: updateData.whatsapp_number || null,
+        whatsapp_number: updateData.whatsapp_number || updateData.phone || null,
         website: updateData.website || null,
         location_city: updateData.location_city,
         location_region: updateData.location_region || null,
