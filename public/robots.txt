@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /mi-agencia/
+Disallow: /auth/
+
+Sitemap: https://vitria.cl/sitemap.xml

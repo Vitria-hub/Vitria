@@ -45,8 +45,7 @@ scripts/*test*.mjs
 scripts/check-*.mjs
 
 # public
-public/sitemap.xml
-public/robots.txt
+# sitemap is now dynamic (app/sitemap.ts), robots.txt is tracked
 
 # attached assets
 attached_assets/
