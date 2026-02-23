@@ -80,22 +80,22 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     author: {
       '@type': 'Organization',
       name: post.author,
-      url: 'https://vitria.replit.app',
+      url: 'https://vitria.cl',
     },
     publisher: {
       '@type': 'Organization',
       name: 'Vitria',
-      url: 'https://vitria.replit.app',
+      url: 'https://vitria.cl',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://vitria.replit.app/vitria-logo.png',
+        url: 'https://vitria.cl/vitria-logo.png',
         width: 200,
         height: 60,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://vitria.replit.app/blog/${post.slug}`,
+      '@id': `https://vitria.cl/blog/${post.slug}`,
     },
     keywords: post.tags.join(', '),
     articleSection: post.category,

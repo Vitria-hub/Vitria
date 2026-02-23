@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://vitria.replit.app'),
+  metadataBase: new URL('https://vitria.cl'),
   title: {
     default: 'Vitria - Directorio de Agencias en Chile',
     template: '%s | Vitria',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_CL',
-    url: 'https://vitria.replit.app',
+    url: 'https://vitria.cl',
     siteName: 'Vitria',
     title: 'Vitria - Directorio de Agencias en Chile',
     description: 'Encuentra la agencia ideal para tu negocio. Conecta con las mejores agencias de marketing, publicidad, diseño, desarrollo y más en Chile.',

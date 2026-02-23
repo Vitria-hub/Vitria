@@ -22,8 +22,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
   },
-  // Optimize build performance
-  output: 'standalone',
 };
 
 export default nextConfig;
