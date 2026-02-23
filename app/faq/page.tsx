@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Preguntas Frecuentes (FAQ)',
+  description: 'Respuestas a las preguntas más comunes sobre Vitria: cómo buscar agencias, solicitar cotizaciones, registrar tu agencia, planes Premium y más.',
+  alternates: { canonical: '/faq' },
+};
+
 export default function FAQPage() {
   const faqs = [
     {
@@ -111,8 +119,27 @@ export default function FAQPage() {
     }
   ];
 
+  // Build FAQ schema from all questions
+  const allQuestions = faqs.flatMap(section => section.questions);
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": allQuestions.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a,
+      },
+    })),
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <h1 className="text-4xl font-bold text-primary mb-4">Preguntas Frecuentes (FAQ)</h1>
       <p className="text-lg text-dark/70 mb-12">
         Encuentra respuestas rápidas a las preguntas más comunes sobre Vitria

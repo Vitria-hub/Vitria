@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Política de Privacidad',
+  description: 'Política de privacidad de Vitria. Cómo recopilamos, usamos y protegemos tu información personal conforme a la Ley N° 19.628 de Chile.',
+  alternates: { canonical: '/privacidad' },
+};
+
 export default function PrivacidadPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

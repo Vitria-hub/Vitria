@@ -69,6 +69,49 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={quicksand.variable}>
+      <head>
+        <link rel="alternate" hrefLang="es-cl" href="https://vitria.cl/" />
+        <link rel="alternate" hrefLang="x-default" href="https://vitria.cl/" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Vitria",
+              "url": "https://vitria.cl",
+              "logo": "https://vitria.cl/logo.png",
+              "description": "Directorio de agencias de marketing, publicidad, diseño y desarrollo en Chile. Encuentra y conecta con la agencia ideal para tu negocio.",
+              "areaServed": { "@type": "Country", "name": "Chile" },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "email": "contacto@vitria.cl",
+                "contactType": "customer service",
+                "availableLanguage": "Spanish"
+              }
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Vitria",
+              "url": "https://vitria.cl",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://vitria.cl/agencias?search={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            }),
+          }}
+        />
+      </head>
       <body className={quicksand.className}>
         <NextTopLoader 
           color="#1B5568"

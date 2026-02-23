@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Términos y Condiciones de Uso',
+  description: 'Términos y condiciones de uso de Vitria, directorio de agencias en Chile. Conforme a la Ley N° 19.496 y normativa chilena vigente.',
+  alternates: { canonical: '/terminos' },
+};
+
 export default function TerminosPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
